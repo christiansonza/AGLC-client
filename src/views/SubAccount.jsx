@@ -1,0 +1,524 @@
+import React, { useRef, useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import {
+  useFetchSubAccountQuery,
+  usePostSubAccountMutation,
+  useImportSubAccountExcelMutation,
+} from "../features/subAccountTitleSlice";
+import { useFetchAccountQuery } from "../features/accountTitleSlice";
+import style from "../views/css/page.module.css";
+import { Mosaic } from "react-loading-indicators";
+
+
+function SubAccount() {
+
+const [openAccount, setOpenAccount] = useState(false);
+const accountRef = useRef(null);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (accountRef.current && !accountRef.current.contains(event.target)) {
+      setOpenAccount(false);
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
+
+
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
+  const { data, isError, error, isLoading } = useFetchSubAccountQuery();
+  const subAccounts = data ?? [];
+
+  const { data: accounts = [], isLoading: isAccountsLoading } = useFetchAccountQuery();
+  const activeAccounts = accounts.filter((a) => a.isActive);
+
+  const [addSubAccount] = usePostSubAccountMutation();
+  const [importExcel] = useImportSubAccountExcelMutation();
+
+  const [formData, setFormData] = useState({
+    code: "",
+    name: "",
+    accountDept: false,
+    accountList: false,
+    accountListItem: "",
+    accountId: null,
+    isActive: true,
+  });
+
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [showModal, setShowModal] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const filteredSubAccounts = subAccounts.filter(
+    (acc) =>
+      acc.code?.toLowerCase().includes(search.toLowerCase()) ||
+      acc.name?.toLowerCase().includes(search.toLowerCase()) ||
+      acc.accountListItem?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredSubAccounts.length / itemsPerPage);
+  const currentSubAccounts = filteredSubAccounts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+  const handleNext = () => currentPage < totalPages && setCurrentPage((p) => p + 1);
+  const handlePrevious = () => currentPage > 1 && setCurrentPage((p) => p - 1);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.accountId === null) {
+      toast.error("Please select a valid Account Title");
+      return;
+    }
+    try {
+      const response = await addSubAccount(formData).unwrap();
+      toast.success(response.message || "SubAccount Added!");
+      setFormData({
+        code: "",
+        name: "",
+        accountDept: false,
+        accountList: false,
+        accountListItem: "",
+        accountId: null,
+        isActive: true,
+      });
+      setShowModal(false);
+      navigate(`/editSubAccount/${response.data.id}`);
+    } catch (err) {
+      toast.error(err?.data?.message || "Failed to add sub account");
+    }
+  };
+
+  const handleImport = () => {
+    fileInputRef.current.click();
+  };
+
+const handleFileChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  setIsImporting(true);
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  try {
+    await delay(2000);
+
+    const res = await importExcel(formData).unwrap();
+    toast.success(res.message || "Imported successfully!");
+  } catch (err) {
+    console.error(err);
+    toast.error(err?.data?.message || "Import failed!");
+  } finally {
+    setIsImporting(false);
+    setIsDropdownOpen(false);
+    e.target.value = "";
+  }
+};
+
+  const handleExport = () => {
+    if (subAccounts.length === 0) {
+      toast.error("No data to export");
+      return;
+    }
+ 
+  const filteredData = subAccounts.map(
+    ({ code, name, accountDept, accountList, accountListItem, accountId }) => ({
+      code,
+      name,
+      accountDept,
+      accountList,
+      accountListItem,
+      accountId,
+    })
+  );
+
+  const ws = XLSX.utils.json_to_sheet(filteredData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "SubAccounts");
+  XLSX.writeFile(wb, "subAccounts_export.xlsx");
+};
+
+   if (isLoading) {
+         return (
+          <div style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#fff",
+            zIndex: 9999,
+          }}>
+            <Mosaic color={"#007bff"} size="small" />
+        </div>
+         );
+       }
+ 
+       if (isError) return <p>Error: {error?.message || 'Something went wrong'}</p>;
+
+  return (
+    <main className="main-container">
+      <Toaster position="top-right" />
+      <div className={style.ListContainer}>
+        
+        <div className={style.pageHeaderContainerAccount}>
+          <div className={style.flexTitleHeader}>
+            <svg className={style.svgTitleHeader} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0zM7 12a1 1 0 1 1 2 0a1 1 0 0 1-2 0"/></svg>
+            <h3 className={style.headerLaber}>Sub Account</h3>
+        </div>
+          <div className={style.flexHeader}>
+            <input
+              className={style.searchBox}
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
+              placeholder="Search..."
+            />
+
+            <button className={style.addBtn} onClick={() => setShowModal(true)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z"
+                />
+              </svg>
+            </button>
+
+            <div className={style.moreWrapper}>
+              <button
+                  className={style.moreBtn}
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                  disabled={isImporting}
+                >
+                {isImporting ? (
+                  <div className={style.loadingWrapper}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity="0.5"/><path fill="currentColor" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"><animateTransform attributeName="transform" dur="1s" from="0 12 12" repeatCount="indefinite" to="360 12 12" type="rotate"/></path></svg>
+                  </div>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M10.825 22q-.675 0-1.162-.45t-.588-1.1L8.85 18.8q-.325-.125-.612-.3t-.563-.375l-1.55.65q-.625.275-1.25.05t-.975-.8l-1.175-2.05q-.35-.575-.2-1.225t.675-1.075l1.325-1Q4.5 12.5 4.5 12.337v-.675q0-.162.025-.337l-1.325-1Q2.675 9.9 2.525 9.25t.2-1.225L3.9 5.975q.35-.575.975-.8t1.25.05l1.55.65q.275-.2.575-.375t.6-.3l.225-1.65q.1-.65.588-1.1T10.825 2h2.35q.675 0 1.163.45t.587 1.1l.225 1.65q.325.125.613.3t.562.375l1.55-.65q.625-.275 1.25-.05t.975.8l1.175 2.05q.35.575.2 1.225t-.675 1.075l-1.325 1q.025.175.025.338v.674q0 .163-.05.338l1.325 1q.525.425.675 1.075t-.2 1.225l-1.2 2.05q-.35.575-.975.8t-1.25-.05l-1.5-.65q-.275.2-.575.375t-.6.3l-.225 1.65q-.1.65-.587 1.1t-1.163.45zm1.225-6.5q1.45 0 2.475-1.025T15.55 12t-1.025-2.475T12.05 8.5q-1.475 0-2.488 1.025T8.55 12t1.013 2.475T12.05 15.5"
+                    />
+                  </svg>
+                )}
+              </button>
+
+              {isDropdownOpen && !isImporting && (
+                <div className={style.dropdownMenu}>
+                  <button onClick={handleImport} className={style.dropdownItem}>
+                    Import
+                  </button>
+                  <button onClick={handleExport} className={style.dropdownItem}>
+                    Export
+                  </button>
+                </div>
+              )}
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                ref={fileInputRef}
+                className={style.hiddenFileInput}
+                onChange={handleFileChange}
+              />
+            </div>
+          </div>
+
+          
+        </div>
+
+        {showModal && (
+          <div className={style.modalOverlay}>
+            <div className={style.modal}>
+              <div className={style.modalHeader}>
+                <h3>Add Sub Account</h3>
+                <button
+                  className={style.closeButton}
+                  onClick={() => setShowModal(false)}
+                >
+                  <svg
+                    className={style.closeBtn}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      d="m11.25 4.75-6.5 6.5m0-6.5 6.5 6.5"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className={style.formContainer}>
+                <input
+                  type="text"
+                  value={formData.code}
+                  onChange={(e) =>
+                    setFormData({ ...formData, code: e.target.value })
+                  }
+                  placeholder="Code"
+                  required
+                />
+
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  placeholder="Name"
+                  required
+                />
+
+                <div className={style.activeAccountWraper}>
+                  <div className={style.activeAccountWrap}>
+                    <label className={style.inputLabel}>Account Department</label>
+                    <input
+                      className={style.activeAccountHolder}
+                      type="checkbox"
+                      checked={formData.accountDept}
+                      onChange={(e) =>
+                        setFormData({ ...formData, accountDept: e.target.checked })
+                      }
+                    />
+                  </div>
+
+                  <div className={style.activeAccountWrap}>
+                    <label className={style.inputLabel}>Account List</label>
+                    <input
+                      className={style.activeAccountHolder}
+                      type="checkbox"
+                      checked={formData.accountList}
+                      onChange={(e) =>
+                        setFormData({ ...formData, accountList: e.target.checked })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <input
+                  type="text"
+                  value={formData.accountListItem}
+                  onChange={(e) =>
+                    setFormData({ ...formData, accountListItem: e.target.value })
+                  }
+                  placeholder="Account List Item"
+                />
+                <div className={style.customSelectWrapper} ref={accountRef}>
+                  <div
+                    className={style.customSelectInput}
+                    onClick={() => setOpenAccount(!openAccount)}
+                  >
+                    {formData.accountId
+                      ? activeAccounts.find((a) => a.id === formData.accountId)?.name
+                      : "Select Account Title"}
+                    <span className={style.selectArrow}>▾</span>
+                  </div>
+
+                  {openAccount && (
+                    <div className={style.customSelectDropdown}>
+                      {isAccountsLoading ? (
+                        <div className={style.customSelectOption} style={{ cursor: "default" }}>
+                          Loading...
+                        </div>
+                      ) : activeAccounts.length === 0 ? (
+                        <div className={style.customSelectOption} style={{ cursor: "default" }}>
+                          No active accounts
+                        </div>
+                      ) : (
+                        activeAccounts.map((account) => (
+                          <div
+                            key={account.id}
+                            className={style.customSelectOption}
+                            onClick={() => {
+                              setFormData({
+                                ...formData,
+                                accountId: account.id,
+                              });
+                              setOpenAccount(false);
+                            }}
+                          >
+                            {account.name}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+                <input
+                  className={style.disableBookingId}
+                  disabled
+                  type="text"
+                  value={
+                    formData.accountId
+                      ? `Account ID: ${formData.accountId}`
+                      : "Account ID"
+                  }
+                />
+
+                <div className={style.activeWrap}>
+                  <label> Active:</label>
+                  <input
+                    className={style.activeHolder}
+                    type="checkbox"
+                    checked={formData.isActive}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isActive: e.target.checked })
+                    }
+                  />
+                </div>
+
+                <div className={style.modalActions}>
+                  <button
+                    type="button"
+                    className={style.cancelButton}
+                    onClick={() => setShowModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className={style.submitButton}>
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <table>
+          <thead>
+            <tr className={style.headAccountTable}>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Account List Item</th>
+              <th>Account Dept</th>
+              <th>Account List</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentSubAccounts.length === 0 ? (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center" }}>
+                  No subaccounts found
+                </td>
+              </tr>
+            ) : (
+              currentSubAccounts.map((sub) => (
+                <tr className={style.bodyAccountTable} key={sub.id}>
+                  <td>{sub.code}</td>
+                  <td>{sub.name}</td>
+                  <td>{sub.accountListItem}</td>
+                  <td>
+                    {sub.accountDept ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        style={{ color: "green" }}
+                      >
+                        <path d="m9.55 15.15l8.475-8.475q.3-.3.7-.3t.7.3t.3.713t-.3.712l-9.175 9.2q-.3.3-.7.3t-.7-.3L4.55 13q-.3-.3-.288-.712t.313-.713t.713-.3t.712.3z" />
+                      </svg>
+                    ) : (
+                      "--"
+                    )}
+                  </td>
+
+                  <td>
+                    {sub.accountList ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        style={{ color: "green" }}
+                      >
+                        <path d="m9.55 15.15l8.475-8.475q.3-.3.7-.3t.7.3t.3.713t-.3.712l-9.175 9.2q-.3.3-.7.3t-.7-.3L4.55 13q-.3-.3-.288-.712t.313-.713t.713-.3t.712.3z" />
+                      </svg>
+                    ) : (
+                      "--"
+                    )}
+                  </td>
+
+                  <td>
+                    <button
+                      className={style.editBtn}
+                      onClick={() => navigate(`/editSubAccount/${sub.id}`)}
+                    >
+                       <svg className={style.svdEditIcon} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16.14 2.25a5.61 5.61 0 0 0-5.327 7.376L2.77 17.671a1.774 1.774 0 0 0 0 2.508l1.052 1.052a1.773 1.773 0 0 0 2.509 0l8.044-8.045a5.61 5.61 0 0 0 7.19-6.765c-.266-1.004-1.442-1.104-2.032-.514L17.81 7.629a1.017 1.017 0 1 1-1.438-1.438l1.722-1.723c.59-.59.49-1.766-.515-2.032a5.6 5.6 0 0 0-1.438-.186"/></svg>
+                      Manage
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+        {totalPages > 1 && (
+            <div className={style.paginationContainer}>
+              <button
+                className={style.pageButton}
+                onClick={handlePrevious}
+                disabled={currentPage === 1}
+              >
+                Prev
+              </button>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i + 1}
+                  className={`${style.pageButton} ${
+                    currentPage === i + 1 ? style.activePage : ""
+                  }`}
+                  onClick={() => handlePageChange(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                className={style.pageButton}
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          )}
+      </div>
+    </main>
+  );
+}
+
+export default SubAccount;

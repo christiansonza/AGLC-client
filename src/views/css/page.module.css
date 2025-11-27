@@ -1,0 +1,1062 @@
+.ListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #ccc;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 2px;
+}
+
+*body::-webkit-scrollbar-thumb:hover {
+  background-color: #666;
+}
+
+.tableContainer {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+
+th {
+  color: #3a3a3a;
+  font-family: "Oswald", sans-serif !important;
+  font-weight: 600;
+  padding: 14px 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  word-break: break-all;
+  padding: 8px 12px;
+  border-top: none;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  background-color: #fff;
+  color: #3f3f3f;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;     
+  height: 100%;            
+  box-sizing: border-box; 
+}
+
+.headTable {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: .2rem;
+}
+
+.bodyTable {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+}
+
+.headTablePayment {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: .2rem;
+}
+
+.bodyTablePayment {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+}
+
+.headTablePaymentDetail{
+    background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: .2rem;
+}
+.bodyTablePaymentDetail{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+}
+.bodyCustomerTable {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr 1fr 140px;
+  text-align: left;
+}
+.editPaymentReqSelect{
+  margin-top: .3rem;
+  display: flex;
+  gap: .5rem;
+  width: 100%;
+}
+.flexSelectPayment{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.flexSelectPaymentReq{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: .75rem;
+}
+.flexSelectPaymentRead{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 17px;
+}
+.flexTitleHeader{
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.flexTitleHeaderPayReq{
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  justify-content: space-between;
+}
+.headerLaber{
+  font-weight: 300;
+  color: #007bff;
+  font-family: "Oswald", sans-serif !important;
+  font-size: 24px;
+}
+.svgTitleHeader{
+  border-radius: 50%;
+  color: #007bff !important;
+  height: 1.75rem;
+  width: 1.75rem;
+  border: 1px solid #007bff;
+  padding: 2px;
+}
+.editLabelPayment{
+   align-self: flex-start;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  font-weight: 600;
+  padding-bottom: .75rem;
+}
+.headTableDepartment{
+  background-color: #fff;
+  display: grid;
+  grid-template-columns:200px 1fr 1fr 140px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: .2rem;
+}
+.bodyTableDept{
+   display: grid;
+  grid-template-columns:200px 1fr 1fr 140px;
+  text-align: left;
+}
+.headCustomerTable {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr 1fr 140px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: .2rem;
+}
+.bodyChargeTable{
+  display: grid;
+  grid-template-columns:1fr 1fr 200px;
+  text-align: left;
+}
+.headChargeTable{
+  background-color: #fff;
+  display: grid;
+  grid-template-columns:1fr 1fr 200px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: .2rem;
+}
+.headAccountTable{
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: .2rem;
+}
+.bodyAccountTable{
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+}
+
+
+.bodyBookingTable {
+  display: grid;
+  grid-template-columns:200px 1fr 1fr 140px;
+  text-align: left;
+}
+th{
+  color: #3a3a3a !important;
+}
+.headBookingTable {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns:200px 1fr 1fr 140px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin-bottom: .25rem;
+}
+
+.flexbooking{
+  display: flex;
+  gap: 1rem;
+}
+.flexBookingContainer{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+.pageSubHeader {
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.pageHeaderContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
+.pageHeaderContainerAccount{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: .5rem;
+
+    margin-bottom: .5rem;
+}
+.searchBox{
+    height: 40px;
+    width: 200px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 0 8px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    outline: none;
+}
+.paginationContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin-top: .65rem;
+}
+
+.pageButton {
+  background-color: #fff;
+  color: #3a3a3a;
+  padding: 6px 12px;
+  /* border-radius: 4px; */
+  cursor: pointer;
+  transition: background 0.2s ease;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  border: none;
+}
+
+.pageButton:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.activePage {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+
+.editBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    background-color: #fff;
+    border: 1px solid #007bff;
+    color: #007bff;
+    padding: 6px 12px 6px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+}
+.editBtn:hover{
+    background-color: #007bff;
+    color: #fff;
+}
+.svdEditIcon{
+  height: 16px;
+  width: 16px;
+}
+.flexHeader{
+  display: flex;
+  gap: 6px;
+}
+.flexHeaderAccount{
+  display: flex;
+  gap: 6px;
+  background-color: #007bff;
+}
+.addBtn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 6px;
+  background-color:#fff;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.addButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.addButton:hover {
+  background-color: #0056b3;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Modal container */
+.modal {
+  background: #f8fafc;
+  color: #3a3a3a;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 420px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  animation: slideUp 0.3s ease;
+}
+
+/* Header */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #3a3a3a;
+  cursor: pointer;
+}
+
+/* Form */
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
+.formContainer input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ccc;
+  color: #3a3a3a;
+  border-radius: 4px;
+}
+
+.activeWrap{
+  display: flex;
+  gap: 1rem;
+  font-size: 14px;
+  color: #3a3a3a;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.activeHolder{
+ margin-top: 2px;
+}
+
+
+.activeAccountWraper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: .5rem .75rem;
+}
+.editActiveAccountWraper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0 0rem .6rem;
+}
+.editAccountId{
+  display: flex !important;
+  padding: 1rem;
+  background-color: #007bff;
+}
+.activeAccountWrap {
+  display: flex;
+  align-items: center; 
+  gap: 0.5rem; 
+}
+.activeAccountWrapBot{
+  margin-top: .25rem;
+}
+.inputLabel {
+  font-size: 14px;
+  white-space: nowrap; 
+}
+
+.activeAccountHolder {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.inputLabel{
+  font-size: 14px;
+  padding-bottom: 0.75rem;
+  display: flex;
+}
+
+.modalActions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.cancelButton {
+  background: #444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submitButton {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background: #0056b3;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+
+
+/* EDIT PAGES */
+
+.editContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.editHeader{
+  font-weight: 300;
+  font-size: 24px;
+  color: #737373;
+  padding: 0 0 0 1.5rem;
+}
+.editHeaderCustomer,.editHeaderVendor,.editHeaderBooking{
+  font-weight: 300;
+  font-size: 24px;
+  color: #737373;
+  padding: 0 0 1.5rem 1.25rem;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;        
+  max-width: 500px;     
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+.editFormPayReq{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;        
+  min-width: 500px;     
+  padding: 1.5rem 0 1.5rem 1.5rem;
+  border-radius: 8px;
+}
+.editFormBooking{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;        
+  max-width: 500px;     
+  padding: 1.5rem;
+  border-radius: 8px;
+
+}
+
+.editBookerContainer{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.editInput,.editInputSubAccount{
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0 .5rem;
+  margin: -.3rem 0 1rem 0;
+}
+.editInputReq{
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0 .5rem;
+  margin:0 0 1rem 0;
+  outline: none;
+}
+.editInputBooking{
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0 .5rem;
+  margin: -.3rem 0 .5rem 0;
+}
+.editInputBookingId{
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0 .5rem;
+  margin: -.3rem 0 .5rem 0;
+  cursor: not-allowed;
+}
+.disableBookingId{
+  cursor: not-allowed;
+}
+.editInputSubAccount{
+  cursor: not-allowed;
+}
+textarea{
+  resize: vertical;
+  height: 80px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding:  .5rem;
+  outline: none;
+  margin-bottom: .75rem;
+}
+.selectCustomer{
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0 .2rem;
+  margin: -.3rem 0 .5rem 0;
+  cursor: pointer;
+  outline: none;
+}
+.selectPayment{
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0 .2rem;
+  margin: -.3rem 0 .75rem 0;
+  cursor: pointer;
+  outline: none;
+  /* color: #000; */
+}
+.editLabel, .editActiveHolder{
+  align-self: flex-start;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  font-weight: 600;
+}
+
+
+.editButton{
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.editActiveHolder{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+.editActive{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.closeBtn{
+  color: #3a3a3a;
+  border-radius: 4px;
+}
+.closeBtn:hover{
+  background-color: #b91c1c;
+  color: #fff;
+}
+
+
+/* momdal */
+
+
+.moreWrapper {
+  position: relative;
+  margin-left: 10px;
+  display: inline-block;
+}
+
+.moreBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px 0 9px;
+  border-radius: 6px;
+  background-color:#fff;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  height: 100%;
+  margin-left: -.65rem;
+}
+
+.moreBtn:disabled {
+  background-color: #fff;
+  cursor: not-allowed;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 110%;
+  right: 1px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 100px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.dropdownItem {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+
+}
+
+.dropdownItem:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.loadingWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+
+
+
+
+.customSelectWrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.customSelectInput {
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 0 0.2rem;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  font-size: 14px;
+  color: #000;
+  padding: 0 .5rem;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+}
+
+.customSelectDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 180px; 
+  overflow-y: auto;  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  font-size: 14px;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.customSelectOption {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.customSelectOption:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.flexFormTable{
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.payReqTempTable{
+  min-width: 50%;
+  padding: 3.5rem 1rem 0;
+}
+.tableTempThead{
+  display: grid;
+  grid-template-columns: 50px 1fr 1fr 100px 100px;
+  /* background-color: #fff; */
+  margin-bottom: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  text-align: left;
+  background-color: #fff;
+}
+.thPayreq{
+  font-weight: 500;
+
+}
+.tableTempTbody {
+  display: grid;
+  grid-template-columns: 50px 1fr 1fr 100px 100px;
+  box-shadow: none !important;
+  font-weight: 300;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  margin-bottom: 2px;
+}
+.deleteBtn{
+  background-color: #fff;
+  border: none;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.deleteSvg{
+  color: #000000;
+  cursor: pointer;
+  height: 22px !important;
+  width: 22px !important;
+}
+.payreqDetails{
+  font-weight:300;
+  font-family: "Oswald", sans-serif !important;
+}
+.payreqTd{
+  box-shadow: none !important;
+  font-family: "Oswald", sans-serif !important;
+}
+.payreqTdTotal{
+  box-shadow: none !important;
+  font-family: "Oswald", sans-serif !important;
+  font-weight: 400;
+}
+.flexPdfBtn{
+  display: flex;
+  gap: .5rem;
+}
+.pdfBtn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 6px;
+  background-color:#fff;
+  color:#007bff;
+  border: none;
+  cursor: pointer;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  height: 40px
+}
+.tableTrHistory{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 100px 100px;
+  box-shadow: none !important;
+  font-weight: 300;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  margin-bottom: 2px;
+  font-family: "Oswald", sans-serif !important;
+}
+
+.addBtnPayReq{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 6px;
+  background-color:#fff;
+  color:#007bff;
+  border: none;
+  cursor: pointer;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  height: 40px;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeInOverlay 200ms ease-out;
+}
+
+.modalDialog {
+  background: #ffffff;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-20px);
+  opacity: 0;
+  animation: slideUpDialog 250ms forwards ease-out;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+.deleteCloseSvg{
+  width: 4rem;
+  height: 4rem;
+  color: #dc2626;
+  margin: auto;
+  margin: 0 0 1.5rem 0;
+  min-width: 100%;
+}
+.cancelDeleteBtn:hover{
+  background-color: #c8c8c8;
+  color: #fff;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #111;
+  color: #3a3a3a;
+  text-align: center;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+.modalText {
+ text-align: center;
+ padding: 1rem 3rem 2.5rem;
+ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ font-weight: 400;
+ color: #6b6b6b;
+
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.cancelDeleteBtn {
+  background: #f3f4f6;
+  color: #555;
+  padding: 8px 2.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease-in-out;
+}
+
+.confirmDeleteBtn {
+  background: #ef4444;
+  color: #fff;
+  padding: 8px 2.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  font-size: 14px;
+  transition: 0.2s ease-in-out;
+}
+
+.confirmDeleteBtn:hover {
+  background: #dd0000;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUpDialog {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

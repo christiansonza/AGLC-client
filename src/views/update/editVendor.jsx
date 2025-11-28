@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   useGetVendorByIdQuery,
   useUpdateVendorMutation,
@@ -10,7 +10,7 @@ import { Mosaic } from "react-loading-indicators";
 
 function VendorEdit() {
   const { id } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { data: vendor, isLoading, isError, error } = useGetVendorByIdQuery(id);
   const [updateVendor] = useUpdateVendorMutation();
@@ -38,7 +38,7 @@ function VendorEdit() {
     try {
       const response = await updateVendor({ id, ...formData }).unwrap();
       toast.success(response.message || 'Updated successfully!');
-      navigate('/vendor');
+      // navigate('/vendor');
     } catch (err) {
       console.error(err);
       const message = err?.data?.message || err?.error || 'Update failed!';

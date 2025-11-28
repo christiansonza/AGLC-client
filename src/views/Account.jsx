@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import {
   useFetchAccountQuery,
@@ -126,26 +126,33 @@ function Account() {
     XLSX.utils.book_append_sheet(wb, ws, 'Accounts');
     XLSX.writeFile(wb, 'accounts_export.xlsx');
   };
+  const [showLoader, setShowLoader] = useState(true);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
-    if (isLoading) {
-        return (
-          <div style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            zIndex: 9999,
-          }}>
-            <Mosaic color={"#007bff"} size="small" />
-        </div>
-        );
-      }
+  if (showLoader || isLoading) {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
+          zIndex: 9999,
+        }}
+      >
+        <Mosaic color="#007bff" size="small" />
+      </div>
+    );
+  }
 
       if (isError) return <p>Error: {error?.message || 'Something went wrong'}</p>;
   return (

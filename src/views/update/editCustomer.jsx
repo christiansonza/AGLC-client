@@ -42,9 +42,17 @@ function EditCustomer() {
     }
   };
 
-  if (isLoading){
-    return (
-          <div style={{
+ const [showLoader, setShowLoader] = useState(true);
+   
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(false), 1000);
+    return () => clearTimeout(timer);
+    }, []);
+     
+    if (showLoader || isLoading) {
+      return (
+        <div
+          style={{
             position: "fixed",
             top: 0,
             left: 0,
@@ -55,11 +63,13 @@ function EditCustomer() {
             alignItems: "center",
             backgroundColor: "#fff",
             zIndex: 9999,
-          }}>
-                <Mosaic color={"#007bff"} size="small" />
-            </div>
-            );
-      }
+          }}
+          >
+            <Mosaic color="#007bff" size="small" />
+        </div>
+      );
+    }
+
   if (isError) return <p>Error: {error?.message || 'Something went wrong'}</p>;
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { useGetUserQuery, useRegisterUserMutation } from '../features/userSlice';
@@ -63,26 +63,35 @@ function UserList() {
   const handleNext = () => currentPage < totalPages && setCurrentPage(prev => prev + 1);
   const handlePrevious = () => currentPage > 1 && setCurrentPage(prev => prev - 1);
 
-if (isLoading) {
-        return (
-          <div style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#fff",
-              zIndex: 9999,
-            }}>
-            <Mosaic color={"#007bff"} size="small" />
-        </div>
-        );
-      }
+  const [showLoader, setShowLoader] = useState(true);
 
-      if (isError) return <p>Error: {error?.message || 'Something went wrong'}</p>;
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showLoader || isLoading) {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
+          zIndex: 9999,
+        }}
+      >
+        <Mosaic color="#007bff" size="small" />
+      </div>
+    );
+  }
+
+  if (isError) return <p>Error: {error?.message || 'Something went wrong'}</p>;
 
   return (
     <main className="main-container">

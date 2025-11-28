@@ -222,7 +222,7 @@ td {
   text-align: left;
 }
 th{
-  color: #3a3a3a !important;
+  color: #5a5a5a !important;
 }
 .headBookingTable {
   background-color: #fff;
@@ -904,6 +904,7 @@ textarea{
 .payreqTd{
   box-shadow: none !important;
   font-family: "Oswald", sans-serif !important;
+  color: #333 !important;
 }
 .payreqTdTotal{
   box-shadow: none !important;

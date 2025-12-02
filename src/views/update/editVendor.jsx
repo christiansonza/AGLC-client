@@ -94,7 +94,7 @@ function VendorEdit() {
           placeholder="Name"
           required
         />
-        <label className={style.editLabel}>Name: </label>
+        <label className={style.editLabel}>Adress: </label>
         <input
           className={style.editInput}
           type="text"
@@ -102,7 +102,7 @@ function VendorEdit() {
           onChange={(e) => setFormData({ ...formData, address: e.target.value })}
           placeholder="Address"
         />
-        <label className={style.editLabel}>Name: </label>
+        <label className={style.editLabel}>Tin: </label>
         <input
           className={style.editInput}
           type="text"

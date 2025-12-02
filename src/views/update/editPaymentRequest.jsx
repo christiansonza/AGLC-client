@@ -959,11 +959,12 @@ const generatePDF = () => {
                         display: "grid",
                         gridTemplateColumns: gridColumns,
                         marginBottom: "4px",
-                        border: "1px solid #ccc",
+                        border: "1px solid #ddd",
                         fontSize: "14px",
                         textAlign: "left",
                         backgroundColor: "#fff",
                       }}
+                      className={style.editThPayreq}
                     >
                       <th className={style.thPayreq}></th>
                       {isOperation && <th className={style.thPayreq}>Booking ID</th>}
@@ -1001,8 +1002,9 @@ const generatePDF = () => {
                           boxShadow: "none !important",
                           fontWeight: "300",
                           fontSize: "14px",
-                          border: "1px solid #ccc",
+                          border: "1px solid #ddd",
                           marginBottom: "2px",
+                          // boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px"
                         }}
                       >
                         <td className={style.payreqTd}>

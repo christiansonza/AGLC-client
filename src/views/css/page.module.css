@@ -41,7 +41,10 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
-
+.editThPayreq{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  border-radius: 4px 4px 0 0;
+}
 td {
   word-break: break-all;
   padding: 8px 12px;
@@ -931,12 +934,12 @@ textarea{
 .tableTrHistory{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 100px 100px;
-  box-shadow: none !important;
   font-weight: 300;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   margin-bottom: 2px;
   font-family: "Oswald", sans-serif !important;
+
 }
 
 .addBtnPayReq{

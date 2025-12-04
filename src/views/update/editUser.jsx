@@ -18,7 +18,8 @@ function EditUser() {
     firstName: '',
     middleName: '',
     lastName: '',
-    role: ''
+    role: '',
+    isActive: false
   });
 
   useEffect(() => {
@@ -30,6 +31,7 @@ function EditUser() {
         middleName: user.middleName || '',
         lastName: user.lastName || '',
         role: user.role || '',
+        isActive: user.isActive ?? false,
       });
     }
   }, [user]);
@@ -85,22 +87,28 @@ function EditUser() {
             <h3 className={style.headerLaber}>Edit Users</h3>
         </div>
        <form onSubmit={handleSubmit} className={style.editForm}>
-        <label className={style.editLabel}>Username: </label>
-        <input
-          className={style.editInput}
-          type="text"
-          value={formData.username}
-          onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-          required
-        />
-        <label className={style.editLabel}>Email: </label>
-        <input
-          className={style.editInput}
-          type="email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          required
-        />
+          <div className={style.flexInput}>
+            <div className={style.gridUserEdit}>
+              <label className={style.editLabel}>Username: </label>
+              <input
+                className={style.editInput}
+                type="text"
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                required
+              />
+            </div>
+            <div className={style.gridUserEdit}>
+              <label className={style.editLabel}>Email: </label>
+              <input
+                className={style.editInput}
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+              />
+            </div>
+          </div>
 
         <label className={style.editLabel}>First Name: </label>
         <input
@@ -139,7 +147,16 @@ function EditUser() {
             <option value="Operations">Operations</option>
             <option value="Accounting Manager">Accounting Manager</option>
             <option value="Accounting Staff">Accounting Staff</option>
-        </select>      
+        </select>  
+        <div className={style.editUserActiveHolder}>
+            <label>Active: </label>
+            <input
+              className={style.editActive}
+              type="checkbox"
+              checked={formData.isActive}
+              onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+            />
+          </div>    
         <button
           className={style.editButton}
           type="submit"
@@ -148,7 +165,6 @@ function EditUser() {
           {isUpdating ? 'Updating...' : 'Update'}
         </button>
       </form>
-
       </div>
     </main>
   );

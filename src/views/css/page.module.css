@@ -660,7 +660,18 @@ textarea{
   color: #333;
   font-weight: 600;
 }
-
+.editUserActiveHolder{
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  gap: .5rem;
+  margin: .75rem 0 0rem;
+}
 
 .editButton{
   height: 40px;
@@ -1053,4 +1064,16 @@ textarea{
     width: 100%;
     color: #4a4a4a;
     cursor: pointer;
+}
+
+.flexInput{
+    display: flex;
+    gap: .5rem;
+    width: 100%;
+}
+.gridUserEdit{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
 }

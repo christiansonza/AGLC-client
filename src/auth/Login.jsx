@@ -12,7 +12,8 @@ export default function Login() {
 
   const [formData, setFormData] = useState({
     username: '',
-    password: ''
+    password: '',
+    role: ''
   })
 
   const [logUser, { isLoading }] = useLoginUserMutation()
@@ -21,9 +22,9 @@ export default function Login() {
     e.preventDefault()
 
     try {
-       await logUser(formData).unwrap()
-      setShowLoader(true)
-      navigate('/user')
+        await logUser(formData).unwrap()
+        setShowLoader(true)
+        navigate('/user')
     } catch (error) {
       const message =
         error?.data?.message ||
@@ -63,6 +64,19 @@ export default function Login() {
           placeholder="password"
           required
         />
+        <select
+          className={authStyle.selectRole}
+          value={formData.role}
+          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+          required
+                >
+          <option value="" disabled>Select Role</option>
+          <option value="Power User">Power User</option>
+          <option value="System Support">System Support</option>
+          <option value="Operations">Operations</option>
+          <option value="Accounting Manager">Accounting Manager</option>
+          <option value="Accounting Staff">Accounting Staff</option>
+        </select>
         <button className={authStyle.btnLogin} type="submit" disabled={isLoading}>
           {isLoading ? 'Logging in...' : 'Login'}
         </button>

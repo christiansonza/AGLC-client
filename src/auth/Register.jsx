@@ -14,7 +14,8 @@ export default function Login() {
     email: '',
     firstName: '',
     middleName: '',
-    lastName: ''
+    lastName: '',
+    role: ''
   })
 
   const [newUser, { isLoading }] = useRegisterUserMutation()
@@ -45,20 +46,22 @@ export default function Login() {
           <h3 className={authStyle.title}>Welcome Back</h3>
           <p className={authStyle.subtitle}>Please enter your details below</p>
         </div>
-        <input className={authStyle.fieldRegister}
-          type="text"
-          value={formData.username}
-          onChange={e => setFormData({ ...formData, username: e.target.value })}
-          placeholder="username"
-          required
-        />
-        <input className={authStyle.fieldRegister}
-          type="email"
-          value={formData.email}
-          onChange={e => setFormData({ ...formData, email: e.target.value })}
-          placeholder="email"
-          required
-        />
+        <div className={authStyle.flexInput}>
+            <input className={authStyle.fieldRegister}
+            type="text"
+            value={formData.username}
+            onChange={e => setFormData({ ...formData, username: e.target.value })}
+            placeholder="username"
+            required
+          />
+          <input className={authStyle.fieldRegister}
+            type="email"
+            value={formData.email}
+            onChange={e => setFormData({ ...formData, email: e.target.value })}
+            placeholder="email"
+            required
+          />
+        </div>
         <input className={authStyle.fieldRegister}
           type="text"
           value={formData.firstName}
@@ -85,6 +88,19 @@ export default function Login() {
           placeholder="password"
           required
         />
+        <select
+          className={authStyle.selectRole}
+          value={formData.role}
+          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+          required
+        >
+          <option value="" disabled>Select Role</option>
+          <option value="Power User">Power User</option>
+          <option value="System Support">System Support</option>
+          <option value="Operations">Operations</option>
+          <option value="Accounting Manager">Accounting Manager</option>
+          <option value="Accounting Staff">Accounting Staff</option>
+        </select>
         <button className={authStyle.btnLogin} type="submit" disabled={isLoading}>
           {isLoading ? 'Registering...' : 'Register'}
         </button>

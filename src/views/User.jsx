@@ -18,6 +18,7 @@ function UserList() {
     firstName: '',
     middleName: '',
     lastName: '',
+    role: '',
   });
   const [newUser, { isLoading: isRegistering }] = useRegisterUserMutation();
 
@@ -33,6 +34,7 @@ function UserList() {
         firstName: '',
         middleName: '',
         lastName: '',
+        role: '',
       });
       setShowModal(false);
     } catch (err) {
@@ -143,7 +145,6 @@ function UserList() {
                     />
                   </svg>
                 </button>
-
               </div>
               <form onSubmit={handleSubmit} className={style.formContainer}>
                 <input type="text" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} placeholder="Username" required />
@@ -152,7 +153,19 @@ function UserList() {
                 <input type="text" value={formData.middleName} onChange={e => setFormData({ ...formData, middleName: e.target.value })} placeholder="Middle Name" />
                 <input type="text" value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })} placeholder="Last Name" />
                 <input type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} placeholder="Password" required />
-
+                <select
+                  className={style.selectRole}
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  required
+                >
+                  <option value="" disabled>Select Role</option>
+                  <option value="Power User">Power User</option>
+                  <option value="System Support">System Support</option>
+                  <option value="Operations">Operations</option>
+                  <option value="Accounting Manager">Accounting Manager</option>
+                  <option value="Accounting Staff">Accounting Staff</option>
+                </select>
                 <div className={style.modalActions}>
                   <button type="button" className={style.cancelButton} onClick={() => setShowModal(false)}>Cancel</button>
                   <button type="submit" className={style.submitButton} disabled={isRegistering}>{isRegistering ? 'Registering...' : 'Submit'}</button>

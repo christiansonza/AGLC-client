@@ -5,7 +5,7 @@ import Nav from './views/Nav';
 
 // Auth
 import Login from './Auth/Login';
-import Register from './Auth/Register';
+import Register from './auth/Register';
 
 // Views
 import User from './views/User';

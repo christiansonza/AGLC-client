@@ -18,6 +18,7 @@ function EditUser() {
     firstName: '',
     middleName: '',
     lastName: '',
+    role: ''
   });
 
   useEffect(() => {
@@ -28,6 +29,7 @@ function EditUser() {
         firstName: user.firstName || '',
         middleName: user.middleName || '',
         lastName: user.lastName || '',
+        role: user.role || '',
       });
     }
   }, [user]);
@@ -124,7 +126,20 @@ function EditUser() {
           value={formData.lastName}
           onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
         />
-
+        <label className={style.editLabel}>Role: </label>
+        <select
+            className={style.selectRole}
+            value={formData.role}
+            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+            required
+          >
+            <option value="" disabled>Select Role</option>
+            <option value="Power User">Power User</option>
+            <option value="System Support">System Support</option>
+            <option value="Operations">Operations</option>
+            <option value="Accounting Manager">Accounting Manager</option>
+            <option value="Accounting Staff">Accounting Staff</option>
+        </select>      
         <button
           className={style.editButton}
           type="submit"

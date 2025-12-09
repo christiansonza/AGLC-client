@@ -120,7 +120,9 @@ useEffect(() => {
 
               {openCustomer && (
                 <div className={style.customSelectDropdown}>
-                  {activeCustomers.map((c) => (
+                  {activeCustomers
+                  .filter((c) => c.id !== formData.customerId)
+                  .map((c) => (
                     <div
                       key={c.id}
                       className={style.customSelectOption}

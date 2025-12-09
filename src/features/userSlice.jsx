@@ -8,7 +8,6 @@ export const userApi = createApi({
   }),
   tagTypes: ['users'],
   endpoints: (builder) => ({
-    
     getUser: builder.query({
       query: () => ({
         url: '/',
@@ -17,7 +16,14 @@ export const userApi = createApi({
       providesTags: ['users'],
     }),
 
-    
+    getUserCount: builder.query({
+      query: () => ({
+        url: '/count',
+        method: 'GET',
+      }),
+      providesTags: ['users'],
+    }),
+
     getUserById: builder.query({
       query: (id) => ({
         url: `/${id}`,
@@ -26,7 +32,6 @@ export const userApi = createApi({
       providesTags: ['users'],
     }),
 
-   
     registerUser: builder.mutation({
       query: (newUser) => ({
         url: '/register',
@@ -36,17 +41,24 @@ export const userApi = createApi({
       invalidatesTags: ['users'],
     }),
 
-   
+    registerUserModal: builder.mutation({
+      query: (newUser) => ({
+        url: '/modal',
+        method: 'POST',
+        body: newUser,
+      }),
+      invalidatesTags: ['users'],
+    }),
+
     loginUser: builder.mutation({
       query: (userData) => ({
         url: '/login',
         method: 'POST',
         body: userData,
       }),
-      providesTags: ['users'],
+      invalidatesTags: ['users'],
     }),
 
-    
     updateUser: builder.mutation({
       query: ({ id, ...body }) => ({
         url: `/${id}`,
@@ -71,16 +83,17 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['users'],
     }),
-
   }),
 });
 
 export const {
   useGetUserQuery,
   useGetUserByIdQuery,
+  useGetUserCountQuery,
   useRegisterUserMutation,
+  useRegisterUserModalMutation,
   useLoginUserMutation,
   useUpdateUserMutation,
   useCurrentUserQuery,
-  useLogoutUserMutation
+  useLogoutUserMutation,
 } = userApi;

@@ -751,7 +751,9 @@ const generatePDF = () => {
                   </div>
                   {openVendor && (
                     <div className={style.customSelectDropdown}>
-                      {activeVendors.map((v) => (
+                      {activeVendors
+                      .filter((v) => v.id !== formData.vendorId)
+                      .map((v) => (
                         <div
                           key={v.id}
                           className={style.customSelectOption}
@@ -782,7 +784,9 @@ const generatePDF = () => {
                 </div>
                 {openDepartment && (
                   <div className={style.customSelectDropdown}>
-                  {activeDepartments.map((d) => (
+                  {activeDepartments
+                    .filter((d) => d.id !== formData.departmentId)
+                    .map((d) => (
                     <div
                       key={d.id}
                       className={style.customSelectOption}

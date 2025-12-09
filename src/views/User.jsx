@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
-import { useGetUserQuery, useRegisterUserMutation } from '../features/userSlice';
+import { useGetUserQuery, useRegisterUserModalMutation } from '../features/userSlice';
 import style from '../views/css/page.module.css';
 import { Link } from 'react-router-dom';
 import { Mosaic } from "react-loading-indicators";
@@ -22,7 +22,7 @@ function UserList() {
     isActive: true,
 
   });
-  const [newUser, { isLoading: isRegistering }] = useRegisterUserMutation();
+  const [newUser, { isLoading: isRegistering }] = useRegisterUserModalMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

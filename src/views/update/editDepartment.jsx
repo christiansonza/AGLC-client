@@ -138,7 +138,9 @@ function EditDepartment() {
             </div>
             {openEditType && (
               <div className={style.customSelectDropdown}>
-                {typeOptions.map((t) => (
+                {typeOptions
+                  .filter((t) => t !== formData.type)
+                  .map((t) => (
                   <div
                     key={t}
                     className={style.customSelectOption}

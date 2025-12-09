@@ -1,87 +1,73 @@
-import React, { useState } from 'react'
-import { useNavigate, Link} from 'react-router-dom'
-import toast, { Toaster } from 'react-hot-toast'
-import { useLoginUserMutation } from '../features/userSlice'
-// import styleLoader from '../auth/loading.module.css'
-import authStyle from '../auth/auth.module.css'
-import logo from '../assets/acestar.jpg'
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
+import { useLoginUserMutation, useGetUserCountQuery } from '../features/userSlice';
+import authStyle from '../auth/auth.module.css';
+import logo from '../assets/acestar.jpg';
 
 export default function Login() {
-  const navigate = useNavigate()
-  const [showLoader, setShowLoader] = useState(false)
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [logUser, { isLoading }] = useLoginUserMutation();
 
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    role: ''
-  })
 
-  const [logUser, { isLoading }] = useLoginUserMutation()
+  const { data, isSuccess } = useGetUserCountQuery();
+  const showRegister = isSuccess && data?.count === 0; 
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
+    e.preventDefault();
     try {
-        await logUser(formData).unwrap()
-        setShowLoader(true)
-        navigate('/user')
+      const res = await logUser(formData).unwrap();
+      if (!res?.data?.isActive) {
+        toast.error('Your account is inactive.');
+        return;
+      }
+      toast.success('Login successful!');
+      navigate('/user');
     } catch (error) {
-      const message =
-        error?.data?.message ||
-        error?.error ||
-        'Login failed!'
-      toast.error(message)
+      const message = error?.data?.message || error?.error || 'Login failed!';
+      toast.error(message);
     }
-  }
-
-  if (showLoader) {
-    return (
-          <div></div>
-    )
-  }
+  };
 
   return (
     <main className={authStyle.mainLogin}>
-      <Toaster position="top-right" reverseOrder={false} />
-
+      <Toaster position="top-right" />
       <form onSubmit={handleSubmit} className={authStyle.formLogin}>
-         <div className={authStyle.logHeader}>
-          <img className={authStyle.img} src={logo} alt="" />
+        <div className={authStyle.logHeader}>
+          <img className={authStyle.img} src={logo} alt="Logo" />
           <h3 className={authStyle.title}>Welcome Back</h3>
           <p className={authStyle.subtitle}>Please enter your details below</p>
         </div>
-        <input className={authStyle.fieldLogin}
+
+        <input
+          className={authStyle.fieldLogin}
           type="text"
           value={formData.username}
           onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-          placeholder="username"
+          placeholder="Username"
           required
         />
-        <input className={authStyle.fieldLogin}
+
+        <input
+          className={authStyle.fieldLogin}
           type="password"
           value={formData.password}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          placeholder="password"
+          placeholder="Password"
           required
         />
-        <select
-          className={authStyle.selectRole}
-          value={formData.role}
-          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-          required
-                >
-          <option value="" disabled>Select Role</option>
-          <option value="Power User">Power User</option>
-          <option value="System Support">System Support</option>
-          <option value="Operations">Operations</option>
-          <option value="Accounting Manager">Accounting Manager</option>
-          <option value="Accounting Staff">Accounting Staff</option>
-        </select>
+
         <button className={authStyle.btnLogin} type="submit" disabled={isLoading}>
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
-        <p className={authStyle.linkLogin}>Don't have an acconut? <Link className={authStyle.link} to='/register'>Register</Link></p>
+
+        {showRegister && (
+          <p className={authStyle.linkLogin}>
+            Don't have an account? <Link className={authStyle.link} to="/register">Register</Link>
+          </p>
+        )}
       </form>
     </main>
-  )
+  );
 }

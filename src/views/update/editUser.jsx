@@ -18,6 +18,7 @@ function EditUser() {
     firstName: '',
     middleName: '',
     lastName: '',
+    password: '',
     role: '',
     isActive: false
   });
@@ -30,6 +31,7 @@ function EditUser() {
         firstName: user.firstName || '',
         middleName: user.middleName || '',
         lastName: user.lastName || '',
+        // password: user.password || '',
         role: user.role || '',
         isActive: user.isActive ?? false,
       });
@@ -38,17 +40,23 @@ function EditUser() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const dataToSend = { ...formData };
+
+    if (!dataToSend.password) {
+      delete dataToSend.password;
+    }
+
     try {
-      await updateUser({ id, ...formData }).unwrap();
+      await updateUser({ id, ...dataToSend }).unwrap();
       toast.success('Updated successfully!');
-      // navigate('/user');
     } catch (err) {
       console.error(err);
       toast.error('Failed to update user.');
     }
   };
 
- const [showLoader, setShowLoader] = useState(true);
+const [showLoader, setShowLoader] = useState(true);
    
   useEffect(() => {
     const timer = setTimeout(() => setShowLoader(false), 1000);
@@ -109,30 +117,40 @@ function EditUser() {
               />
             </div>
           </div>
-
-        <label className={style.editLabel}>First Name: </label>
-        <input
-          className={style.editInput}
-          type="text"
-          value={formData.firstName}
-          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-          required
-        />
-
-        <label className={style.editLabel}>Middle Name: </label>
-        <input
-          className={style.editInput}
-          type="text"
-          value={formData.middleName}
-          onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
-        />
-
+          <div className={style.flexInput}>
+            <div className={style.gridUserEdit}>
+              <label className={style.editLabel}>First Name: </label>
+              <input
+                className={style.editInput}
+                type="text"
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                required
+              />
+            </div>
+            <div className={style.gridUserEdit}>
+              <label className={style.editLabel}>Middle Name: </label>
+              <input
+                className={style.editInput}
+                type="text"
+                value={formData.middleName}
+                onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
+              />
+            </div>
+        </div>
         <label className={style.editLabel}>Last Name: </label>
         <input
           className={style.editInput}
           type="text"
           value={formData.lastName}
           onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+        />
+        <label className={style.editLabel}>Password: </label>
+        <input
+          className={style.editInput}
+          type="password"
+          value={formData.password}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
         />
         <label className={style.editLabel}>Role: </label>
         <select

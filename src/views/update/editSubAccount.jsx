@@ -184,7 +184,9 @@ function EditSubAccount() {
                     No accounts
                   </div>
                 ) : (
-                  activeAccounts.map((account) => (
+                  activeAccounts
+                  .filter((a) => a.id !== formData.accountId)
+                  .map((account) => (
                     <div
                       key={account.id}
                       className={style.customSelectOption}

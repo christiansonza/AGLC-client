@@ -19,8 +19,16 @@ export const pettyCashApi = createApi({
                 body:newData
             }),
             invalidatesTags:['pettyCash']
-        })
+        }),
+        updatePettyCash: builder.mutation({
+            query: ({ id, ...updateData }) => ({
+                url: `/${id}`,
+                method: "PUT",
+                body: updateData,
+            }),
+            invalidatesTags: ["pettyCash"],
+            }),
     })
 })
 
-export const {useGetPettyCashQuery, useCreatePettyCashMutation} = pettyCashApi
+export const {useGetPettyCashQuery, useCreatePettyCashMutation, useUpdatePettyCashMutation} = pettyCashApi

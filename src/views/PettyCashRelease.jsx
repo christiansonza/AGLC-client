@@ -5,10 +5,12 @@ import { useFetchPaymentRequestQuery } from "../features/paymentRequest";
 import { useFetchEmployeeQuery } from "../features/employeeSlice";
 import style from "../views/css/page.module.css";
 import { Mosaic } from "react-loading-indicators";
+import { useNavigate } from "react-router-dom";
 
 function PettyCashRelease() {
   const { data, isLoading, isError, error } = useGetPettyCashQuery();
   const pettyCashes = data ?? [];
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     paymentRequestId: null,
@@ -96,12 +98,15 @@ function PettyCashRelease() {
 
       <div className={style.ListContainer}>
         <div className={style.pageHeaderContainerAccount}>
-          <div className={style.flexTitleHeader}>
-            <svg className={style.svgTitleHeader} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-              <path fill="currentColor" d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0zM7 12a1 1 0 1 1 2 0a1 1 0 0 1-2 0"/>
-            </svg>
-            <h3 className={style.headerLaber}>Petty Cash Release</h3>
-          </div>
+            <div className={style.flexTitleHeader}>
+             <div className={style.flexheaderTitle}>
+                <svg className={style.svgExclamation} xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+                <path fill="currentColor" d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248m-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46s46-20.595 46-46s-20.595-46-46-46m-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654" />
+              </svg>
+              <h3 className={style.headerLaber}>View Petty Cash</h3>
+              </div>
+              <p className={style.headerSubtitle}>Transactions / Manage Petty Cash</p>
+            </div>
           <div className={style.flexHeader}>
             <input
               className={style.searchBox}
@@ -160,39 +165,39 @@ function PettyCashRelease() {
                 <div
                     className={style.customSelectInput}
                     onClick={() => setOpenPayReq(!openPayReq)}
-                >
+                  >
                     {formData.paymentRequestId
-                    ? (() => {
-                        const pr = paymentRequests.find(p => p.id === formData.paymentRequestId);
-                        return pr ? pr.requestType : formData.paymentRequestId;
+                      ? (() => {
+                          const pr = paymentRequests.find(p => p.id === formData.paymentRequestId);
+                          return pr ? pr.requestNumber || pr.code || pr.id : formData.paymentRequestId;
                         })()
-                    : "Select Payment Request"}
+                      : "Select Payment Request"}
                     <span className={style.selectArrow}>▾</span>
-                </div>
+                  </div>
 
                 {openPayReq && (
-                    <div className={style.customSelectDropdown}>
+                  <div className={style.customSelectDropdown}>
                     {isLoadingPayReq ? (
-                        <div className={style.customSelectOption}>Loading...</div>
-                    ) : paymentRequests.length === 0 ? (
-                        <div className={style.customSelectOption}>No Payment Requests</div>
+                      <div className={style.customSelectOption}>Loading...</div>
+                    ) : paymentRequests.filter(pr => pr.status === 'Open' && pr.requestType === 'Petty Cash').length === 0 ? (
+                      <div className={style.customSelectOption}>No Payment Requests</div>
                     ) : (
-                        paymentRequests
+                      paymentRequests
                         .filter(pr => pr.status === 'Open' && pr.requestType === 'Petty Cash')
                         .map((pr) => (
-                            <div
+                          <div
                             key={pr.id}
                             className={style.customSelectOption}
                             onClick={() => {
-                                setFormData({ ...formData, paymentRequestId: pr.id }); 
-                                setOpenPayReq(false);
+                              setFormData({ ...formData, paymentRequestId: pr.id });
+                              setOpenPayReq(false);
                             }}
-                            >
-                            {pr.requestType}
-                            </div>
+                          >
+                            {pr.requestNumber || pr.code || pr.id} 
+                          </div>
                         ))
                     )}
-                    </div>
+                  </div>
                 )}
                 </div>
 
@@ -236,7 +241,6 @@ function PettyCashRelease() {
                 )}
                 </div>
 
-
                 <div className={style.modalActions}>
                   <button type="button" className={style.cancelButton} onClick={() => setShowModal(false)}>Cancel</button>
                   <button type="submit" className={style.submitButton}>Submit</button>
@@ -259,12 +263,19 @@ function PettyCashRelease() {
               <tr><td colSpan="2" style={{ textAlign: "center" }}>No records found</td></tr>
             ) : currentPettyCash.map((pc) => (
               <tr className={style.bodyPettyCashTable} key={pc.id}>
-                <td>
-                    {paymentRequests.find(
-                        pr => pr.id === pc.paymentRequestId && pr.requestType === "Petty Cash"
-                    )?.requestType || pc.paymentRequestId}
-                </td>
+                  <td>
+                    {(() => {
+                      const pr = paymentRequests.find(
+                        (pr) =>
+                          pr.id === pc.paymentRequestId &&
+                          pr.requestType === "Petty Cash"
+                      );
 
+                      return pr
+                        ? pr.requestNumber || pr.code || pr.id
+                        : pc.paymentRequestId;
+                    })()}
+                  </td>
                     <td>
                     {(() => {
                         const emp = employees.find(e => e.id === pc.receivedById);
@@ -276,8 +287,9 @@ function PettyCashRelease() {
                     <td>
                         <button
                             className={style.editBtn}
+                            onClick={()=> navigate(`/editPettyCashRelease/${pc.id}`)}
                         >
-                            <svg className={style.svdEditIcon} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16.14 2.25a5.61 5.61 0 0 0-5.327 7.376L2.77 17.671a1.774 1.774 0 0 0 0 2.508l1.052 1.052a1.773 1.773 0 0 0 2.509 0l8.044-8.045a5.61 5.61 0 0 0 7.19-6.765c-.266-1.004-1.442-1.104-2.032-.514L17.81 7.629a1.017 1.017 0 1 1-1.438-1.438l1.722-1.723c.59-.59.49-1.766-.515-2.032a5.6 5.6 0 0 0-1.438-.186"/></svg>
+                            <svg className={style.svdEditIcon} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16.14 2.25a5.61 5.61 0 0 0-5.327 7.376L2.77 17.671a1.774 1.774 0 0 0 0 2.508l1.052 1.052a1.773 1.773 0 0 0 2.509 0l8.044-8.045a5.61 5.61 0 0 0 7.19-6.765c-.266-1.004-1.442-1.104-2.032-.514L1``7.81 7.629a1.017 1.017 0 1 1-1.438-1.438l1.722-1.723c.59-.59.49-1.766-.515-2.032a5.6 5.6 0 0 0-1.438-.186"/></svg>
                             Manage
                         </button>
                     </td>

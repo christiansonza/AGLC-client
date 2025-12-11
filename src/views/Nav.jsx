@@ -200,6 +200,7 @@ function Nav() {
                 <Link className={style.link} onClick={closeAllAccordions} to="/subAccount"><p>Sub Account</p></Link>
                 <Link className={style.link} onClick={closeAllAccordions} to="/booking"><p>Booking</p></Link>
                 <Link className={style.link} onClick={closeAllAccordions} to="/paymentRequest"><p>Payment Request</p></Link>
+                <Link className={style.link} onClick={closeAllAccordions} to="/pettyCashRelease"><p>Petty Cash Release</p></Link>
                 {/* <Link className={style.link} onClick={closeAllAccordions} to="/paymentRequestDetail"><p>Payment Request Detail</p></Link> */}
               </div>
             )}

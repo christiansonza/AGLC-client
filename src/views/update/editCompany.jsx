@@ -78,10 +78,15 @@ function EditCompany() {
     <main className='main-container'>
       <Toaster position="top-right" reverseOrder={false} />
       <div className={style.editContainer}>
-              <div className={style.flexTitleHeader}>
-                  <svg className={style.svgTitleHeader} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0zM7 12a1 1 0 1 1 2 0a1 1 0 0 1-2 0"/></svg>
-                  <h3 className={style.headerLaber}>Edit Company</h3>
-                </div>
+            <div className={style.EditflexTitleHeader}>
+             <div className={style.flexheaderTitle}>
+                <svg className={style.svgExclamation} xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+                <path fill="currentColor" d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248m-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46s46-20.595 46-46s-20.595-46-46-46m-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654" />
+              </svg>
+              <h3 className={style.headerLaber}>Edit Company</h3>
+              </div>
+              <p className={style.headerSubtitle}>Business / Manage Company</p>
+            </div>
              <form onSubmit={handleSubmit} className={style.editForm}>
               <label className={style.editLabel}>Code: </label>
               <input

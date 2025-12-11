@@ -37,6 +37,7 @@ import EditPaymentRequest from './views/update/editPaymentRequest';
 import EditPaymentRequestDetail from './views/update/editPaymentRequestDetail';
 import EditCharge from './views/update/editCharge';
 import EditProfile from './views/update/editProfile';
+import EditPettyCashRelease from './views/update/editPettyCashRelease';
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
                 <Route path="editPaymentRequestDetail/:id" element={<EditPaymentRequestDetail />} />
                 <Route path="editCharge/:id" element={<EditCharge />} />
                 <Route path="editProfile/:id" element={<EditProfile />} />
+                <Route path="editPettyCashRelease/:id" element={<EditPettyCashRelease />} />
               </Routes>
             </>
           }

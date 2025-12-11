@@ -87,6 +87,7 @@ function PaymentRequestPage() {
       pr.chargeTo?.toLowerCase().includes(search.toLowerCase()) ||
       pr.requestType?.toLowerCase().includes(search.toLowerCase()) ||
       pr.requestNumber?.toLowerCase().includes(search.toLowerCase()) ||
+      pr.status?.toLowerCase().includes(search.toLowerCase()) ||
       activeVendors.find((v) => v.id === pr.vendorId)?.name?.toLowerCase().includes(search.toLowerCase()) ||
       activeDepartments.find((d) => d.id === pr.costCenterId)?.name?.toLowerCase().includes(search.toLowerCase())
   );
@@ -162,14 +163,19 @@ function PaymentRequestPage() {
           {/* Header */}
           <div className={style.pageHeaderContainer}>
             <div className={style.flexTitleHeader}>
-            <svg className={style.svgTitleHeader} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0zM7 12a1 1 0 1 1 2 0a1 1 0 0 1-2 0"/></svg>
+              <div className={style.flexheaderTitle}>
+                <svg className={style.svgExclamation} xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+                <path fill="currentColor" d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248m-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46s46-20.595 46-46s-20.595-46-46-46m-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654" />
+              </svg>
               <h3 className={style.headerLaber}>Payment Request</h3>
+              </div>
+              <p className={style.headerSubtitle}>Transactions / Manage Payment Request</p>
             </div>
             <div className={style.flexHeader}>
               <input
                 className={style.searchBox}
                 type="text"
-                placeholder="Search..."
+                placeholder="Search here..."
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
@@ -191,7 +197,7 @@ function PaymentRequestPage() {
               </button>
             </div>
           </div>
-
+          {/* <hr className={style.hrLine} /> */}
         {showModal && (
           <div className={style.modalOverlay}>
             <div className={style.modal}>

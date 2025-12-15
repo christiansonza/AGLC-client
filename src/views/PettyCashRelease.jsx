@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useGetPettyCashQuery, useCreatePettyCashMutation } from "../features/pettyCashReleaseSlice";
 import { useFetchPaymentRequestQuery } from "../features/paymentRequest";
+import { useGetPaymentRequestDetailsByRequestIdQuery } from "../features/paymentRequestDetailSlice";
 import { useFetchEmployeeQuery } from "../features/employeeSlice";
 import style from "../views/css/page.module.css";
 import { Mosaic } from "react-loading-indicators";
@@ -15,7 +16,10 @@ function PettyCashRelease() {
   const [formData, setFormData] = useState({
     paymentRequestId: null,
     receivedById: null,
+    vendor: "",
+    remarks: "",
   });
+
 
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,6 +71,8 @@ function PettyCashRelease() {
       toast.success(res.message || "Petty Cash Released!");
       setFormData({ paymentRequestId: null, receivedById: null });
       setShowModal(false);
+      navigate(`/editPettyCashRelease/${res.data.id}`);
+
     } catch (err) {
       toast.error(err?.data?.message || "Failed to release petty cash");
     }
@@ -77,6 +83,18 @@ function PettyCashRelease() {
     const timer = setTimeout(() => setShowLoader(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+
+    const { data: paymentRequestDetails = [] } = useGetPaymentRequestDetailsByRequestIdQuery(
+    formData.paymentRequestId,
+    { skip: !formData.paymentRequestId }
+  );
+
+  const totalAmount = paymentRequestDetails.length > 0
+    ? paymentRequestDetails
+        .reduce((sum, d) => sum + d.amount * d.quantity, 0)
+        .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : (0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 
   if (showLoader || isLoading) {
     return (
@@ -152,10 +170,18 @@ function PettyCashRelease() {
           <div className={style.modalOverlay}>
             <div className={style.modal}>
               <div className={style.modalHeader}>
-                <h3>Add Account</h3>
+                <h3>Add Petty Cash</h3>
                     <button
                       className={style.closeButton}
-                      onClick={() => setShowModal(false)}
+                      onClick={() => {
+                        setFormData({
+                          paymentRequestId: null,
+                          receivedById: null,
+                          vendor: "",
+                          remarks: "",
+                        });
+                        setShowModal(false);
+                      }}
                     >
                       <svg
                         className={style.closeBtn}
@@ -177,6 +203,7 @@ function PettyCashRelease() {
               </div>
 
               <form onSubmit={handleSubmit} className={style.formContainer}>
+              <label className={style.modalLabel}>Payment Request: </label>
                <div className={style.customSelectWrapper} ref={payReqRef}>
                 <div
                     className={style.customSelectInput}
@@ -205,9 +232,14 @@ function PettyCashRelease() {
                             key={pr.id}
                             className={style.customSelectOption}
                             onClick={() => {
-                              setFormData({ ...formData, paymentRequestId: pr.id });
-                              setOpenPayReq(false);
-                            }}
+                            setFormData({
+                              ...formData,
+                              paymentRequestId: pr.id,
+                              vendor: pr.vendor?.name || "",
+                              remarks: pr.remarks || "",
+                            });
+                            setOpenPayReq(false);
+                          }}
                           >
                             {pr.requestNumber || pr.code || pr.id} 
                           </div>
@@ -217,6 +249,33 @@ function PettyCashRelease() {
                 )}
                 </div>
 
+                <label className={style.modalLabel}>Vendor:</label>
+                <input
+                  style={{outline:"none", cursor:'not-allowed'}}
+                  type="text"
+                  className={style.modalInput}
+                  value={formData.vendor}
+                  readOnly
+                />
+
+                <label className={style.modalLabel}>Remarks:</label>
+                <textarea
+                  style={{outline:"none", cursor:'not-allowed'}}
+                  className={style.modalTextarea}
+                  value={formData.remarks}
+                  readOnly
+                />
+
+                <label className={style.modalLabel}>Amount:</label>
+                <input
+                  style={{outline:"none", cursor:'not-allowed'}}
+                  type="text"
+                  className={style.modalInput}
+                  value={totalAmount}
+                  readOnly
+                />
+
+              <label className={style.modalLabel}>Received By: </label>
                 <div className={style.customSelectWrapper} ref={empRef}>
                 <div
                     className={style.customSelectInput}

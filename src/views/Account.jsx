@@ -287,6 +287,7 @@ function Account() {
                 </button>
               </div>
               <form onSubmit={handleSubmit} className={style.formContainer}>
+                <label className={style.modalLabel}>Code: </label>
                 <input
                   type="text"
                   value={formData.code}
@@ -296,6 +297,7 @@ function Account() {
                   placeholder="Code"
                   required
                 />
+                <label className={style.modalLabel}>Name: </label>
                 <input
                   type="text"
                   value={formData.name}
@@ -305,6 +307,7 @@ function Account() {
                   placeholder="Name"
                   required
                 />
+                <label className={style.modalLabel}>Account Type: </label>
                 <input
                   type="text"
                   value={formData.accountType}
@@ -313,6 +316,7 @@ function Account() {
                   }
                   placeholder="Account Type"
                 />
+                <label className={style.modalLabel}>Report Type: </label>
                 <input
                   type="text"
                   value={formData.reportType}
@@ -321,6 +325,7 @@ function Account() {
                   }
                   placeholder="Report Type"
                 />
+                <label className={style.modalLabel}>Line Item: </label>
                 <input
                   type="text"
                   value={formData.lineItem}

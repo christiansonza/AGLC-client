@@ -177,6 +177,7 @@ function Employee() {
 
         </div>
           <form onSubmit={handleSubmit} className={style.formContainer}>
+            <label className={style.modalLabel}>Firstname: </label>
             <input
               type="text"
               value={formData.firstName}
@@ -184,24 +185,28 @@ function Employee() {
               placeholder="Firstname"
               required
             />
+            <label className={style.modalLabel}>Middlename: </label>
             <input
               type="text"
               value={formData.middleName}
               onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
               placeholder="Middlename"
             />
+            <label className={style.modalLabel}>Lastname: </label>
             <input
               type="text"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
               placeholder="Lastname"
             />
+            <label className={style.modalLabel}>Contact #: </label>
             <input
               type="text"
               value={formData.contactNumber}
               onChange={(e) => setFormData({ ...formData, contactNumber: e.target.value })}
               placeholder="Contact Number"
             />
+            <label className={style.modalLabel}>User ID: </label>
             <input
               type="number"
               value={formData.userId}

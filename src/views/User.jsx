@@ -172,13 +172,56 @@ function UserList() {
                 </button>
               </div>
               <form onSubmit={handleSubmit} className={style.formContainer}>
-                <input type="text" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} placeholder="Username" required />
-                <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} placeholder="Email" required />
-                <input type="text" value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} placeholder="First Name" required />
-                <input type="text" value={formData.middleName} onChange={e => setFormData({ ...formData, middleName: e.target.value })} placeholder="Middle Name" />
-                <input type="text" value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })} placeholder="Last Name" />
-                <input type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} placeholder="Password" required />
-                <select
+                <div style={{
+                  display:'flex',
+                  width:'100%',
+                  gap: '1rem'
+                }}>
+                 <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                 }}>
+                    <label className={style.modalLabel}>Username: </label>
+                    <input type="text" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} placeholder="Username" required />
+                 </div>
+                 <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                 }}>
+                   <label className={style.modalLabel}>Email: </label>
+                    <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} placeholder="Email" required />
+                 </div>
+                </div>
+                <div style={{
+                  display:'flex',
+                  width:'100%',
+                  gap: '1rem'
+                 }}>
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                 }}>
+                  <label className={style.modalLabel}>Firstname: </label>
+                  <input type="text" value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} placeholder="First Name" required />
+                </div>
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                 }}>
+                  <label className={style.modalLabel}>Middlename: </label>
+                  <input type="text" value={formData.middleName} onChange={e => setFormData({ ...formData, middleName: e.target.value })} placeholder="Middle Name" />
+                  </div>
+                </div>
+                  <label className={style.modalLabel}>Lastname: </label>
+                  <input type="text" value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })} placeholder="Last Name" />
+                  <label className={style.modalLabel}>Password: </label>
+                  <input type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} placeholder="Password" required />
+                  <label className={style.modalLabel}>Role: </label>
+                  <select
                   className={style.selectRole}
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}

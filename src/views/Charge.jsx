@@ -162,6 +162,7 @@ function Charge() {
               </div>
 
               <form onSubmit={handleSubmit} className={style.formContainer}>
+                <label className={style.modalLabel}>Code: </label>
                 <input
                   type="text"
                   placeholder="Code"
@@ -170,6 +171,7 @@ function Charge() {
                   required
                 />
 
+                <label className={style.modalLabel}>Name: </label>
                 <input
                   type="text"
                   placeholder="Name"

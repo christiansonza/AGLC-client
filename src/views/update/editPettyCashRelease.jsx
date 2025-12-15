@@ -9,6 +9,8 @@ import {
 } from "../../features/pettyCashReleaseSlice";
 import { useFetchPaymentRequestQuery } from "../../features/paymentRequest";
 import { useFetchEmployeeQuery } from "../../features/employeeSlice";
+import { useGetPaymentRequestDetailsByRequestIdQuery } from "../../features/paymentRequestDetailSlice";
+
 
 import style from "../../views/css/page.module.css";
 
@@ -27,7 +29,21 @@ function EditPettyCashRelease() {
   const [formData, setFormData] = useState({
     paymentRequestId: "",
     receivedById: "",
+    vendor: "",
+    remarks: "",
   });
+
+  useEffect(() => {
+    if (pettyCashData.length > 0) {
+      const current = pettyCashData.find((pc) => pc.id === parseInt(id));
+      if (current) {
+        setFormData({
+          paymentRequestId: current.paymentRequestId,
+          receivedById: current.receivedById,
+        });
+      }
+    }
+  }, [pettyCashData, id]);
 
   const payReqRef = useRef(null);
   const empRef = useRef(null);
@@ -78,6 +94,17 @@ function EditPettyCashRelease() {
     }
   };
 
+  const { data: paymentRequestDetails = [] } = useGetPaymentRequestDetailsByRequestIdQuery(
+    formData.paymentRequestId,
+    { skip: !formData.paymentRequestId } 
+  );
+
+  const amountText = paymentRequestDetails.length > 0
+    ? paymentRequestDetails
+        .reduce((sum, d) => sum + (d.amount * d.quantity), 0)
+        .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : (0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
   if (isLoadingPettyCash || showLoader) {
     return (
       <div
@@ -98,6 +125,14 @@ function EditPettyCashRelease() {
       </div>
     );
   }
+
+  const selectedPaymentRequest = paymentRequests.find(
+    (pr) => pr.id === formData.paymentRequestId
+  );
+
+  const vendorName = selectedPaymentRequest?.vendor?.name || "";
+  const remarksText = selectedPaymentRequest?.remarks || "";
+
     if (isError) {
     const status = error?.status;
 
@@ -190,7 +225,32 @@ function EditPettyCashRelease() {
                 </div>
             )}
             </div>
-          <label className={style.editLabel}>Received By:</label>
+            
+        <label className={style.editLabel}>Vendor:</label>
+          <input
+            style={{outline:"none", cursor:'not-allowed'}}
+            type="text"
+            className={style.editInput}
+            value={vendorName}
+            readOnly
+          />
+        <label className={style.editLabel}>Remarks:</label>
+          <textarea
+            style={{outline:"none", cursor:'not-allowed'}}
+            className={style.modalTextarea}
+            value={remarksText}
+            readOnly
+          />
+          <label className={style.editLabel}>Amount:</label>
+          <input
+            style={{outline:"none", cursor:'not-allowed'}}
+            type="text"
+            className={style.editInput}
+            value={amountText}
+            readOnly
+        />
+
+        <label className={style.editLabel}>Received By:</label>
           <div className={style.customSelectWrapper} ref={empRef}>
             <div
               className={style.customSelectInput}

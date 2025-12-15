@@ -240,6 +240,17 @@ function PaymentRequestPage() {
               </div>
 
               <form onSubmit={handleSubmit} className={style.formContainer}>
+                <div style={{
+                  display:'flex',
+                  width:'100%',
+                  gap: '1rem'
+                }}>
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                }}>
+              <label className={style.modalLabel}>Vendor: </label>
                <div className={style.customSelectWrapper} ref={vendorRef} >
                   <div
                     className={style.customSelectInput}
@@ -274,7 +285,13 @@ function PaymentRequestPage() {
                     </div>
                   )}
                 </div>
-
+              </div>
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                }}>
+              <label className={style.modalLabel}>Date: </label>
               <input
                 style={{color:"#000"}}
                   type="date"
@@ -282,7 +299,20 @@ function PaymentRequestPage() {
                   onChange={(e) => setFormData({ ...formData, dateNeeded: e.target.value })}
                   required
                 />
+              </div>
+            </div>
 
+            <div style={{
+                  display:'flex',
+                  width:'100%',
+                  gap: '1rem'
+                }}>
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                }}>
+              <label className={style.modalLabel}>Department: </label>
               <div className={style.customSelectWrapper} ref={departmentRef}>
                 <div
                   className={style.customSelectInput}
@@ -317,7 +347,13 @@ function PaymentRequestPage() {
                   </div>
                 )}
               </div>
-
+            </div>
+            <div style={{
+                display:'flex',
+                flexDirection:'column',
+                width:'100%',
+              }}>
+              <label className={style.modalLabel}>Department Type: </label>
                <input
                   type="text"
                   placeholder="Department Type"
@@ -334,8 +370,10 @@ function PaymentRequestPage() {
                     // background: "#f2f2f2",
                   }}
                 />
-
-                
+                </div>
+              </div>
+              
+            <label className={style.modalLabel}>Request Type: </label>
             <div className={style.customSelectWrapper} ref={requestTypeRef} style={{ marginBottom: ".75rem" }}>
               <div
                 className={style.customSelectInput}
@@ -379,7 +417,7 @@ function PaymentRequestPage() {
                   readOnly 
                   style={{cursor:"not-alowed", outline:"none", color:"#000"}}
                 /> */}
-
+                  <label className={style.modalLabel}>Charge To: </label>
                   <div
                     className={style.customSelectWrapper}
                     ref={chargeToRef}
@@ -410,7 +448,7 @@ function PaymentRequestPage() {
                       </div>
                     )}
                   </div>
-
+                <label className={style.modalLabel}>Remarks: </label>
                 <textarea
                   type="text"
                   placeholder="Remarks"

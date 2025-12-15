@@ -206,6 +206,7 @@ function Department() {
                 </div>
 
                 <form onSubmit={handleSubmit} className={style.formContainer}>
+                  <label className={style.modalLabel}>Code: </label>
                   <input
                     type="text"
                     placeholder="Code"
@@ -215,6 +216,7 @@ function Department() {
                     }
                     required
                   />
+                  <label className={style.modalLabel}>Name: </label>
                   <input
                     type="text"
                     placeholder="Name"
@@ -224,6 +226,7 @@ function Department() {
                     }
                     required
                   />
+                  <label className={style.modalLabel}>Type: </label>
                   <div className={style.customSelectWrapper} ref={typeRef}>
                     <div
                       className={style.customSelectInput}

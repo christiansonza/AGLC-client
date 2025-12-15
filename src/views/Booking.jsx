@@ -173,6 +173,7 @@ useEffect(() => {
                     </button>
                   </div>
                   <form onSubmit={handleSubmit} className={style.formContainer}>
+                  <label className={style.modalLabel}>Customer: </label>
                   <div className={style.customSelectWrapper} ref={customerRef}>
                   <div
                     className={style.customSelectInput}
@@ -211,7 +212,7 @@ useEffect(() => {
                   placeholder="Customer ID"
                   required
                 /> */}
-                 
+                <label className={style.modalLabel}>Remarks: </label>
                 <textarea name="" id=""
                   type="text"
                   value={formData.remarks}

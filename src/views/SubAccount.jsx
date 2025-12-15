@@ -307,6 +307,7 @@ const handleFileChange = async (e) => {
               </div>
 
               <form onSubmit={handleSubmit} className={style.formContainer}>
+                <label className={style.modalLabel}>Code: </label>
                 <input
                   type="text"
                   value={formData.code}
@@ -317,6 +318,7 @@ const handleFileChange = async (e) => {
                   required
                 />
 
+                <label className={style.modalLabel}>Name: </label>
                 <input
                   type="text"
                   value={formData.name}
@@ -352,7 +354,7 @@ const handleFileChange = async (e) => {
                     />
                   </div>
                 </div>
-
+                <label className={style.modalLabel}>Account List Item: </label>
                 <input
                   type="text"
                   value={formData.accountListItem}
@@ -361,6 +363,7 @@ const handleFileChange = async (e) => {
                   }
                   placeholder="Account List Item"
                 />
+                <label className={style.modalLabel}>Account Title: </label>
                 <div className={style.customSelectWrapper} ref={accountRef}>
                   <div
                     className={style.customSelectInput}

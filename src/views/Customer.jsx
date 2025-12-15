@@ -162,6 +162,7 @@ function Customer() {
                 </button>
               </div>
               <form onSubmit={handleSubmit} className={style.formContainer}>
+                <label className={style.modalLabel}>Name: </label>
                 <input
                   type="text"
                   value={formData.name}
@@ -169,12 +170,14 @@ function Customer() {
                   placeholder="Name"
                   required
                 />
+                <label className={style.modalLabel}>Address: </label>
                 <input
                   type="text"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="Address"
                 />
+                <label className={style.modalLabel}>Tin: </label>
                 <input
                   type="text"
                   value={formData.tin}

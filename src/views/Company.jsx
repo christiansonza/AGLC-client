@@ -163,6 +163,7 @@ function Company() {
                 </button>
               </div>
               <form onSubmit={handleSubmit} className={style.formContainer}>
+                <label className={style.modalLabel}>Code: </label>
                 <input
                   type="text"
                   value={formData.code}
@@ -170,6 +171,7 @@ function Company() {
                   placeholder="Code"
                   required
                 />
+                <label className={style.modalLabel}>Name: </label>
                 <input
                   type="text"
                   value={formData.name}
@@ -177,12 +179,14 @@ function Company() {
                   placeholder="Name"
                   required
                 />
+                <label className={style.modalLabel}>Address: </label>
                 <input
                   type="text"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="Address"
                 />
+                <label className={style.modalLabel}>TIN: </label>
                 <input
                   type="text"
                   value={formData.tin}

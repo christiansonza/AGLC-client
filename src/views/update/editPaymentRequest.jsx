@@ -228,39 +228,50 @@ const handleSubmitDetail = async (e) => {
     setIsPostingDetail(false);
   }
 };
-
 function numberToWords(amount) {
-  if (!amount) return "";
-  const ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine"];
-  const teens = ["Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
-  const tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+  // Arrays for number words
+  const ones = [
+    "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"
+  ];
+  const teens = [
+    "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen",
+    "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+  ];
+  const tens = [
+    "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+  ];
 
   function convert(num) {
     if (num === 0) return "";
     if (num < 10) return ones[num];
     if (num < 20) return teens[num - 10];
     if (num < 100) {
-      let t = Math.floor(num / 10);
-      let o = num % 10;
+      const t = Math.floor(num / 10);
+      const o = num % 10;
       return tens[t] + (o ? " " + ones[o] : "");
     }
     if (num < 1000) {
-      let h = Math.floor(num / 100);
-      let rest = num % 100;
+      const h = Math.floor(num / 100);
+      const rest = num % 100;
       return ones[h] + " Hundred" + (rest ? " " + convert(rest) : "");
     }
-    if (num < 1000000) {
-      let th = Math.floor(num / 1000);
-      let rest = num % 1000;
+    if (num < 1_000_000) {
+      const th = Math.floor(num / 1000);
+      const rest = num % 1000;
       return convert(th) + " Thousand" + (rest ? " " + convert(rest) : "");
+    }
+    if (num < 1_000_000_000) {
+      const m = Math.floor(num / 1_000_000);
+      const rest = num % 1_000_000;
+      return convert(m) + " Million" + (rest ? " " + convert(rest) : "");
     }
     return num.toString();
   }
 
   if (typeof amount === "string") amount = parseFloat(amount);
 
-  let pesos = Math.floor(amount);
-  let centavos = Math.round((amount - pesos) * 100);
+  const pesos = Math.floor(amount);
+  const centavos = Math.round((amount - pesos) * 100);
 
   let words = convert(pesos) + " Pesos";
 
@@ -270,6 +281,8 @@ function numberToWords(amount) {
 
   return words + " Only";
 }
+
+
 
 const generatePDF = () => {
   const doc = new jsPDF({
@@ -560,36 +573,6 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
               </div>
               <p className={style.headerSubtitle}>Transactions / Manage Payment Request</p>
             </div>
-            <div className={style.flexPdfBtn}>
-              <button className={style.addBtnPayReq} onClick={() => {
-                setDetailForm({
-                  paymentRequestId: id,
-                  bookingId: "",
-                  chargeId: "",
-                  chargeDesc: "",
-                  quantity: "",
-                  amount: "",
-                });
-                setShowModal(true);
-              }}>
-               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z"
-                />
-              </svg>
-                </button>
-              <button className={style.pdfBtn} onClick={generatePDF}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="currentColor" d="m18 21l4-4l-1.4-1.4l-1.6 1.6v-4.175h-2V17.2l-1.6-1.6L14 17zm-4 3v-2h8v2zm-8-4q-.825 0-1.412-.587T4 18V4q0-.825.588-1.412T6 2h7l6 6v3.025h-2V9h-5V4H6v14h6v2zm0-2V4z" />
-              </svg>
-              </button>
-            </div>
         </div>
 
         {showModal && (
@@ -622,6 +605,7 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
               {departmentType.toLowerCase() === "operation" && (
                 <>
                   {/* Booking */}
+                  <label className={style.modalLabel}>Booking: </label>
                   <div className={style.customSelectWrapper} ref={bookingRef}>
                     <div
                       className={style.customSelectInput}
@@ -652,6 +636,7 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                   </div>
 
                   {/* Charge */}
+                  <label className={style.modalLabel}>Charge: </label>
                   <div className={style.customSelectWrapper} ref={chargeRef}>
                     <div
                       className={style.customSelectInput}
@@ -680,7 +665,7 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                       </div>
                     )}
                   </div>
-
+                  <label className={style.modalLabel}>Charge Description: </label>
                   <input
                   style={{
                     outline:"none",
@@ -704,7 +689,7 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                   }
                 />
               )}
-
+              <label className={style.modalLabel}>Quantity: </label>
               <input
                 type="number"
                 placeholder="Quantity"
@@ -714,7 +699,7 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                 }
                 required
               />
-
+              <label className={style.modalLabel}>Amount: </label>
               <input
                 type="number"
                 placeholder="Amount"
@@ -776,6 +761,21 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                   )}
                 </div>
               </div>
+
+              {/* Date Needed */}
+              <div className={style.flexSelectPaymentRead}>
+                <label className={style.editLabel}>Date Needed:</label>
+                <input
+                  className={style.editInput}
+                  type="date"
+                  value={formData.dateNeeded}
+                  onChange={(e) => setFormData({ ...formData, dateNeeded: e.target.value })}
+                  required
+                />
+              </div>
+            </div>
+
+          <div className={style.editPaymentReqDepartment}>
             <div className={style.flexSelectPayment}>
               {/* Department */}
               <label className={style.editLabelPayment}>Department:</label>
@@ -851,99 +851,88 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                     // background: "#f2f2f2",
                   }}
                 />
-              </div>
-            </div>
-
-         <div className={style.editPaymentReqSelect}>
-            <div className={style.flexSelectPaymentReq}>
-          {/* Request Type */}
-          <label className={style.editLabel}>Request Type:</label>
-            <div className={style.customSelectWrapper} ref={requestTypeRef}>
-              <div
-                className={style.customSelectInput}
-                onClick={() => setOpenRequestType(!openRequestType)}
-              >
-                {formData.requestType || "-- Select Request Type --"}
-                <span className={style.selectArrow}>▾</span>
-              </div>
-              {openRequestType && (
-                <div className={style.customSelectDropdown}>
-                  {requestTypeOptions.map((type) => (
-                    <div
-                      key={type}
-                      className={style.customSelectOption}
-                      onClick={() => {
-                        handleRequestTypeChange(type);
-                        setOpenRequestType(false);
-                      }}
-                    >
-                      {type}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+              </div>  
           </div>
 
+        <div className={style.editPaymentReqSelect}>
           <div className={style.flexSelectPaymentReq}>
-            {/* Request Number */}
-            <label className={style.editLabel}>Request Number:</label>
-            <input
-              type="text"
-              className={style.editInputReq}
-              value={formData.requestNumber}
-              readOnly
-            />
-            </div>
-          </div>
-
-          {/* Charge To */}
-            <label className={style.editLabel}>Charge To:</label>
-
-            <div className={style.customSelectWrapper} ref={chargeToRef}>
-              <div
-                className={style.customSelectInput}
-                onClick={() => setOpenChargeTo(!openChargeTo)}
-              >
-                {formData.chargeTo || "Select Charge To"}
-                <span className={style.selectArrow}>▾</span>
-              </div>
-
-              {openChargeTo && (
-                <div className={style.customSelectDropdown}>
-                  {chargeToOptions.map((option) => (
-                    <div
-                      key={option}
-                      className={style.customSelectOption}
-                      onClick={() => {
-                        setFormData({ ...formData, chargeTo: option });
-                        setOpenChargeTo(false);
-                      }}
-                    >
-                      {option}
-                    </div>
-                  ))}
+            {/* Request Type */}
+            <label className={style.editLabel}>Request Type:</label>
+              <div className={style.customSelectWrapper} ref={requestTypeRef}>
+                <div
+                  className={style.customSelectInput}
+                  onClick={() => setOpenRequestType(!openRequestType)}
+                >
+                  {formData.requestType || "-- Select Request Type --"}
+                  <span className={style.selectArrow}>▾</span>
                 </div>
-              )}
+                {openRequestType && (
+                  <div className={style.customSelectDropdown}>
+                    {requestTypeOptions.map((type) => (
+                      <div
+                        key={type}
+                        className={style.customSelectOption}
+                        onClick={() => {
+                          handleRequestTypeChange(type);
+                          setOpenRequestType(false);
+                        }}
+                      >
+                        {type}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+            <div className={style.flexSelectPaymentReq}>
+              {/* Request Number */}
+              <label className={style.editLabel}>Request Number:</label>
+              <input
+                type="text"
+                className={style.editInputReq}
+                value={formData.requestNumber}
+                readOnly
+              />
+            </div>
+            <div className={style.flexSelectPaymentReq}>
+              {/* Charge To */}
+              <label className={style.editLabel}>Charge To:</label>
 
+              <div className={style.customSelectWrapper} ref={chargeToRef}>
+                <div
+                  className={style.customSelectInput}
+                  onClick={() => setOpenChargeTo(!openChargeTo)}
+                >
+                  {formData.chargeTo || "Select Charge To"}
+                  <span className={style.selectArrow}>▾</span>
+                </div>
+
+                  {openChargeTo && (
+                    <div className={style.customSelectDropdown}>
+                      {chargeToOptions.map((option) => (
+                        <div
+                          key={option}
+                          className={style.customSelectOption}
+                          onClick={() => {
+                            setFormData({ ...formData, chargeTo: option });
+                            setOpenChargeTo(false);
+                          }}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
 
           {/* Remarks */}
-          <label className={style.editLabel}>Remarks:</label>
+          <label className={style.editLabel} style={{marginTop:".25rem"}}>Remarks:</label>
           <textarea
             placeholder="Remarks"
             value={formData.remarks}
             onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
-          />
-
-          {/* Date Needed */}
-          <label className={style.editLabel}>Date Needed:</label>
-          <input
-            className={style.editInput}
-            type="date"
-            value={formData.dateNeeded}
-            onChange={(e) => setFormData({ ...formData, dateNeeded: e.target.value })}
-            required
           />
 
          <div className={style.flexBtn}>
@@ -1015,18 +1004,54 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
          </div>
         </form>
           
-          <div className={style.bookingContainer}>
+         <div className={style.FlexBookingHistory}>
+           <div className={style.bookingContainer}>
             <p className={style.bookingPaymentTitle}>Booking Details</p>
             <p className={style.bookingPaymentSubtitle}>Verify current status and entire transaction history for official documentation.</p>
           </div>
+
+            <div className={style.flexPdfBtn}>
+              <button className={style.addBtnPayReq} onClick={() => {
+                setDetailForm({
+                  paymentRequestId: id,
+                  bookingId: "",
+                  chargeId: "",
+                  chargeDesc: "",
+                  quantity: "",
+                  amount: "",
+                });
+                setShowModal(true);
+              }}>
+               <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z"
+                />
+              </svg>
+                </button>
+              <button className={style.pdfBtn} onClick={generatePDF}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="m18 21l4-4l-1.4-1.4l-1.6 1.6v-4.175h-2V17.2l-1.6-1.6L14 17zm-4 3v-2h8v2zm-8-4q-.825 0-1.412-.587T4 18V4q0-.825.588-1.412T6 2h7l6 6v3.025h-2V9h-5V4H6v14h6v2zm0-2V4z" />
+              </svg>
+              </button>
+            </div>
+         </div>
+
+
+
           <div className={style.payReqTempTable}>
             <table className={style.table}>
               <thead>
                 {(() => {
                   const isOperation = departmentType.toLowerCase() === "operation";
                   const gridColumns = isOperation
-                    ? "50px 1fr 1fr 100px 100px" 
-                    : "50px 1fr 100px 100px";     
+                    ? "50px 1fr 1fr 120px 140px" 
+                    : "50px 1fr 120px 140px";     
 
                   return (
                     <tr
@@ -1049,7 +1074,7 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
               </thead>
               <tbody>
                 {currentDetails.length === 0 ? (
-                  <tr className={style.bookingHistoryTd}>
+                  <tr className={style.bookingHistoryTdPayreq}>
                     <td
                       colSpan={departmentType.toLowerCase() === "operation" ? 5 : 4}
                       className={style.payreqDetails}
@@ -1062,8 +1087,8 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                   currentDetails.map((d) => {
                     const isOperation = departmentType.toLowerCase() === "operation";
                     const gridColumns = isOperation
-                      ? "50px 1fr 1fr 100px 100px"
-                      : "50px 1fr 100px 100px";
+                      ? "50px 1fr 1fr 120px 140px"
+                      : "50px 1fr 120px 140px";
 
                     return (
                       <tr
@@ -1101,18 +1126,22 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                         {isOperation && <td className={style.payreqTd}>{d.bookingNumber}</td>}
                         <td className={style.payreqTd}>{d.chargeDesc}</td>
                         <td className={style.payreqTd}>{d.quantity}</td>
-                        <td className={style.payreqTd}>{d.amount}</td>
+                       <td className={style.payreqTd}>
+                        {Number(d.amount || 0).toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
                       </tr>
                     );
                   })
                 )}
 
-                {/* Total row */}
                 {(() => {
                   const isOperation = departmentType.toLowerCase() === "operation";
                   const gridColumns = isOperation
-                    ? "100px 100px 1fr 100px 100px"
-                    : "100px 1fr 100px 100px";
+                    ? "100px 100px 1fr 120px 140px"
+                    : "100px 1fr 120px 140px";
 
                   return (
                     <tr
@@ -1120,14 +1149,19 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
                       style={{ display: "grid", gridTemplateColumns: gridColumns }}
                     >
                       <td className={style.payreqTdTotal}>Total:</td>
-                      {isOperation && <td className={style.payreqTd}></td>}
-                      <td className={style.payreqTd}></td>
+                      {isOperation && <td className={style.payreqTdTotal}></td>}
+                      <td className={style.payreqTdTotal}></td>
                       <td className={style.payreqTdTotal}></td>
                       <td className={style.payreqTdTotal}>
-                        {localDetails.reduce(
-                          (sum, d) => sum + (Number(d.quantity || 0) * Number(d.amount || 0)),
-                          0
-                        )}
+                        {localDetails
+                          .reduce(
+                            (sum, d) => sum + (Number(d.quantity || 0) * Number(d.amount || 0)),
+                            0
+                          )
+                          .toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                       </td>
                     </tr>
                   );

@@ -14,6 +14,7 @@ function Nav() {
 
   const [openUsers, setOpenUsers] = useState(false);
   const [openBusiness, setOpenBusiness] = useState(false);
+  const [openOrg, setOpenOrg] = useState(false);
 
   const [logoutUser] = useLogoutUserMutation();
   const { data: user, isLoading } = useCurrentUserQuery();
@@ -26,6 +27,7 @@ function Nav() {
   const toggleUsers = () => {
     setOpenUsers(prev => !prev);
     setOpenBusiness(false);
+    setOpenOrg(false);
     setOpenSetup(false);
     setOpenOperations(false);
     setOpenPettyCash(false);
@@ -34,16 +36,26 @@ function Nav() {
   const toggleBusiness = () => {
     setOpenBusiness(prev => !prev);
     setOpenUsers(false);
+    setOpenOrg(false);
+    setOpenSetup(false);
+    setOpenOperations(false);
+    setOpenPettyCash(false);
+  };
+  
+    const toggleOrg = () => {
+    setOpenOrg(prev => !prev);
+    setOpenUsers(false);
+    setOpenBusiness(false);
     setOpenSetup(false);
     setOpenOperations(false);
     setOpenPettyCash(false);
   };
 
-
   const toggleSetup = () => {
     setOpenSetup(prev => !prev);
     setOpenUsers(false);
     setOpenBusiness(false);
+    setOpenOrg(false);
     setOpenOperations(false);
     setOpenPettyCash(false);
   };
@@ -52,6 +64,7 @@ function Nav() {
     setOpenOperations(prev => !prev);
     setOpenUsers(false);
     setOpenBusiness(false);
+    setOpenOrg(false);
     setOpenSetup(false);
     setOpenPettyCash(false);
   };
@@ -60,6 +73,7 @@ function Nav() {
     setOpenPettyCash(prev => !prev);
     setOpenUsers(false);
     setOpenBusiness(false);
+    setOpenOrg(false);
     setOpenSetup(false);
     setOpenOperations(false);
   };
@@ -68,6 +82,7 @@ function Nav() {
   const closeAllAccordions = () => {
     setOpenUsers(false);
     setOpenBusiness(false);
+    setOpenOrg(false);
     setOpenSetup(false);
     setOpenOperations(false);
     setOpenPettyCash(false);
@@ -205,6 +220,8 @@ function Nav() {
               <Link className={style.link} onClick={closeAllAccordions} to="/employee"><p>Employee</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/customer"><p>Customer</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/agents"><p>Agent</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/department"><p>Department</p></Link>
+
             </div>
           </div>
           {/* Accounts */}
@@ -235,56 +252,7 @@ function Nav() {
               <Link className={style.link} onClick={closeAllAccordions} to="/paymentRequest"><p>Payment Request</p></Link>
             </div>
           </div>
-          {/* Entities */}
-          <div className={`${style.accordionItem} ${openBusiness ? style.activeAccordion : ''}`}>
-            <div className={style.accordionHeader} onClick={toggleBusiness}>
-              <div className={style.flexUserManagement}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M7.998 5.75A3.752 3.752 0 1 1 12.5 9.428V11.5h3.25A2.25 2.25 0 0 1 18 13.75v.825a3.754 3.754 0 0 1-.748 7.43a3.752 3.752 0 0 1-.752-7.43v-.825a.75.75 0 0 0-.75-.75h-8a.75.75 0 0 0-.75.75v.825a3.754 3.754 0 0 1-.748 7.43a3.752 3.752 0 0 1-.752-7.43v-.825a2.25 2.25 0 0 1 2.25-2.25H11V9.428A3.754 3.754 0 0 1 7.998 5.75" />
-                </svg>
-              <p>Entities</p>
-              </div>
-              <span className={`${style.arrow} ${openBusiness ? style.rotate : ''}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z" />
-                </svg>
-              </span>
-            </div>
-            <div
-              className={`${style.accordionContent} ${openBusiness ? style.openAccordion : ''}`}
-              style={{ maxHeight: openBusiness ? '500px' : '0' }}
-            >
-              <Link className={style.link} onClick={closeAllAccordions} to="/affiliates"><p>Affiliate</p></Link>
-              <Link className={style.link} onClick={closeAllAccordions} to="/company"><p>Company</p></Link>
-              <Link className={style.link} onClick={closeAllAccordions} to="/vendor"><p>Vendor</p></Link>
-              <Link className={style.link} onClick={closeAllAccordions} to="/department"><p>Department</p></Link>
-              <Link className={style.link} onClick={closeAllAccordions} to="/localGovernmentAgency"><p>Local Government Agency</p></Link>
-            </div>
-          </div>
-          {/* Operations */}
-          <div className={`${style.accordionItem} ${openOperations ? style.activeAccordion : ''}`}>
-            <div className={style.accordionHeader} onClick={toggleOperations}>
-              <div className={style.flexUserManagement}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M11.669 2.282c.218-.043.443-.043.662 0c.251.048.479.167.691.277l.053.028l8.27 4.28a.75.75 0 0 1 .405.666v7.898c0 .283.002.583-.093.862a1.8 1.8 0 0 1-.395.652c-.205.214-.473.351-.723.48l-.063.033l-8.131 4.208a.75.75 0 0 1-.69 0l-8.131-4.208l-.063-.033c-.25-.129-.518-.266-.723-.48a1.8 1.8 0 0 1-.395-.652c-.095-.28-.094-.58-.093-.863V7.533a.75.75 0 0 1 .405-.666l8.269-4.28l.053-.027c.213-.111.44-.23.692-.278m.226 1.496a7 7 0 0 0-.282.141L4.668 7.514l2.827 1.384l7.356-3.703l-2.465-1.276a7 7 0 0 0-.282-.141l-.058-.024m4.45 2.292l-7.31 3.68L12 11.102l7.332-3.588zm-5.246 13.72v-7.36l-3-1.469v1a.75.75 0 0 1-1.5 0v-1.734l-3-1.468v6.624c0 .187 0 .294.005.375l.009.078a.3.3 0 0 0 .057.095c.005.004.021.017.064.042c.068.042.163.09.328.176zm.645-15.988l.06-.024z" />
-                </svg>
-                <p>Operations</p>
-              </div>
-              <span className={`${style.arrow} ${openOperations ? style.rotate : ''}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z" />
-                </svg>
-              </span>
-            </div>
-            <div
-              className={`${style.accordionContent} ${openOperations ? style.openAccordion : ''}`}
-              style={{ maxHeight: openOperations ? '500px' : '0' }}
-            >
-              <Link className={style.link} onClick={closeAllAccordions} to="/booking"><p>Booking</p></Link>
-              <Link className={style.link} onClick={closeAllAccordions} to="/charge"><p>Charge</p></Link>
-            </div>
-          </div>
-          {/* Petty Cash */}
+                    {/* Petty Cash */}
           <div className={`${style.accordionItem} ${openPettyCash ? style.activeAccordion : ''}`}>
             <div className={style.accordionHeader} onClick={togglePettyCash}>
               <div className={style.flexUserManagement}>
@@ -321,6 +289,78 @@ function Nav() {
               <Link className={style.link} onClick={closeAllAccordions} to="/pettyCashLiquidation">
                 <p>Petty Cash Liquidation</p>
               </Link>
+            </div>
+          </div>
+          {/* organizations */}
+          <div className={`${style.accordionItem} ${openOrg ? style.activeAccordion : ''}`}>
+            <div className={style.accordionHeader} onClick={toggleOrg}>
+              <div className={style.flexUserManagement}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M7.998 5.75A3.752 3.752 0 1 1 12.5 9.428V11.5h3.25A2.25 2.25 0 0 1 18 13.75v.825a3.754 3.754 0 0 1-.748 7.43a3.752 3.752 0 0 1-.752-7.43v-.825a.75.75 0 0 0-.75-.75h-8a.75.75 0 0 0-.75.75v.825a3.754 3.754 0 0 1-.748 7.43a3.752 3.752 0 0 1-.752-7.43v-.825a2.25 2.25 0 0 1 2.25-2.25H11V9.428A3.754 3.754 0 0 1 7.998 5.75" />
+                </svg>
+              <p>Organizations</p>
+              </div>
+              <span className={`${style.arrow} ${openOrg ? style.rotate : ''}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z" />
+                </svg>
+              </span>
+            </div>
+            <div
+              className={`${style.accordionContent} ${openOrg ? style.openAccordion : ''}`}
+              style={{ maxHeight: openOrg ? '500px' : '0' }}
+            >
+              <Link className={style.link} onClick={closeAllAccordions} to="/affiliates"><p>Affiliate</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/company"><p>Company</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/vendor"><p>Vendor</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/localGovernmentAgency"><p>Local Government Agency</p></Link>
+            </div>
+          </div>
+          {/* Operations */}
+          <div className={`${style.accordionItem} ${openOperations ? style.activeAccordion : ''}`}>
+            <div className={style.accordionHeader} onClick={toggleOperations}>
+              <div className={style.flexUserManagement}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M11.669 2.282c.218-.043.443-.043.662 0c.251.048.479.167.691.277l.053.028l8.27 4.28a.75.75 0 0 1 .405.666v7.898c0 .283.002.583-.093.862a1.8 1.8 0 0 1-.395.652c-.205.214-.473.351-.723.48l-.063.033l-8.131 4.208a.75.75 0 0 1-.69 0l-8.131-4.208l-.063-.033c-.25-.129-.518-.266-.723-.48a1.8 1.8 0 0 1-.395-.652c-.095-.28-.094-.58-.093-.863V7.533a.75.75 0 0 1 .405-.666l8.269-4.28l.053-.027c.213-.111.44-.23.692-.278m.226 1.496a7 7 0 0 0-.282.141L4.668 7.514l2.827 1.384l7.356-3.703l-2.465-1.276a7 7 0 0 0-.282-.141l-.058-.024m4.45 2.292l-7.31 3.68L12 11.102l7.332-3.588zm-5.246 13.72v-7.36l-3-1.469v1a.75.75 0 0 1-1.5 0v-1.734l-3-1.468v6.624c0 .187 0 .294.005.375l.009.078a.3.3 0 0 0 .057.095c.005.004.021.017.064.042c.068.042.163.09.328.176zm.645-15.988l.06-.024z" />
+                </svg>
+                <p>Operations</p>
+              </div>
+              <span className={`${style.arrow} ${openOperations ? style.rotate : ''}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z" />
+                </svg>
+              </span>
+            </div>
+            <div
+              className={`${style.accordionContent} ${openOperations ? style.openAccordion : ''}`}
+              style={{ maxHeight: openOperations ? '500px' : '0' }}
+            >
+              <Link className={style.link} onClick={closeAllAccordions} to="/booking"><p>Booking</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/charge"><p>Charge</p></Link>
+            </div>
+          </div>
+          {/* data maintenance */}
+          <div className={`${style.accordionItem} ${openBusiness ? style.activeAccordion : ''}`}>
+            <div className={style.accordionHeader} onClick={toggleBusiness}>
+              <div className={style.flexUserManagement}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M3 8h18V5.5q0-.625-.437-1.062T19.5 4h-15q-.625 0-1.062.438T3 5.5zm0 6h18v-4H3zm1.5 6h15q.625 0 1.063-.437T21 18.5V16H3v2.5q0 .625.438 1.063T4.5 20M4.287 6.712Q4 6.425 4 6t.288-.712T5 5t.713.288T6 6t-.288.713T5 7t-.712-.288m0 6Q4 12.426 4 12t.288-.712T5 11t.713.288T6 12t-.288.713T5 13t-.712-.288m0 6Q4 18.426 4 18t.288-.712T5 17t.713.288T6 18t-.288.713T5 19t-.712-.288" />
+              </svg>
+              <p>Data Maintenance</p>
+              </div>
+              <span className={`${style.arrow} ${openBusiness ? style.rotate : ''}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z" />
+                </svg>
+              </span>
+            </div>
+            <div
+              className={`${style.accordionContent} ${openBusiness ? style.openAccordion : ''}`}
+              style={{ maxHeight: openBusiness ? '500px' : '0' }}
+            >
+              <Link className={style.link} onClick={closeAllAccordions} to="/courier"><p>Courier</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/broker"><p>Broker</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/vessel"><p>Vessel</p></Link>
             </div>
           </div>
 

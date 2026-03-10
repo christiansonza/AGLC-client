@@ -26,6 +26,9 @@ import LocalGovernmentAgency from './views/LocalGovernmentAgency';
 import Banks from './views/Banks';
 import Agents from './views/Agents';
 import PettyCashLiquidation from './views/PettyCashLiquidation'
+import Courier from './views/Courier'
+import Broker from './views/Broker'
+import Vessel from './views/Vessel'
 
 
 // Edit
@@ -48,6 +51,9 @@ import EditLocalGovernmentAgency from './views/update/editLocalGovernmentAgency'
 import EditBanks from './views/update/editBanks';
 import EditAgents from './views/update/editAgents';
 import EditPettyCashLiquidation from './views/update/editPettyCashLiquidation';
+import EditCourier from './views/update/editCourier';
+import EditBroker from './views/update/editBroker';
+import EditVessel from './views/update/editVessel';
 
 function App() {
   return (
@@ -89,6 +95,9 @@ function App() {
                 <Route path="banks" element={<Banks />} />
                 <Route path="agents" element={<Agents />} />
                 <Route path="pettyCashLiquidation" element={<PettyCashLiquidation />} />
+                <Route path="courier" element={<Courier />} />
+                <Route path="broker" element={<Broker />} />
+                <Route path="vessel" element={<Vessel />} />
 
                 {/* Edit */}
                 <Route path="editUser/:id" element={<EditUser />} />
@@ -110,6 +119,9 @@ function App() {
                 <Route path="editBanks/:id" element={<EditBanks />} />
                 <Route path="editAgents/:id" element={<EditAgents />} />
                 <Route path="editPettyCashLiquidation/:id" element={<EditPettyCashLiquidation />} />
+                <Route path="editCourier/:id" element={<EditCourier />} />
+                <Route path="editBroker/:id" element={<EditBroker />} />
+                <Route path="editVessel/:id" element={<EditVessel />} />
               </Routes>
             </>
           }

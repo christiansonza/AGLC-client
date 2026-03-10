@@ -18,7 +18,9 @@ import { bankApi } from '../features/bankSlice'
 import { agentApi } from '../features/agentSlice'
 import { journalEntryApi } from '../features/journalEntrySlice'
 import { pettyCashLiquidationApi } from '../features/pettyCashLiquidationSlice';
-
+import { courierApi } from '../features/courierSlice';
+import { brokerApi } from '../features/brokerSlice';
+import { vesselApi } from '../features/vesselSlice'
 
 const store = configureStore({
     reducer: {
@@ -40,7 +42,10 @@ const store = configureStore({
         [bankApi.reducerPath]: bankApi.reducer,
         [agentApi.reducerPath]: agentApi.reducer,
         [journalEntryApi.reducerPath]: journalEntryApi.reducer,
-        [pettyCashLiquidationApi.reducerPath]: pettyCashLiquidationApi.reducer
+        [pettyCashLiquidationApi.reducerPath]: pettyCashLiquidationApi.reducer,
+        [courierApi.reducerPath]: courierApi.reducer,
+        [brokerApi.reducerPath] : brokerApi.reducer,
+        [vesselApi.reducerPath] : vesselApi.reducer,
 
 
     },
@@ -64,7 +69,10 @@ const store = configureStore({
             bankApi.middleware,
             agentApi.middleware,
             journalEntryApi.middleware,
-            pettyCashLiquidationApi.middleware
+            pettyCashLiquidationApi.middleware,
+            courierApi.middleware,
+            brokerApi.middleware,
+            vesselApi.middleware
         )
 })
 

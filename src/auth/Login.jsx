@@ -48,7 +48,7 @@ export default function Login() {
             />
           </div>
           <div className={authStyle.flexLabelfield}>
-            <label className={authStyle.authLabel} htmlFor="">Username</label>
+            <label className={authStyle.authLabel} htmlFor="">Password</label>
             <input
               className={authStyle.fieldLogin}
               type="password"

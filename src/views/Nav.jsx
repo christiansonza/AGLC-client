@@ -361,6 +361,8 @@ function Nav() {
               <Link className={style.link} onClick={closeAllAccordions} to="/courier"><p>Courier</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/broker"><p>Broker</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/vessel"><p>Vessel</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/shipper"><p>Shipper</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/destination"><p>Destination</p></Link>
             </div>
           </div>
 

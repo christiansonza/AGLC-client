@@ -1497,6 +1497,20 @@ td.payreqTd {
   background-color: #0D254C;
 
 }
+.journalBodyTableBookingDetails{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+.journalHeaderTableBookingDetails{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  background-color: #0D254C;
+}
+
+.journalHeaderTableBookingDetails th{
+  color: #fff !important;
+}
+
 .EditpayreqDetailsBodyTable{
   display: grid;
   grid-template-columns: 140px 1fr 125px  135px 135px 140px 135px 120px;
@@ -1510,4 +1524,11 @@ td.payreqTd {
 .totalPayreqDetails{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 120px;
+}
+
+/* booking detail */
+.flexVoyCour{
+  display: flex;
+  width: 100%;
+  gap: 1rem;
 }

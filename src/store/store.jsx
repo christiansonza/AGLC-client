@@ -21,6 +21,8 @@ import { pettyCashLiquidationApi } from '../features/pettyCashLiquidationSlice';
 import { courierApi } from '../features/courierSlice';
 import { brokerApi } from '../features/brokerSlice';
 import { vesselApi } from '../features/vesselSlice'
+import { shipperApi } from '../features/shipperSlice'
+import { destinationApi } from '../features/destinationSlice'
 
 const store = configureStore({
     reducer: {
@@ -46,6 +48,8 @@ const store = configureStore({
         [courierApi.reducerPath]: courierApi.reducer,
         [brokerApi.reducerPath] : brokerApi.reducer,
         [vesselApi.reducerPath] : vesselApi.reducer,
+        [shipperApi.reducerPath] : shipperApi.reducer,
+        [destinationApi.reducerPath] : destinationApi.reducer,
 
 
     },
@@ -72,7 +76,9 @@ const store = configureStore({
             pettyCashLiquidationApi.middleware,
             courierApi.middleware,
             brokerApi.middleware,
-            vesselApi.middleware
+            vesselApi.middleware,
+            shipperApi.middleware,
+            destinationApi.middleware,
         )
 })
 

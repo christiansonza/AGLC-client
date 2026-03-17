@@ -6,24 +6,17 @@ export const bookingApi = createApi({
     baseUrl: 'http://localhost:4000',
     credentials: 'include',
   }),
-  tagTypes: ['booking'],
+  tagTypes: ['booking', 'bookingDetails'],
   endpoints: (builder) => ({
+    // --- Booking ---
     fetchBooking: builder.query({
-      query: () => ({
-        url: '/booking',
-        method: 'GET',
-      }),
+      query: () => '/booking',
       providesTags: ['booking'],
     }),
-
     fetchBookingById: builder.query({
-      query: (id) => ({
-        url: `/booking/${id}`,
-        method: 'GET',
-      }),
+      query: (id) => `/booking/${id}`,
       providesTags: ['booking'],
     }),
-
     createBooking: builder.mutation({
       query: (newBooking) => ({
         url: '/booking',
@@ -32,7 +25,6 @@ export const bookingApi = createApi({
       }),
       invalidatesTags: ['booking'],
     }),
-
     updateBooking: builder.mutation({
       query: ({ id, ...updatedBooking }) => ({
         url: `/booking/${id}`,
@@ -40,6 +32,32 @@ export const bookingApi = createApi({
         body: updatedBooking,
       }),
       invalidatesTags: ['booking'],
+    }),
+
+    // --- Booking Details ---
+    fetchBookingDetails: builder.query({
+      query: (bookingId) => `/booking/${bookingId}/details`,
+      providesTags: ['bookingDetails'],
+    }),
+    fetchBookingDetailById: builder.query({
+      query: ({ bookingId, detailId }) => `/booking/${bookingId}/details/${detailId}`,
+      providesTags: ['bookingDetails'],
+    }),
+    createBookingDetail: builder.mutation({
+      query: ({ bookingId, ...newDetail }) => ({
+        url: `/booking/${bookingId}/details`, 
+        method: 'POST',
+        body: newDetail, 
+      }),
+      invalidatesTags: ['bookingDetails'],
+    }),
+    updateBookingDetail: builder.mutation({
+      query: ({ bookingId, detailId, ...updatedDetail }) => ({
+        url: `/booking/${bookingId}/details/${detailId}`,
+        method: 'PUT',
+        body: updatedDetail,
+      }),
+      invalidatesTags: ['bookingDetails'],
     }),
   }),
 });
@@ -49,4 +67,8 @@ export const {
   useFetchBookingByIdQuery,
   useCreateBookingMutation,
   useUpdateBookingMutation,
+  useFetchBookingDetailsQuery,
+  useFetchBookingDetailByIdQuery,
+  useCreateBookingDetailMutation,
+  useUpdateBookingDetailMutation,
 } = bookingApi;

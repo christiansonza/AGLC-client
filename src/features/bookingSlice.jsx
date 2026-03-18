@@ -8,7 +8,7 @@ export const bookingApi = createApi({
   }),
   tagTypes: ['booking', 'bookingDetails'],
   endpoints: (builder) => ({
-    // --- Booking ---
+    //  Booking 
     fetchBooking: builder.query({
       query: () => '/booking',
       providesTags: ['booking'],
@@ -34,7 +34,7 @@ export const bookingApi = createApi({
       invalidatesTags: ['booking'],
     }),
 
-    // --- Booking Details ---
+    // Booking Details
     fetchBookingDetails: builder.query({
       query: (bookingId) => `/booking/${bookingId}/details`,
       providesTags: ['bookingDetails'],

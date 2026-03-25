@@ -12,7 +12,7 @@ body{
 }
 
 .formLogin{
-    width: clamp(320px, 40vw, 500px);
+    width: clamp(320px, 40vw, 450px);
     display: flex;
     flex-direction: column;
     gap: 1rem;

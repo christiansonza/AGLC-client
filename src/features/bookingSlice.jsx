@@ -6,17 +6,20 @@ export const bookingApi = createApi({
     baseUrl: 'http://localhost:4000',
     credentials: 'include',
   }),
-  tagTypes: ['booking', 'bookingDetails'],
+  tagTypes: ['booking', 'bookingDetails', 'journal'],
+
   endpoints: (builder) => ({
-    //  Booking 
+    // Booking
     fetchBooking: builder.query({
       query: () => '/booking',
       providesTags: ['booking'],
     }),
+
     fetchBookingById: builder.query({
       query: (id) => `/booking/${id}`,
       providesTags: ['booking'],
     }),
+
     createBooking: builder.mutation({
       query: (newBooking) => ({
         url: '/booking',
@@ -25,6 +28,7 @@ export const bookingApi = createApi({
       }),
       invalidatesTags: ['booking'],
     }),
+
     updateBooking: builder.mutation({
       query: ({ id, ...updatedBooking }) => ({
         url: `/booking/${id}`,
@@ -35,22 +39,27 @@ export const bookingApi = createApi({
     }),
 
     // Booking Details
+
     fetchBookingDetails: builder.query({
       query: (bookingId) => `/booking/${bookingId}/details`,
       providesTags: ['bookingDetails'],
     }),
+
     fetchBookingDetailById: builder.query({
-      query: ({ bookingId, detailId }) => `/booking/${bookingId}/details/${detailId}`,
+      query: ({ bookingId, detailId }) =>
+        `/booking/${bookingId}/details/${detailId}`,
       providesTags: ['bookingDetails'],
     }),
+
     createBookingDetail: builder.mutation({
       query: ({ bookingId, ...newDetail }) => ({
-        url: `/booking/${bookingId}/details`, 
+        url: `/booking/${bookingId}/details`,
         method: 'POST',
-        body: newDetail, 
+        body: newDetail,
       }),
       invalidatesTags: ['bookingDetails'],
     }),
+
     updateBookingDetail: builder.mutation({
       query: ({ bookingId, detailId, ...updatedDetail }) => ({
         url: `/booking/${bookingId}/details/${detailId}`,
@@ -59,16 +68,62 @@ export const bookingApi = createApi({
       }),
       invalidatesTags: ['bookingDetails'],
     }),
+
+    // Journal Booking
+
+    fetchJournalBooking: builder.query({
+      query: (bookingId) => `/booking/${bookingId}/journal`,
+      providesTags: (result, error, bookingId) => [
+        { type: 'journal', id: bookingId },
+      ],
+    }),
+
+    fetchJournalBookingById: builder.query({
+      query: ({ bookingId, journalId }) =>
+        `/booking/${bookingId}/journal/${journalId}`,
+      providesTags: ['journal'],
+    }),
+
+    createJournalBooking: builder.mutation({
+      query: ({ bookingId, ...newJournal }) => ({
+        url: `/booking/${bookingId}/journal`,
+        method: 'POST',
+        body: newJournal,
+      }),
+      invalidatesTags: (result, error, { bookingId }) => [
+        { type: 'journal', id: bookingId },
+      ],
+    }),
+
+    // updateJournalBooking: builder.mutation({
+    //   query: ({ bookingId, journalId, ...updatedJournal }) => ({
+    //     url: `/booking/${bookingId}/journal/${journalId}`,
+    //     method: 'PUT',
+    //     body: updatedJournal,
+    //   }),
+    //   invalidatesTags: (result, error, { bookingId }) => [
+    //     { type: 'journal', id: bookingId },
+    //   ],
+    // }),
   }),
 });
 
 export const {
+  // Booking
   useFetchBookingQuery,
   useFetchBookingByIdQuery,
   useCreateBookingMutation,
   useUpdateBookingMutation,
+
+  // Booking Details
   useFetchBookingDetailsQuery,
   useFetchBookingDetailByIdQuery,
   useCreateBookingDetailMutation,
   useUpdateBookingDetailMutation,
+
+  // Journal
+  useFetchJournalBookingQuery,
+  useFetchJournalBookingByIdQuery,
+  useCreateJournalBookingMutation,
+  // useUpdateJournalBookingMutation,
 } = bookingApi;

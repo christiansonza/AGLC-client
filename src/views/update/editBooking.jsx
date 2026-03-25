@@ -17,6 +17,21 @@ import { useGetVesselQuery } from '../../features/vesselSlice';
 import { useGetShipperQuery } from '../../features/shipperSlice';
 import { useGetDestinationQuery } from '../../features/destinationSlice';
 
+import {
+  useFetchJournalBookingQuery,
+  useCreateJournalBookingMutation,
+} from '../../features/bookingSlice';
+import { useFetchAccountQuery } from '../../features/accountTitleSlice';
+import { useFetchSubAccountQuery } from '../../features/subAccountTitleSlice';
+import { useFetchDepartmentQuery } from '../../features/departmentSlice';
+
+import { useFetchAffiliateQuery } from '../../features/affiliateSlice';
+import { useFetchAgentQuery } from '../../features/agentSlice';
+import { useFetchBankQuery } from '../../features/bankSlice';
+import { useFetchEmployeeQuery } from '../../features/employeeSlice';
+import { useFetchLocalGovernmentAgencyQuery } from '../../features/localGovernmentAgencySlice';
+import { useFetchVendorQuery } from '../../features/vendorSlice';
+
 import style from '../css/page.module.css';
 
 function EditBooking() {
@@ -95,6 +110,135 @@ function EditBooking() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
+  const { data: journalData = [] } = useFetchJournalBookingQuery(id);
+  const [createJournal] = useCreateJournalBookingMutation();
+  const [journalList, setJournalList] = useState([]);
+  const [openJournalModal, setOpenJournalModal] = useState(false);
+  const [journalForm, setJournalForm] = useState({
+    accountTitleId: null,
+    subAccountTitleId: null,
+    departmentId: null,
+    listItemType: '',
+    listItemId: ''
+  });
+
+  const { data: accounts = [] } = useFetchAccountQuery();
+  const { data: subAccounts = [] } = useFetchSubAccountQuery();
+  const { data: departments = [] } = useFetchDepartmentQuery();
+
+  const accountRef = useRef(null);
+  const subAccountRef = useRef(null);
+  const departmentRef = useRef(null);
+  const listTypeRef = useRef(null);
+  const listItemRef = useRef(null);
+
+  const [openAccount, setOpenAccount] = useState(false);
+  const [openSubAccount, setOpenSubAccount] = useState(false);
+  const [openDepartment, setOpenDepartment] = useState(false);
+  const [openListType, setOpenListType] = useState(false);
+  const [openListItem, setOpenListItem] = useState(false);
+
+  const { data: affiliates = [] } = useFetchAffiliateQuery();
+  const { data: agents = [] } = useFetchAgentQuery();
+  const { data: banks = [] } = useFetchBankQuery();
+  const { data: employees = [] } = useFetchEmployeeQuery();
+  const { data: lgas = [] } = useFetchLocalGovernmentAgencyQuery();
+  const { data: vendors = [] } = useFetchVendorQuery();
+
+  const getListItemNameFromJournal = (j) => {
+  const id = Number(j.listItemId); 
+
+    switch (j.listItemType) {
+      case "Affiliate":
+        return affiliates.find(a => Number(a.id) === id)?.name || "-";
+
+      case "Agent":
+        return agents.find(a => Number(a.id) === id)?.name || "-";
+
+      case "Bank":
+        return banks.find(b => Number(b.id) === id)?.name || "-";
+
+      case "Customer":
+        return customers.find(c => Number(c.id) === id)?.name || "-";
+
+      case "Employee": {
+        const emp = employees.find(e => Number(e.id) === id);
+        return emp
+          ? `${emp.firstName} ${emp.middleName || ""} ${emp.lastName}`.trim()
+          : "-";
+      }
+
+      case "Local Government Agency":
+        return lgas.find(l => Number(l.id) === id)?.name || "-";
+
+      case "Vendor":
+        return vendors.find(v => Number(v.id) === id)?.name || "-";
+
+      default:
+        return "-";
+    }
+  };
+
+  const getListItemSource = () => {
+    switch (journalForm.listItemType) {
+      case "Affiliate":
+        return affiliates || [];
+      case "Agent":
+        return agents || [];
+      case "Bank":
+        return banks || [];
+      case "Customer":
+        return customers || [];
+      case "Employee":
+        return employees || [];
+      case "Local Government Agency":
+        return lgas || [];
+      case "Vendor":
+        return vendors || [];
+      default:
+        return [];
+    }
+  };
+
+  useEffect(() => {
+    if (journalData) setJournalList(journalData);
+  }, [journalData]);
+
+  const handleSaveJournal = async () => {
+  const { accountTitleId, subAccountTitleId, departmentId, listItemType, listItemId } = journalForm;
+
+  if (!accountTitleId) {
+    toast.error("Account Title is required");
+    return;
+  }
+
+    try {
+      const payload = {
+        accountTitleId,
+        subAccountTitleId,
+        departmentId,
+        listItemType,
+        listItemId
+      };
+
+      const newJournal = await createJournal({ bookingId: id, ...payload }).unwrap();
+      setJournalList(prev => [...prev, newJournal]);
+      setJournalForm({
+        accountTitleId: null,
+        subAccountTitleId: null,
+        departmentId: null,
+        listItemType: '',
+        listItemId: ''
+      });
+      setOpenJournalModal(false);
+      toast.success("Journal Entry added!");
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.data?.message || "Failed to add journal entry");
+    }
+  };
+
   const [showLoader, setShowLoader] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => setShowLoader(false), 1000);
@@ -143,11 +287,12 @@ function EditBooking() {
   const handleSaveDetail = async () => {
     const { voyNo, voy, no, courierId, brokerId, vesselId, shipperId, destinationId } = detailForm;
 
-    if (!voyNo || !voy || !no || !courierId || !brokerId || !vesselId || !shipperId || !destinationId) {
-      toast.error("Please complete all booking detail fields");
-      return;
-    }
-
+  if (!voyNo || !voy || !no ||
+      courierId == null || brokerId == null || vesselId == null || 
+      shipperId == null || destinationId == null) {
+    toast.error("Please complete all booking detail fields");
+    return;
+  }
     const payload = {
       voyNo,
       voy,
@@ -179,6 +324,7 @@ function EditBooking() {
       toast.error(err?.data?.message || "Failed to add booking detail");
     }
   };
+  
 
   return (
     <main className="main-container">
@@ -276,7 +422,7 @@ function EditBooking() {
           </tbody>
         </table>
 
-        {/* Booking Detail Modal */}
+        {/* Booking Details Modal */}
         {openDetailModal && (
           <div className={style.modalOverlay}>
             <div className={style.modal}>
@@ -310,98 +456,97 @@ function EditBooking() {
                   <input type="text" value={detailForm.voyNo} onChange={e => setDetailForm(prev => ({ ...prev, voyNo: e.target.value }))} />
                 </div>
 
-            <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
-                {/* Courier */}
-                <label className={style.modalLabel}>S/L Courier:</label>
-                <div className={style.customSelectWrapper} ref={courierRef}>
-                  <div className={style.customSelectInput} onClick={() => setOpenCourier(!openCourier)}>
-                    {detailForm.courierId ? couriers.find(c => c.id === detailForm.courierId)?.courier : "Select Courier"}
-                    <span className={style.selectArrow}>▾</span>
-                  </div>
-                  {openCourier && (
-                    <div className={style.customSelectDropdown}>
-                      {couriers.map(c => (
-                        <div key={c.id} className={style.customSelectOption} onClick={() => { setDetailForm(prev => ({ ...prev, courierId: Number(c.id) })); setOpenCourier(false); }}>
-                          {c.courier}
-                        </div>
-                      ))}
+              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
+                  {/* Courier */}
+                  <label className={style.modalLabel}>S/L Courier:</label>
+                  <div className={style.customSelectWrapper} ref={courierRef}>
+                    <div className={style.customSelectInput} onClick={() => setOpenCourier(!openCourier)}>
+                      {detailForm.courierId ? couriers.find(c => c.id === detailForm.courierId)?.courier : "Select Courier"}
+                      <span className={style.selectArrow}>▾</span>
                     </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-
-          <div className={style.flexVoyCour}>
-            <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
-                {/* Broker */}
-                <label className={style.modalLabel}>Broker:</label>
-                <div className={style.customSelectWrapper} ref={brokerRef}>
-                  <div className={style.customSelectInput} onClick={() => setOpenBroker(!openBroker)}>
-                    {detailForm.brokerId ? brokers.find(b => b.id === detailForm.brokerId)?.broker : "Select Broker"}
-                    <span className={style.selectArrow}>▾</span>
+                    {openCourier && (
+                      <div className={style.customSelectDropdown}>
+                        {couriers.map(c => (
+                          <div key={c.id} className={style.customSelectOption} onClick={() => { setDetailForm(prev => ({ ...prev, courierId: Number(c.id) })); setOpenCourier(false); }}>
+                            {c.courier}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  {openBroker && (
-                    <div className={style.customSelectDropdown}>
-                      {brokers.map(b => (
-                        <div key={b.id} className={style.customSelectOption} onClick={() => { setDetailForm(prev => ({ ...prev, brokerId: Number(b.id) })); setOpenBroker(false); }}>
-                          {b.broker}
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
 
-            <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
-                {/* Vessel */}
-                <label className={style.modalLabel}>Vessel Name:</label>
-                <div className={style.customSelectWrapper} ref={vesselRef}>
-                  <div className={style.customSelectInput} onClick={() => setOpenVessel(!openVessel)}>
-                    {detailForm.vesselId ? vessels.find(v => v.id === detailForm.vesselId)?.vesselName : "Select Vessel"}
-                    <span className={style.selectArrow}>▾</span>
-                  </div>
-                  {openVessel && (
-                    <div className={style.customSelectDropdown}>
-                      {vessels.map(v => (
-                        <div key={v.id} className={style.customSelectOption} onClick={() => { setDetailForm(prev => ({ ...prev, vesselId: Number(v.id) })); setOpenVessel(false); }}>
-                          {v.vesselName}
-                        </div>
-                      ))}
+            <div className={style.flexVoyCour}>
+              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
+                  {/* Broker */}
+                  <label className={style.modalLabel}>Broker:</label>
+                  <div className={style.customSelectWrapper} ref={brokerRef}>
+                    <div className={style.customSelectInput} onClick={() => setOpenBroker(!openBroker)}>
+                      {detailForm.brokerId ? brokers.find(b => b.id === detailForm.brokerId)?.broker : "Select Broker"}
+                      <span className={style.selectArrow}>▾</span>
                     </div>
-                  )}
+                    {openBroker && (
+                      <div className={style.customSelectDropdown}>
+                        {brokers.map(b => (
+                          <div key={b.id} className={style.customSelectOption} onClick={() => { setDetailForm(prev => ({ ...prev, brokerId: Number(b.id) })); setOpenBroker(false); }}>
+                            {b.broker}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
+                  {/* Vessel */}
+                  <label className={style.modalLabel}>Vessel Name:</label>
+                  <div className={style.customSelectWrapper} ref={vesselRef}>
+                    <div className={style.customSelectInput} onClick={() => setOpenVessel(!openVessel)}>
+                      {detailForm.vesselId ? vessels.find(v => v.id === detailForm.vesselId)?.vesselName : "Select Vessel"}
+                      <span className={style.selectArrow}>▾</span>
+                    </div>
+                    {openVessel && (
+                      <div className={style.customSelectDropdown}>
+                        {vessels.map(v => (
+                          <div key={v.id} className={style.customSelectOption} onClick={() => { setDetailForm(prev => ({ ...prev, vesselId: Number(v.id) })); setOpenVessel(false); }}>
+                            {v.vesselName}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-          <div className={style.flexVoyCour}>
-            <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
-                {/* Voy & No */}
-                <label className={style.modalLabel}>Voy #:</label>
-                <input type="text" value={detailForm.voy} onChange={e => setDetailForm(prev => ({ ...prev, voy: e.target.value }))} />
-            </div>
-            <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
-                <label className={style.modalLabel}>No.:</label>
-                <input type="text" value={detailForm.no} onChange={e => setDetailForm(prev => ({ ...prev, no: e.target.value }))} />
-                </div>
-            </div>
-                {/* Shipper */}
-                <label className={style.modalLabel}>Shipper:</label>
-                <div className={style.customSelectWrapper} ref={shipperRef}>
-                  <div className={style.customSelectInput} onClick={() => setOpenShipper(!openShipper)}>
-                    {detailForm.shipperId ? shippers.find(s => s.id === detailForm.shipperId)?.shipper : "Select Shipper"}
-                    <span className={style.selectArrow}>▾</span>
+            <div className={style.flexVoyCour}>
+              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
+                  {/* Voy & No */}
+                  <label className={style.modalLabel}>Voy #:</label>
+                  <input type="text" value={detailForm.voy} onChange={e => setDetailForm(prev => ({ ...prev, voy: e.target.value }))} />
+              </div>
+              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
+                  <label className={style.modalLabel}>No.:</label>
+                  <input type="text" value={detailForm.no} onChange={e => setDetailForm(prev => ({ ...prev, no: e.target.value }))} />
                   </div>
-                  {openShipper && (
-                    <div className={style.customSelectDropdown}>
-                      {shippers.map(s => (
-                        <div key={s.id} className={style.customSelectOption} onClick={() => { setDetailForm(prev => ({ ...prev, shipperId: Number(s.id) })); setOpenShipper(false); }}>
-                          {s.shipper}
-                        </div>
-                      ))}
+              </div>
+                  {/* Shipper */}
+                  <label className={style.modalLabel}>Shipper:</label>
+                  <div className={style.customSelectWrapper} ref={shipperRef}>
+                    <div className={style.customSelectInput} onClick={() => setOpenShipper(!openShipper)}>
+                      {detailForm.shipperId ? shippers.find(s => s.id === detailForm.shipperId)?.shipper : "Select Shipper"}
+                      <span className={style.selectArrow}>▾</span>
                     </div>
-                  )}
-                </div>
+                    {openShipper && (
+                      <div className={style.customSelectDropdown}>
+                        {shippers.map(s => (
+                          <div key={s.id} className={style.customSelectOption} onClick={() => { setDetailForm(prev => ({ ...prev, shipperId: Number(s.id) })); setOpenShipper(false); }}>
+                            {s.shipper}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
                 {/* Destination */}
                 <label className={style.modalLabel}>Destination:</label>
@@ -430,6 +575,232 @@ function EditBooking() {
           </div>
         )}
 
+      {/* Journal Entries Table */}
+      <div className={style.flexheaderTitleJournal} style={{ marginTop: "2rem" }}>
+        <div className={style.bookingContainer}>
+          <p className={style.bookingPaymentTitle}>Journal Entries</p>
+          <p className={style.bookingPaymentSubtitle}>Create and review journal entry history. </p>
+        </div>
+        <button className={style.addBtnJournal} onClick={() => setOpenJournalModal(true)}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z"/>
+          </svg>
+        </button>
+      </div>
+
+      <table className={style.tableJournal}>
+        <thead>
+          <tr className={style.journalHeaderTable}>
+            <th>Account Title</th>
+            <th>Sub Account</th>
+            <th>Department</th>
+            <th>List Item type</th>
+            <th>List Item</th>
+          </tr>
+        </thead>
+        <tbody>
+          {journalList.length === 0 ? (
+            <tr>
+              <td className={style.journalBodyTable}>No journal entries.</td>
+            </tr>
+          ) : (
+            journalList.map((j, index) => (
+              <tr  className={style.journalBodyTable} key={index}>
+                <td>{accounts.find(a => a.id === j.accountTitleId)?.name || j.accountTitleId}</td>
+                <td>{subAccounts.find(s => s.id === j.subAccountTitleId)?.name || j.subAccountTitleId}</td>
+                <td>{departments.find(d => d.id === j.departmentId)?.name || j.departmentId}</td>
+                <td>{j.listItemType}</td>
+                <td>{getListItemNameFromJournal(j)}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+
+        {openJournalModal && (
+          <div className={style.modalOverlay}>
+            <div className={style.modal}>
+              <div className={style.modalHeader}>
+                <h3>Add Journal Entry</h3>
+                <button className={style.closeButton} onClick={() => setOpenJournalModal(false)}>
+                <svg
+                  className={style.closeBtn}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    d="m11.25 4.75-6.5 6.5m0-6.5 6.5 6.5"
+                  />
+                </svg>
+                </button>
+              </div>
+              <form className={style.formContainer} onSubmit={(e) => { e.preventDefault(); handleSaveJournal(); }}>
+               {/* Account Title */}
+                <label className={style.modalLabel}>Account Title:</label>
+                <div className={style.customSelectWrapper} ref={accountRef}>
+                  <div
+                    className={style.customSelectInput}
+                    onClick={() => setOpenAccount(!openAccount)}
+                  >
+                    {journalForm.accountTitleId
+                      ? accounts.find(a => a.id === journalForm.accountTitleId)?.name
+                      : "Select Account"}
+                    <span className={style.selectArrow}>▾</span>
+                  </div>
+
+                  {openAccount && (
+                    <div className={style.customSelectDropdown}>
+                      {accounts.map(a => (
+                        <div
+                          key={a.id}
+                          className={style.customSelectOption}
+                          onClick={() => {
+                            setJournalForm(prev => ({ ...prev, accountTitleId: a.id }));
+                            setOpenAccount(false);
+                          }}
+                        >
+                          {a.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Sub Account */}
+                <label className={style.modalLabel}>Sub Account:</label>
+                <div className={style.customSelectWrapper} ref={subAccountRef}>
+                  <div
+                    className={style.customSelectInput}
+                    onClick={() => setOpenSubAccount(!openSubAccount)}
+                  >
+                    {journalForm.subAccountTitleId
+                      ? subAccounts.find(s => s.id === journalForm.subAccountTitleId)?.name
+                      : "Select Sub Account"}
+                    <span className={style.selectArrow}>▾</span>
+                  </div>
+
+                  {openSubAccount && (
+                    <div className={style.customSelectDropdown}>
+                      {subAccounts.map(s => (
+                        <div
+                          key={s.id}
+                          className={style.customSelectOption}
+                          onClick={() => {
+                            setJournalForm(prev => ({ ...prev, subAccountTitleId: s.id }));
+                            setOpenSubAccount(false);
+                          }}
+                        >
+                          {s.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Department */}
+                <label className={style.modalLabel}>Department:</label>
+                <div className={style.customSelectWrapper} ref={departmentRef}>
+                  <div
+                    className={style.customSelectInput}
+                    onClick={() => setOpenDepartment(!openDepartment)}
+                  >
+                    {journalForm.departmentId
+                      ? departments.find(d => d.id === journalForm.departmentId)?.name
+                      : "Select Department"}
+                    <span className={style.selectArrow}>▾</span>
+                  </div>
+
+                  {openDepartment && (
+                    <div className={style.customSelectDropdown}>
+                      {departments.map(d => (
+                        <div
+                          key={d.id}
+                          className={style.customSelectOption}
+                          onClick={() => {
+                            setJournalForm(prev => ({ ...prev, departmentId: d.id }));
+                            setOpenDepartment(false);
+                          }}
+                        >
+                          {d.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* List Item Type */}
+                <label className={style.modalLabel}>List Item Type:</label>
+                <div className={style.customSelectWrapper} ref={listTypeRef}>
+                  <div className={style.customSelectInput} onClick={() => setOpenListType(!openListType)}>
+                    {journalForm.listItemType || "Select Type"}
+                    <span className={style.selectArrow}>▾</span>
+                  </div>
+                  {openListType && (
+                    <div className={style.customSelectDropdown}>
+                      {["Affiliate","Agent","Bank","Customer","Employee","Local Government Agency","Vendor"].map(type => (
+                        <div
+                          key={type}
+                          className={style.customSelectOption}
+                          onClick={() => {
+                            setJournalForm(prev => ({ ...prev, listItemType: type, listItemId: '' }));
+                            setOpenListType(false);
+                          }}
+                        >
+                          {type}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* List Item */}
+                <label className={style.modalLabel}>List Item:</label>
+                <div className={style.customSelectWrapper} ref={listItemRef}>
+                  <div
+                    className={style.customSelectInput}
+                    onClick={() => journalForm.listItemType && setOpenListItem(!openListItem)}
+                  >
+                {journalForm.listItemId
+                  ? (() => {
+                      const item = getListItemSource().find(i => i.id === journalForm.listItemId);
+                      return item ? item.name || `${item.firstName || ""} ${item.lastName || ""}`.trim() : "";
+                    })()
+                  : "Select Item"}
+                    <span className={style.selectArrow}>▾</span>
+                  </div>
+                  {openListItem && (
+                    <div className={style.customSelectDropdown}>
+                      {getListItemSource().map(item => (
+                        <div
+                          key={item.id}
+                          className={style.customSelectOption}
+                          onClick={() => {
+                            setJournalForm(prev => ({ ...prev, listItemId: item.id }));
+                            setOpenListItem(false);
+                          }}
+                        >
+                          {item.name || `${item.firstName || ""} ${item.lastName || ""}`.trim()}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+              <div className={style.modalActions}>
+                <button type="button" className={style.cancelButton} onClick={() => setOpenJournalModal(false)}>Cancel</button>
+                <button type="submit" className={style.submitButton}>Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       </div>
       <ToastContainer />
     </main>

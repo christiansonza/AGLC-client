@@ -9,6 +9,8 @@ import style from "../views/css/page.module.css";
 import { Mosaic } from "react-loading-indicators";
 import { useNavigate, Link } from "react-router-dom";
 
+import { useFetchJournalEntryQuery } from "../features/journalEntrySlice";
+
 function PettyCashRelease() {
   const { data, isLoading, isError, error } = useGetPettyCashQuery();
   const pettyCashes = data ?? [];
@@ -46,7 +48,23 @@ function PettyCashRelease() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const { data: journalEntries = [] } = useFetchJournalEntryQuery();
 
+  const pettyCashesWithBalance = pettyCashes.map(pc => {
+    const relatedJournals = journalEntries.filter(
+      j =>
+        j.belongsToType?.toLowerCase().replace(/\s/g,'') === "pettycashrelease" &&
+        Number(j.belongsToId) === Number(pc.id)
+    );
+
+  const totalDebit = relatedJournals.reduce((sum, j) => sum + (Number(j.debit) || 0), 0);
+  const totalCredit = relatedJournals.reduce((sum, j) => sum + (Number(j.credit) || 0), 0);
+
+    return {
+      ...pc,
+      isBalanced: Math.abs(totalDebit - totalCredit) < 0.01 
+    };
+  });
 
     const getPaymentRequestLabel = (id) => {
     const pr = paymentRequests.find(p => p.id === id);
@@ -62,14 +80,13 @@ function PettyCashRelease() {
   };
 
 
-const filteredPettyCash = pettyCashes.filter((pc) => {
-  const query = search.toLowerCase();
-
-  return (
-    getPaymentRequestLabel(pc.paymentRequestId).includes(query) ||
-    getEmployeeName(pc.receivedById).includes(query)
-  );
-});
+  const filteredPettyCash = pettyCashesWithBalance.filter((pc) => {
+    const query = search.toLowerCase();
+    return (
+      getPaymentRequestLabel(pc.paymentRequestId).includes(query) ||
+      getEmployeeName(pc.receivedById).includes(query)
+    );
+  });
 
   const totalPages = Math.ceil(filteredPettyCash.length / itemsPerPage);
   const currentPettyCash = filteredPettyCash.slice(
@@ -377,6 +394,7 @@ const filteredPettyCash = pettyCashes.filter((pc) => {
         <table>
           <thead>
             <tr className={style.headPettyCashTable}>
+              <th></th>
               <th>Request Number</th>
               <th>Received By</th>
               <th></th>
@@ -387,6 +405,15 @@ const filteredPettyCash = pettyCashes.filter((pc) => {
               <tr><td colSpan="2" style={{ textAlign: "center" }}>No records found</td></tr>
             ) : currentPettyCash.map((pc) => (
               <tr className={style.bodyPettyCashTable} key={pc.id}>
+                <td>
+                  {!pc.isBalanced && (
+                    <span className={style.warningIcon} data-tooltip="Total Debit and Credit are not equal" style={{ color: "orange" }}>
+                      <svg className={style.warningIconPettyCash} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 20a8 8 0 1 0 0-16a8 8 0 0 0 0 16M10.756 8.4C10.686 7.65 11.264 7 12 7s1.313.649 1.244 1.4l-.494 4.15a.76.76 0 0 1-.75.7a.76.76 0 0 1-.75-.7zm2.494 7.35a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0" />
+                      </svg>
+                    </span>
+                  )}
+                </td>
                   <td>
                     {(() => {
                       const pr = paymentRequests.find(

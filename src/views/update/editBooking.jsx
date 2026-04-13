@@ -115,12 +115,15 @@ function EditBooking() {
   const [createJournal] = useCreateJournalBookingMutation();
   const [journalList, setJournalList] = useState([]);
   const [openJournalModal, setOpenJournalModal] = useState(false);
+
   const [journalForm, setJournalForm] = useState({
     accountTitleId: null,
     subAccountTitleId: null,
     departmentId: null,
     listItemType: '',
-    listItemId: ''
+    listItemId: '',
+    credit:'',
+    debit:''
   });
 
   const { data: accounts = [] } = useFetchAccountQuery();
@@ -206,7 +209,7 @@ function EditBooking() {
   }, [journalData]);
 
   const handleSaveJournal = async () => {
-  const { accountTitleId, subAccountTitleId, departmentId, listItemType, listItemId } = journalForm;
+  const { accountTitleId, subAccountTitleId, departmentId, listItemType, listItemId, credit, debit } = journalForm;
 
   if (!accountTitleId) {
     toast.error("Account Title is required");
@@ -219,7 +222,9 @@ function EditBooking() {
         subAccountTitleId,
         departmentId,
         listItemType,
-        listItemId
+        listItemId,
+        credit: Number(credit) || 0,
+        debit: Number(debit) || 0
       };
 
       const newJournal = await createJournal({ bookingId: id, ...payload }).unwrap();
@@ -229,7 +234,9 @@ function EditBooking() {
         subAccountTitleId: null,
         departmentId: null,
         listItemType: '',
-        listItemId: ''
+        listItemId: '',
+        credit:'',
+        debit:''
       });
       setOpenJournalModal(false);
       toast.success("Journal Entry added!");
@@ -256,6 +263,15 @@ function EditBooking() {
       </div>
     );
   }
+  const totalDebit = journalList.reduce((sum, j) => {
+    const value = parseFloat(j.debit);
+    return sum + (isNaN(value) ? 0 : value);
+  }, 0);
+
+  const totalCredit = journalList.reduce((sum, j) => {
+    const value = parseFloat(j.credit);
+    return sum + (isNaN(value) ? 0 : value);
+  }, 0);
 
   if (isError) {
     const status = error?.status;
@@ -332,6 +348,9 @@ function EditBooking() {
         {/* Booking Form */}
         <div className={style.EditflexTitleHeader}>
           <div className={style.flexheaderTitle}>
+            <svg className={style.EditsvgExclamation} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M21 12a1 1 0 0 0-1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6a1 1 0 0 0 0-2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-6a1 1 0 0 0-1-1m-15 .76V17a1 1 0 0 0 1 1h4.24a1 1 0 0 0 .71-.29l6.92-6.93L21.71 8a1 1 0 0 0 0-1.42l-4.24-4.29a1 1 0 0 0-1.42 0l-2.82 2.83l-6.94 6.93a1 1 0 0 0-.29.71m10.76-8.35l2.83 2.83l-1.42 1.42l-2.83-2.83ZM8 13.17l5.93-5.93l2.83 2.83L10.83 16H8Z" />
+              </svg>
             <h3 className={style.headerLaber}>Update Booking</h3>
           </div>
           <p className={style.headerSubtitle}>View and manage bookings.</p>
@@ -578,7 +597,7 @@ function EditBooking() {
       {/* Journal Entries Table */}
       <div className={style.flexheaderTitleJournal} style={{ marginTop: "2rem" }}>
         <div className={style.bookingContainer}>
-          <p className={style.bookingPaymentTitle}>Journal Entries</p>
+          <p className={style.bookingPaymentTitle}>Journal Entry</p>
           <p className={style.bookingPaymentSubtitle}>Create and review journal entry history. </p>
         </div>
         <button className={style.addBtnJournal} onClick={() => setOpenJournalModal(true)}>
@@ -588,7 +607,16 @@ function EditBooking() {
         </button>
       </div>
 
-      <table className={style.tableJournal}>
+        {totalDebit !== totalCredit && (
+          <div className={style.notifJounalEntry}>
+            <svg className={style.svgNotifJournal} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor" d="m21.171 15.398l-5.912-9.854C14.483 4.251 13.296 3.511 12 3.511s-2.483.74-3.259 2.031l-5.912 9.856c-.786 1.309-.872 2.705-.235 3.83C3.23 20.354 4.472 21 6 21h12c1.528 0 2.77-.646 3.406-1.771s.551-2.521-.235-3.831M12 17.549c-.854 0-1.55-.695-1.55-1.549c0-.855.695-1.551 1.55-1.551s1.55.696 1.55 1.551c0 .854-.696 1.549-1.55 1.549m1.633-7.424c-.011.031-1.401 3.468-1.401 3.468c-.038.094-.13.156-.231.156s-.193-.062-.231-.156l-1.391-3.438a1.8 1.8 0 0 1-.129-.655c0-.965.785-1.75 1.75-1.75a1.752 1.752 0 0 1 1.633 2.375" />
+            </svg>
+             Total Debit and Credit are not equal!
+          </div>
+        )}
+        
+      <table className={style.tableJournal} style={{marginBottom:'4rem'}}>
         <thead>
           <tr className={style.journalHeaderTable}>
             <th>Account Title</th>
@@ -596,6 +624,8 @@ function EditBooking() {
             <th>Department</th>
             <th>List Item type</th>
             <th>List Item</th>
+            <th>Credit</th>
+            <th>Debit</th>
           </tr>
         </thead>
         <tbody>
@@ -611,9 +641,31 @@ function EditBooking() {
                 <td>{departments.find(d => d.id === j.departmentId)?.name || j.departmentId}</td>
                 <td>{j.listItemType}</td>
                 <td>{getListItemNameFromJournal(j)}</td>
+                <td>
+                  {Number(j.credit || 0).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}
+                </td>
+                <td>
+                  {Number(j.debit || 0).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}
+                </td>
               </tr>
             ))
           )}
+
+          <tr className={style.journalTotalRow}>
+            <td colSpan={5} style={{ textAlign: "right", fontWeight: "bold" }}>Total:</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style={{ fontWeight: "bold" }}>{totalCredit.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+            <td style={{ fontWeight: "bold" }}>{totalDebit.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+          </tr>
         </tbody>
       </table>
 
@@ -642,7 +694,18 @@ function EditBooking() {
                 </button>
               </div>
               <form className={style.formContainer} onSubmit={(e) => { e.preventDefault(); handleSaveJournal(); }}>
+
                {/* Account Title */}
+              <div style={{
+                  display:'flex',
+                  width:'100%',
+                  gap: '1rem'
+                }}>
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                }}>
                 <label className={style.modalLabel}>Account Title:</label>
                 <div className={style.customSelectWrapper} ref={accountRef}>
                   <div
@@ -672,8 +735,14 @@ function EditBooking() {
                     </div>
                   )}
                 </div>
+              </div>
 
                 {/* Sub Account */}
+              <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                }}>
                 <label className={style.modalLabel}>Sub Account:</label>
                 <div className={style.customSelectWrapper} ref={subAccountRef}>
                   <div
@@ -703,6 +772,8 @@ function EditBooking() {
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
 
                 {/* Department */}
                 <label className={style.modalLabel}>Department:</label>
@@ -792,6 +863,32 @@ function EditBooking() {
                     </div>
                   )}
                 </div>
+
+                <label className={style.modalLabel}>Credit:</label>
+                <input
+                  type="number"
+                  value={journalForm.credit}
+                  onChange={(e) =>
+                    setJournalForm(prev => ({
+                      ...prev,
+                      credit: e.target.value
+                    }))
+                  }
+                  placeholder="0.00"
+                />
+
+                <label className={style.modalLabel}>Debit:</label>
+                <input
+                  type="number"
+                  value={journalForm.debit}
+                  onChange={(e) =>
+                    setJournalForm(prev => ({
+                      ...prev,
+                      debit: e.target.value
+                    }))
+                  }
+                  placeholder="0.00"
+                />
 
               <div className={style.modalActions}>
                 <button type="button" className={style.cancelButton} onClick={() => setOpenJournalModal(false)}>Cancel</button>

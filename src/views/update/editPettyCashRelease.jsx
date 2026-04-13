@@ -53,6 +53,8 @@ function EditPettyCashRelease() {
     departmentId: "",
     listItemType: "",
     listItemId: "",
+    credit:"",
+    debit:""
   });
 
   const getListItemSource = () => {
@@ -90,35 +92,38 @@ function EditPettyCashRelease() {
   const { data: vendors = [] } = useFetchVendorQuery();
 
   const handleSaveJournalEntry = async () => {
-  try {
-    if (
-      !journalForm.accountTitleId ||
-      !journalForm.subAccountTitleId ||
-      !journalForm.departmentId ||
-      !journalForm.listItemType
-    ) {
-      toast.error("Please complete journal entry fields");
-      return;
+    try {
+      if (
+        !journalForm.accountTitleId ||
+        !journalForm.subAccountTitleId ||
+        !journalForm.departmentId ||
+        !journalForm.listItemType
+      ) {
+        toast.error("Please complete journal entry fields");
+        return;
+      }
+
+      await createJournalEntry(journalForm).unwrap();
+      setJournalForm({
+        belongsToType: "Petty Cash Release",
+        belongsToId: Number(id),
+        accountTitleId: "",
+        subAccountTitleId: "",
+        departmentId: "",
+        listItemType: "",
+        listItemId: "",
+        credit:"",
+        debit:"",
+      });
+
+      toast.success("Journal Entry Created");
+      setOpenJournalModal(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create journal entry");
     }
-
-    await createJournalEntry(journalForm).unwrap();
-    setJournalForm({
-      belongsToType: "Petty Cash Release",
-      belongsToId: Number(id),
-      accountTitleId: "",
-      subAccountTitleId: "",
-      departmentId: "",
-      listItemType: "",
-      listItemId: "",
-    });
-
-    toast.success("Journal Entry Created");
-    setOpenJournalModal(false);
-  } catch (err) {
-    console.error(err);
-    toast.error("Failed to create journal entry");
-  }
-};
+  };
+  
   const accountRef = useRef(null);
   const subAccountRef = useRef(null);
   const departmentRef = useRef(null);
@@ -236,6 +241,20 @@ function EditPettyCashRelease() {
         return "-";
     }
   };
+
+  const filteredJournalEntries = journalEntries.filter(
+    j => j.belongsToType === "Petty Cash Release" && j.belongsToId === Number(id)
+  );
+
+  const totalDebit = filteredJournalEntries.reduce((sum, j) => {
+    const value = parseFloat(j.debit);
+    return sum + (isNaN(value) ? 0 : value);
+  }, 0);
+
+  const totalCredit = filteredJournalEntries.reduce((sum, j) => {
+    const value = parseFloat(j.credit);
+    return sum + (isNaN(value) ? 0 : value);
+  }, 0);
 
   if (isLoadingPettyCash || showLoader) {
     return (
@@ -447,7 +466,14 @@ function EditPettyCashRelease() {
               </svg>
           </button>
         </div>
-
+        {totalDebit !== totalCredit && (
+          <div className={style.notifJounalEntry}>
+            <svg className={style.svgNotifJournal} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor" d="m21.171 15.398l-5.912-9.854C14.483 4.251 13.296 3.511 12 3.511s-2.483.74-3.259 2.031l-5.912 9.856c-.786 1.309-.872 2.705-.235 3.83C3.23 20.354 4.472 21 6 21h12c1.528 0 2.77-.646 3.406-1.771s.551-2.521-.235-3.831M12 17.549c-.854 0-1.55-.695-1.55-1.549c0-.855.695-1.551 1.55-1.551s1.55.696 1.55 1.551c0 .854-.696 1.549-1.55 1.549m1.633-7.424c-.011.031-1.401 3.468-1.401 3.468c-.038.094-.13.156-.231.156s-.193-.062-.231-.156l-1.391-3.438a1.8 1.8 0 0 1-.129-.655c0-.965.785-1.75 1.75-1.75a1.752 1.752 0 0 1 1.633 2.375" />
+            </svg>
+             Total Debit and Credit are not equal!
+          </div>
+        )}
         <table className={style.tableJournal}>
           <thead>
             <tr className={style.journalHeaderTable}>
@@ -456,14 +482,12 @@ function EditPettyCashRelease() {
               <th>Department</th>
               <th>List Item Type</th>
               <th>List Item</th>
+              <th>Credit</th>
+              <th>Debit</th>
             </tr>
           </thead>
           <tbody>
-            {journalEntries.filter(
-              j =>
-                j.belongsToType === "Petty Cash Release" &&
-                j.belongsToId === Number(id)
-            ).length === 0 ? (
+            {filteredJournalEntries.length === 0 ? (
               <tr className={style.journalBodyTable}>
                 <td
                   style={{
@@ -476,27 +500,38 @@ function EditPettyCashRelease() {
                 </td>
               </tr>
             ) : (
-              journalEntries
-                .filter(
-                  j =>
-                    j.belongsToType === "Petty Cash Release" &&
-                    j.belongsToId === Number(id)
-                )
-                .map(j => (
+              <>
+                {filteredJournalEntries.map(j => (
                   <tr key={j.id} className={style.journalBodyTable}>
                     <td>{j.account?.name}</td>
                     <td>{j.subAccount?.name}</td>
                     <td>{j.department?.name}</td>
                     <td>{j.listItemType}</td>
                     <td>{getListItemNameFromJournal(j)}</td>
+                    <td>{Number(j.credit).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>{Number(j.debit).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   </tr>
-                ))
+                ))}
+
+                <tr className={style.journalTotalRow}>
+                  <td colSpan={5} style={{ textAlign: "right", fontWeight: "bold" }}>Total:</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td style={{ fontWeight: "bold" }}>
+                    {totalCredit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </td>
+                  <td style={{ fontWeight: "bold" }}>
+                    {totalDebit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              </>
             )}
           </tbody>
         </table>
       </div>
 
-{/* modal */}
       {openJournalModal && (
         <div className={style.modalOverlay}>
           <div className={style.modal}>
@@ -534,6 +569,16 @@ function EditPettyCashRelease() {
               }}
             >
               {/* Account Title */}
+              <div style={{
+                  display:'flex',
+                  width:'100%',
+                  gap: '1rem'
+                }}>
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                }}>
               <label className={style.modalLabel}>Account Title:</label>
               <div className={style.customSelectWrapper} ref={accountRef}>
                 <div
@@ -566,8 +611,14 @@ function EditPettyCashRelease() {
                   </div>
                 )}
               </div>
+            </div>
 
               {/* Sub Account */}
+                <div style={{
+                  display:'flex',
+                  flexDirection:'column',
+                  width:'100%',
+                }}>
               <label className={style.modalLabel}>Sub Account:</label>
               <div className={style.customSelectWrapper} ref={subAccountRef}>
                 <div
@@ -600,7 +651,9 @@ function EditPettyCashRelease() {
                   </div>
                 )}
               </div>
-
+            </div>
+          </div>
+            
               {/* Department */}
               <label className={style.modalLabel}>Department:</label>
               <div className={style.customSelectWrapper} ref={departmentRef}>
@@ -713,7 +766,32 @@ function EditPettyCashRelease() {
                 )}
               </div>
 
-              {/* buttons */}
+              <label className={style.modalLabel}>Credit:</label>
+              <input
+                type="text"
+                value={journalForm.credit}
+                onChange={e =>
+                  setJournalForm(prev => ({
+                    ...prev,
+                    credit: e.target.value
+                  }))
+                }
+                placeholder="0.0"
+              />
+
+              <label className={style.modalLabel}>Debit:</label>
+              <input
+                type="text"
+                value={journalForm.debit}
+                onChange={e =>
+                  setJournalForm(prev => ({
+                    ...prev,
+                    debit: e.target.value
+                  }))
+                }
+                placeholder="0.0"
+              />
+
               <div className={style.modalActions}>
                 <button
                   type="button"

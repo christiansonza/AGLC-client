@@ -70,23 +70,25 @@ export const bookingApi = createApi({
     }),
 
     // Journal Booking
+    getAllJournals: builder.query({
+      query: () => `/booking/journals`, 
+      providesTags: ['journal'],
+    }),
 
     fetchJournalBooking: builder.query({
-      query: (bookingId) => `/booking/${bookingId}/journal`,
-      providesTags: (result, error, bookingId) => [
-        { type: 'journal', id: bookingId },
-      ],
+      query: (bookingId) => `/booking/${bookingId}/journals`,
+      providesTags: (result, error, bookingId) => [{ type: 'journal', id: bookingId }],
     }),
 
     fetchJournalBookingById: builder.query({
       query: ({ bookingId, journalId }) =>
-        `/booking/${bookingId}/journal/${journalId}`,
+        `/booking/${bookingId}/journals/${journalId}`,
       providesTags: ['journal'],
     }),
 
     createJournalBooking: builder.mutation({
       query: ({ bookingId, ...newJournal }) => ({
-        url: `/booking/${bookingId}/journal`,
+        url: `/booking/${bookingId}/journals`,
         method: 'POST',
         body: newJournal,
       }),
@@ -125,5 +127,6 @@ export const {
   useFetchJournalBookingQuery,
   useFetchJournalBookingByIdQuery,
   useCreateJournalBookingMutation,
+  useGetAllJournalsQuery
   // useUpdateJournalBookingMutation,
 } = bookingApi;

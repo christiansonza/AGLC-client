@@ -6,27 +6,31 @@ import style from '../views/css/page.module.css';
 import {useFetchCustomerQuery} from '../features/customerSlice'
 import { Mosaic } from "react-loading-indicators";
 
+import { useGetAllJournalsQuery } from '../features/bookingSlice';
+
+
 function Booking() {
-const [openCustomer, setOpenCustomer] = useState(false);
-const customerRef = useRef(null);
+  const [openCustomer, setOpenCustomer] = useState(false);
+  const customerRef = useRef(null);
 
-const { data: customers = [] } = useFetchCustomerQuery();
-const activeCustomers = customers.filter(c => c.isActive);
+  const { data: customers = [] } = useFetchCustomerQuery();
+  const activeCustomers = customers.filter(c => c.isActive);
 
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (customerRef.current && !customerRef.current.contains(event.target)) {
-      setOpenCustomer(false);
-    }
-  };
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-}, []);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (customerRef.current && !customerRef.current.contains(event.target)) {
+        setOpenCustomer(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const navigate = useNavigate();
   const { data, isError, error, isLoading } = useFetchBookingQuery();
   const bookings = data ?? [];
-
+  const { data: journals = [], isLoading: isJournalLoading } = useGetAllJournalsQuery();
+  
   const [formData, setFormData] = useState({
     customerId: '',
     remarks: '',
@@ -37,20 +41,34 @@ useEffect(() => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
   const [showModal, setShowModal] = useState(false);
+  
+  const getCustomerName = (id) => {
+    const customer = customers.find(c => c.id === id);
+    return customer?.name?.toLowerCase() || "";
+  };
+  
+  const parseNumber = (val) => Number(String(val).replace(/,/g, '')) || 0;
 
-const getCustomerName = (id) => {
-  const customer = customers.find(c => c.id === id);
-  return customer?.name?.toLowerCase() || "";
-};
-const filteredBookings = bookings.filter((b) => {
-  const query = search.toLowerCase();
+  const bookingsWithBalance = bookings.map(b => {
+    const relatedJournals = journals.filter(j => Number(j.bookingId) === Number(b.id));
 
-  return (
-    b.bookingNumber?.toLowerCase().includes(query) ||
-    getCustomerName(b.customerId).includes(query) ||
-    b.remarks?.toLowerCase().includes(query)
-  );
-});
+    const totalDebit = relatedJournals.reduce((sum, j) => sum + parseNumber(j.debit), 0);
+    const totalCredit = relatedJournals.reduce((sum, j) => sum + parseNumber(j.credit), 0);
+
+    return {
+      ...b,
+      isBalanced: Math.round(totalDebit * 100) === Math.round(totalCredit * 100)
+    };
+  });
+
+  const filteredBookings = bookingsWithBalance.filter(b => {
+    const query = search.toLowerCase();
+    return (
+      b.bookingNumber?.toLowerCase().includes(query) ||
+      getCustomerName(b.customerId).includes(query) ||
+      b.remarks?.toLowerCase().includes(query)
+    );
+  });
 
 
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
@@ -83,7 +101,7 @@ const filteredBookings = bookings.filter((b) => {
     return () => clearTimeout(timer);
     }, []);
      
-    if (showLoader || isLoading) {
+    if (showLoader || isLoading || isJournalLoading) {
       return (
         <div
           style={{
@@ -192,7 +210,7 @@ const filteredBookings = bookings.filter((b) => {
                       </svg>
                     </button>
                   </div>
-                  <form onSubmit={handleSubmit} className={style.formContainer}>
+                <form onSubmit={handleSubmit} className={style.formContainer}>
                   <label className={style.modalLabel}>Customer: </label>
                   <div className={style.customSelectWrapper} ref={customerRef}>
                   <div
@@ -222,16 +240,6 @@ const filteredBookings = bookings.filter((b) => {
                     </div>
                   )}
                 </div>
-
-                {/* <input
-                  className={style.disableBookingId}
-                  disabled
-                  type="number"
-                  value={formData.customerId}
-                  onChange={e => setFormData({ ...formData, customerId: e.target.value })}
-                  placeholder="Customer ID"
-                  required
-                /> */}
                 <label className={style.modalLabel}>Remarks: </label>
                 <textarea name="" id=""
                   type="text"
@@ -254,6 +262,7 @@ const filteredBookings = bookings.filter((b) => {
         <table>
           <thead>
             <tr className={style.headBookingTable}>
+              <th></th>
               <th>Booking Number</th>
               <th>Customer Name</th>
               <th>Remarks</th>
@@ -268,6 +277,15 @@ const filteredBookings = bookings.filter((b) => {
             ) : (
               currentBookings.map(booking => (
                 <tr className={style.bodyBookingTable} key={booking.id}>
+                  <td>
+                  {!booking.isBalanced && (
+                    <span className={style.warningIcon} data-tooltip="Total Debit and Credit are not equal" style={{ color: "orange" }}>
+                      <svg className={style.warningIconPettyCash} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 20a8 8 0 1 0 0-16a8 8 0 0 0 0 16M10.756 8.4C10.686 7.65 11.264 7 12 7s1.313.649 1.244 1.4l-.494 4.15a.76.76 0 0 1-.75.7a.76.76 0 0 1-.75-.7zm2.494 7.35a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0" />
+                      </svg>
+                    </span>
+                  )}
+                </td>
                   <td>{booking.bookingNumber}</td>
                   <td>
                     {customers.find(c => c.id === booking.customerId)?.name || 'N/A'}
@@ -283,7 +301,7 @@ const filteredBookings = bookings.filter((b) => {
             )}
           </tbody>
         </table>
-                  {/* Pagination */}
+        {/* Pagination */}
           {totalPages > 1 && (
             <div className={style.paginationContainer}>
               <button className={style.pageButton} onClick={handlePrevious} disabled={currentPage === 1}>

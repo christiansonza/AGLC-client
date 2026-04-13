@@ -297,24 +297,75 @@ td {
 }
 
 .headPettyCashTable{
-    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+  background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
   display: grid;
-  grid-template-columns: 1fr 1fr 140px;
+  grid-template-columns: 50px 1fr 1fr 140px;
   text-align: left;
   margin-bottom: .2rem;
   border-bottom: 1px solid #eee;
 }
 .bodyPettyCashTable{
   display: grid;
-  grid-template-columns: 1fr 1fr 140px;
+  grid-template-columns: 50px 1fr 1fr 140px;
   text-align: left;
 }
 
 .bodyBookingTable {
   display: grid;
-  grid-template-columns:200px 1fr 1fr 140px;
+  grid-template-columns:50px 200px 1fr 1fr 140px;
   text-align: left;
 }
+.warningIconPettyCash{
+  opacity: .7;
+}
+
+.warningIcon {
+  position: relative; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.warningIcon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;   
+  left: 50%;     
+  transform: translateX(0);
+  background-color: #fffae6;   
+  color: #b35f00;              
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.warningIcon::before {
+  content: '';
+  position: absolute;
+  bottom: 90%;    
+  left: 50%;
+  transform: translateX(0);  
+  border-width: 6px;
+  border-style: solid;
+  border-color: #fffae6 transparent transparent transparent;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.warningIcon:hover::after,
+.warningIcon:hover::before {
+  opacity: 1;
+  transform: translateX(0) translateY(-2px);
+}
+
 th{
   color: #5a5a5a !important;
   display: flex;
@@ -327,7 +378,7 @@ th{
     background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
   border-bottom: 1px solid #eee;
   display: grid;
-  grid-template-columns:200px 1fr 1fr 140px;
+  grid-template-columns:50px 200px 1fr 1fr 140px;
   text-align: left;
   margin-bottom: .25rem;
 }
@@ -1479,7 +1530,7 @@ td.payreqTd {
 }
 .journalHeaderTable{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   background-color: #0D254C;
 }
 .journalHeaderTable th, .EditjournalHeaderTableDetails th{
@@ -1487,7 +1538,11 @@ td.payreqTd {
 }
 .journalBodyTable{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+.journalTotalRow{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .EditjournalHeaderTableDetails{
@@ -1510,7 +1565,19 @@ td.payreqTd {
 .journalHeaderTableBookingDetails th{
   color: #fff !important;
 }
-
+.svgNotifJournal{
+  color: #d97706;
+}
+.notifJounalEntry{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-style: italic;
+  color: #d97706;
+  margin-bottom: 1rem;
+}
 .EditpayreqDetailsBodyTable{
   display: grid;
   grid-template-columns: 140px 1fr 125px  135px 135px 140px 135px 120px;

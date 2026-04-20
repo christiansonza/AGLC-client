@@ -283,6 +283,9 @@ function Nav() {
               className={`${style.accordionContent} ${openPettyCash ? style.openAccordion : ''}`}
               style={{ maxHeight: openPettyCash ? '500px' : '0' }}
             >
+              <Link className={style.link} onClick={closeAllAccordions} to="/pettyCashFund">
+                <p>Petty Cash Fund</p>
+              </Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/pettyCashRelease">
                 <p>Petty Cash Release</p>
               </Link>
@@ -311,6 +314,7 @@ function Nav() {
               style={{ maxHeight: openOrg ? '500px' : '0' }}
             >
               <Link className={style.link} onClick={closeAllAccordions} to="/affiliates"><p>Affiliate</p></Link>
+              <Link className={style.link} onClick={closeAllAccordions} to="/branch"><p>Branches</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/company"><p>Company</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/vendor"><p>Vendor</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/localGovernmentAgency"><p>Local Government Agency</p></Link>

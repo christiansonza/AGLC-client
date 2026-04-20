@@ -83,12 +83,16 @@ td {
   margin-bottom: .2rem;
   border-bottom: 1px solid #eee;
   background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
-
 }
 
 .bodyTable {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+}
+.bodyTableBranch {
+  display: grid;
+  grid-template-columns: 1fr 1fr 140px;
   text-align: left;
 }
 
@@ -118,7 +122,29 @@ td {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 110px 110px 80px;
   text-align: left;
 }
-
+.headTableBranch {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1fr 140px;
+  text-align: left;
+  margin-bottom: .2rem;
+  border-bottom: 1px solid #eee;
+  background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+}
+.headTableFund{
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+  margin-bottom: .2rem;
+  border-bottom: 1px solid #eee;
+  background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+}
+.bodyTableFund {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 140px;
+  text-align: left;
+}
 .headTablePaymentDetail{
     background-color: #fff;
   display: grid;
@@ -312,7 +338,7 @@ td {
 
 .bodyBookingTable {
   display: grid;
-  grid-template-columns:50px 200px 1fr 1fr 140px;
+  grid-template-columns: 200px 1fr 1fr 140px;
   text-align: left;
 }
 .warningIconPettyCash{
@@ -378,7 +404,7 @@ th{
     background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
   border-bottom: 1px solid #eee;
   display: grid;
-  grid-template-columns:50px 200px 1fr 1fr 140px;
+  grid-template-columns: 200px 1fr 1fr 140px;
   text-align: left;
   margin-bottom: .25rem;
 }
@@ -575,8 +601,7 @@ th{
   border-radius: 2px;
   cursor: pointer;
   transition: 0.1s ease-in-out;
-  border: 1px solid #ccc;
-  border-radius: 2px;
+  border: none;
 }
 .editBtnLiquidation:hover{
   display: flex;

@@ -31,6 +31,8 @@ import Broker from './views/Broker'
 import Vessel from './views/Vessel'
 import Shipper from './views/Shipper'
 import Destination from './views/Destination'
+import Branch from './views/Branch'
+import PettyCashFund from './views/PettyCashFund'
 
 
 // Edit
@@ -58,6 +60,8 @@ import EditBroker from './views/update/editBroker';
 import EditVessel from './views/update/editVessel';
 import EditShipper from './views/update/editShipper';
 import EditDestination from './views/update/editDestination';
+import EditBranch from './views/update/editBranch';
+import EditPettyCashFund from './views/update/editPettyCashFund';
 
 function App() {
   return (
@@ -104,6 +108,8 @@ function App() {
                 <Route path="vessel" element={<Vessel />} />
                 <Route path="shipper" element={<Shipper />} />
                 <Route path="destination" element={<Destination />} />
+                <Route path="branch" element={<Branch />} />
+                <Route path="PettyCashFund" element={<PettyCashFund />} />
 
                 {/* Edit */}
                 <Route path="editUser/:id" element={<EditUser />} />
@@ -130,6 +136,7 @@ function App() {
                 <Route path="editVessel/:id" element={<EditVessel />} />
                 <Route path="editShipper/:id" element={<EditShipper />} />
                 <Route path="editDestination/:id" element={<EditDestination />} />
+                <Route path="editPettyCashFund/:id" element={<EditPettyCashFund />} />
               </Routes>
             </>
           }

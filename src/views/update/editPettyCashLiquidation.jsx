@@ -276,7 +276,7 @@ function EditPettyCashLiquidation() {
                 <th>Released Amount</th>
                 <th>Liquidated Amount</th>
                 <th>Return/Refund</th>
-                <th>Action</th>
+                <th></th>
               </tr>
             </thead>
               <tbody>

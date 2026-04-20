@@ -6,7 +6,6 @@ import style from '../views/css/page.module.css';
 import {useFetchCustomerQuery} from '../features/customerSlice'
 import { Mosaic } from "react-loading-indicators";
 
-import { useGetAllJournalsQuery } from '../features/bookingSlice';
 
 
 function Booking() {
@@ -29,7 +28,6 @@ function Booking() {
   const navigate = useNavigate();
   const { data, isError, error, isLoading } = useFetchBookingQuery();
   const bookings = data ?? [];
-  const { data: journals = [], isLoading: isJournalLoading } = useGetAllJournalsQuery();
   
   const [formData, setFormData] = useState({
     customerId: '',
@@ -47,21 +45,9 @@ function Booking() {
     return customer?.name?.toLowerCase() || "";
   };
   
-  const parseNumber = (val) => Number(String(val).replace(/,/g, '')) || 0;
 
-  const bookingsWithBalance = bookings.map(b => {
-    const relatedJournals = journals.filter(j => Number(j.bookingId) === Number(b.id));
-
-    const totalDebit = relatedJournals.reduce((sum, j) => sum + parseNumber(j.debit), 0);
-    const totalCredit = relatedJournals.reduce((sum, j) => sum + parseNumber(j.credit), 0);
-
-    return {
-      ...b,
-      isBalanced: Math.round(totalDebit * 100) === Math.round(totalCredit * 100)
-    };
-  });
-
-  const filteredBookings = bookingsWithBalance.filter(b => {
+ 
+  const filteredBookings = bookings.filter(b => {
     const query = search.toLowerCase();
     return (
       b.bookingNumber?.toLowerCase().includes(query) ||
@@ -101,7 +87,7 @@ function Booking() {
     return () => clearTimeout(timer);
     }, []);
      
-    if (showLoader || isLoading || isJournalLoading) {
+    if (showLoader || isLoading) {
       return (
         <div
           style={{
@@ -262,7 +248,6 @@ function Booking() {
         <table>
           <thead>
             <tr className={style.headBookingTable}>
-              <th></th>
               <th>Booking Number</th>
               <th>Customer Name</th>
               <th>Remarks</th>
@@ -277,15 +262,6 @@ function Booking() {
             ) : (
               currentBookings.map(booking => (
                 <tr className={style.bodyBookingTable} key={booking.id}>
-                  <td>
-                  {!booking.isBalanced && (
-                    <span className={style.warningIcon} data-tooltip="Total Debit and Credit are not equal" style={{ color: "orange" }}>
-                      <svg className={style.warningIconPettyCash} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M12 20a8 8 0 1 0 0-16a8 8 0 0 0 0 16M10.756 8.4C10.686 7.65 11.264 7 12 7s1.313.649 1.244 1.4l-.494 4.15a.76.76 0 0 1-.75.7a.76.76 0 0 1-.75-.7zm2.494 7.35a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0" />
-                      </svg>
-                    </span>
-                  )}
-                </td>
                   <td>{booking.bookingNumber}</td>
                   <td>
                     {customers.find(c => c.id === booking.customerId)?.name || 'N/A'}

@@ -41,6 +41,7 @@ function Branch() {
       })
 
       setShowModal(false)
+      navigate(`/editBranch/${res.data.id}`);
 
     } catch (err) {
       console.log(err)
@@ -96,7 +97,6 @@ function Branch() {
     )
   }
 
-  /* ---------------- ERROR ---------------- */
   if (isError) {
     const status = error?.status
 
@@ -323,7 +323,6 @@ function Branch() {
 
       </div>
 
-      <ToastContainer />
     </main>
   )
 }

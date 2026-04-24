@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import { Mosaic } from "react-loading-indicators"
 import { useNavigate } from 'react-router-dom'
@@ -9,6 +9,9 @@ import {
   useCreatePettyCashFundMutation
 } from '../features/pettyCashFundSlice'
 
+import { useFetchBranchQuery } from '../features/branchSlice'
+import { useFetchDepartmentQuery } from '../features/departmentSlice'
+
 function PettyCashFund() {
 
   const { data, isLoading, isError, error } = useFetchPettyCashFundQuery()
@@ -18,35 +21,81 @@ function PettyCashFund() {
   const [createFund] = useCreatePettyCashFundMutation()
   const handlePageChange = (page) => setCurrentPage(page)
 
+  const { data: branches = [] } = useFetchBranchQuery()
+  const { data: departments = [] } = useFetchDepartmentQuery()
+
   const [formData, setFormData] = useState({
     code: '',
     name: '',
-    branch: '',
-    department: '',
+    branchId: '',
+    departmentId: '',
     fund: ''
   })
+
+  const [openBranch, setOpenBranch] = useState(false)
+  const [openDepartment, setOpenDepartment] = useState(false)
+
+  const branchRef = useRef(null)
+  const departmentRef = useRef(null)
+  
+  const activeBranches = branches.filter(b => Number(b.isActive) === 1)
+  const activeDepartments = departments.filter(d => Number(d.isActive) === 1)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (branchRef.current && !branchRef.current.contains(e.target)) {
+        setOpenBranch(false)
+      }
+      if (departmentRef.current && !departmentRef.current.contains(e.target)) {
+        setOpenDepartment(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const [showModal, setShowModal] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    if (
+      !formData.code ||
+      !formData.name ||
+      !formData.branchId ||
+      !formData.departmentId ||
+      formData.fund === ''
+    ) {
+      toast.error("All fields are required")
+      return
+    }
+
+    const payload = {
+      ...formData,
+      branchId: Number(formData.branchId),
+      departmentId: Number(formData.departmentId),
+      fund: Number(formData.fund)
+    }
+
+    console.log("Submitting:", payload)
+
     try {
-      const res = await createFund(formData).unwrap()
+      const res = await createFund(payload).unwrap()
 
       toast.success(res.message || 'Created successfully')
 
       setFormData({
         code: '',
         name: '',
-        branch: '',
-        department: '',
-        fund: 0
+        branchId: '',
+        departmentId: '',
+        fund: ''
       })
 
       setShowModal(false)
-      navigate(`/editPettyCashFund/${res.data.id}`);
 
+      navigate(`/editPettyCashFund/${res.data.id}`)
 
     } catch (err) {
       console.log(err)
@@ -60,14 +109,18 @@ function PettyCashFund() {
 
   const safeText = (val) => String(val ?? '').toLowerCase()
 
-  const filtered = funds.filter((f) =>
-    safeText(f.code).includes(search.toLowerCase()) ||
-    safeText(f.name).includes(search.toLowerCase()) ||
-    safeText(f.branch).includes(search.toLowerCase()) ||
-    safeText(f.fund).includes(search.toLowerCase()) ||
-    safeText(f.department).includes(search.toLowerCase())
+  const filtered = funds.filter((f) => {
+    const branchName = branches.find(b => b.id == f.branchId)?.name || ''
+    const deptName = departments.find(d => d.id == f.departmentId)?.name || ''
 
-  )
+    return (
+      safeText(f.code).includes(search.toLowerCase()) ||
+      safeText(f.name).includes(search.toLowerCase()) ||
+      safeText(branchName).includes(search.toLowerCase()) ||
+      safeText(deptName).includes(search.toLowerCase()) ||
+      safeText(f.fund).includes(search.toLowerCase())
+    )
+  })
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage)
   const indexOfLastItem = currentPage * itemsPerPage
@@ -76,7 +129,6 @@ function PettyCashFund() {
 
   const handleNext = () => currentPage < totalPages && setCurrentPage(p => p + 1)
   const handlePrevious = () => currentPage > 1 && setCurrentPage(p => p - 1)
-
 
   const [showLoader, setShowLoader] = useState(true)
 
@@ -125,8 +177,8 @@ function PettyCashFund() {
                   <g fill="none">
                     <use href="#SVGS9q3IkIf" />
                     <path d="M12 13.5a2.5 2.5 0 1 1 0 5a2.5 2.5 0 0 1 0-5m5.136-7.209L19 5.67l1.824 5.333H3.002L3 11.004L14.146 2.1z" />
-                    <path stroke="currentColor" stroke-linecap="square" stroke-width="2" d="M21 11.003h-.176L19.001 5.67L3.354 11.003L3 11m-.5.004H3L14.146 2.1l2.817 3.95" />
-                    <g stroke="currentColor" stroke-linecap="square" stroke-width="2">
+                    <path stroke="currentColor" strokeLinecap="square" strokeWidth="2" d="M21 11.003h-.176L19.001 5.67L3.354 11.003L3 11m-.5.004H3L14.146 2.1l2.817 3.95" />
+                    <g stroke="currentColor" strokeLinecap="square" strokeWidth="2">
                       <path d="M14.5 16a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0Z" />
                       <use href="#SVGS9q3IkIf" />
                       <path d="M2.5 11h2a2 2 0 0 1-2 2zm19 0h-2a2 2 0 0 0 2 2zm-19 10h2.002A2 2 0 0 0 2.5 18.998zm19 0h-2a2 2 0 0 1 2-2z" />
@@ -180,7 +232,7 @@ function PettyCashFund() {
             <div className={style.modal}>
 
               <div className={style.modalHeader}>
-                <h3>Add Petty Cash</h3>
+                <h3>Add Petty Cash Fund</h3>
                 <button
                     type="button"
                     onClick={() => setShowModal(false)}
@@ -221,25 +273,71 @@ function PettyCashFund() {
                   }
                 />
                 <label className={style.modalLabel}>Branch:</label>
-                <input
-                  value={formData.branch}
-                  onChange={(e) =>
-                    setFormData({ ...formData, branch: e.target.value })
-                  }
-                />
-                <label className={style.modalLabel}>Department:</label>
-                <input
-                  value={formData.department}
-                  onChange={(e) =>
-                    setFormData({ ...formData, department: e.target.value })
-                  }
-                />
+
+<div className={style.customSelectWrapper} ref={branchRef}>
+  <div
+    className={style.customSelectInput}
+    onClick={() => setOpenBranch(!openBranch)}
+  >
+    {formData.branchId
+  ? activeBranches.find(b => b.id == formData.branchId)?.name
+  : "Select Branch"}
+    <span className={style.selectArrow}>▾</span>
+  </div>
+
+  {openBranch && (
+    <div className={style.customSelectDropdown}>
+   {activeBranches.map(b => (
+        <div
+          key={b.id}
+          className={style.customSelectOption}
+          onClick={() => {
+            setFormData({ ...formData, branchId: b.id })
+            setOpenBranch(false)
+          }}
+        >
+          {b.name}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+              <label className={style.modalLabel}>Department:</label>
+
+<div className={style.customSelectWrapper} ref={departmentRef}>
+  <div
+    className={style.customSelectInput}
+    onClick={() => setOpenDepartment(!openDepartment)}
+  >
+    {formData.departmentId
+  ? activeDepartments.find(d => d.id == formData.departmentId)?.name
+  : "Select Department"}
+    <span className={style.selectArrow}>▾</span>
+  </div>
+
+  {openDepartment && (
+    <div className={style.customSelectDropdown}>
+    {activeDepartments.map(d => (
+        <div
+          key={d.id}
+          className={style.customSelectOption}
+          onClick={() => {
+            setFormData({ ...formData, departmentId: d.id })
+            setOpenDepartment(false)
+          }}
+        >
+          {d.name}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
                 <label className={style.modalLabel}>Fund:</label>
                 <input
                   type="number"
                   value={formData.fund}
                   onChange={(e) =>
-                    setFormData({ ...formData, fund: Number(e.target.value) })
+                    setFormData({ ...formData, fund: e.target.value })
                   }
                 />
                 <div className={style.modalActions}>
@@ -281,8 +379,13 @@ function PettyCashFund() {
                 <tr className={style.bodyTableFund} key={f.id}>
                     <td>{f.code}</td>
                     <td>{f.name}</td>
-                    <td>{f.branch}</td>
-                    <td>{f.department}</td>
+                    <td>
+                      {branches.find(b => b.id == f.branchId)?.name || '—'}
+                    </td>
+
+                    <td>
+                      {departments.find(d => d.id == f.departmentId)?.name || '—'}
+                    </td>
                     <td>{f.fund}</td>
                     <td>
                     <button
@@ -343,7 +446,6 @@ function PettyCashFund() {
         )}
         </div>
 
-      <ToastContainer />
     </main>
   )
 }

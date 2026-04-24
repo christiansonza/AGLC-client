@@ -47,7 +47,7 @@ function EditDepartment() {
         code: department.code || "",
         name: department.name || "",
         type: department.type || "",
-        isActive: department.isActive ?? false,
+        isActive: Boolean(Number(department.isActive)),
       });
     }
   }, [department]);
@@ -57,7 +57,6 @@ function EditDepartment() {
     try {
       await updateDepartment({ id, ...formData }).unwrap();
       toast.success("Updated successfully!");
-      // navigate("/department");
     } catch (err) {
       console.error(err);
       toast.error("Failed to update department.");

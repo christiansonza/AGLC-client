@@ -136,6 +136,7 @@ function App() {
                 <Route path="editVessel/:id" element={<EditVessel />} />
                 <Route path="editShipper/:id" element={<EditShipper />} />
                 <Route path="editDestination/:id" element={<EditDestination />} />
+                <Route path="editBranch/:id" element={<EditBranch />} />
                 <Route path="editPettyCashFund/:id" element={<EditPettyCashFund />} />
               </Routes>
             </>

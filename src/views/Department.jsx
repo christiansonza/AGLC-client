@@ -25,7 +25,7 @@ function Department() {
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useFetchDepartmentQuery();
 
-  const departments = data ?? [];
+const departments = data ?? [];
 
   const [formData, setFormData] = useState({
     code: "",
@@ -274,7 +274,10 @@ function Department() {
                           type="checkbox"
                           checked={formData.isActive}
                           onChange={(e) =>
-                            setFormData({ ...formData, isActive: e.target.checked })
+                            setFormData({
+                              ...formData,
+                              isActive: e.target.checked ? 1 : 0
+                            })
                           }
                         />
                         <span className={style.slider}></span>

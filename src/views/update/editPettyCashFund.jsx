@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import { Mosaic } from "react-loading-indicators"
@@ -10,6 +10,9 @@ import {
   useUpdatePettyCashFundMutation
 } from '../../features/pettyCashFundSlice'
 
+import { useFetchBranchQuery } from '../../features/branchSlice'
+import { useFetchDepartmentQuery } from '../../features/departmentSlice'
+
 function EditPettyCashFund() {
 
   const { id } = useParams()
@@ -20,11 +23,20 @@ function EditPettyCashFund() {
   const [updatePettyCashFund, { isLoading: isUpdating }] =
     useUpdatePettyCashFundMutation()
 
+  const { data: branches = [] } = useFetchBranchQuery()
+  const { data: departments = [] } = useFetchDepartmentQuery()
+
+  const [openBranch, setOpenBranch] = useState(false)
+  const [openDepartment, setOpenDepartment] = useState(false)
+
+  const branchRef = useRef(null)
+  const departmentRef = useRef(null)
+
   const [formData, setFormData] = useState({
     code: '',
     name: '',
-    branch: '',
-    department: '',
+    branchId: '',
+    departmentId: '',
     fund: ''
   })
 
@@ -33,12 +45,26 @@ function EditPettyCashFund() {
       setFormData({
         code: pettyCashFund.code || '',
         name: pettyCashFund.name || '',
-        branch: pettyCashFund.branch || '',
-        department: pettyCashFund.department || '',
+        branchId: pettyCashFund.branchId || '',
+        departmentId: pettyCashFund.departmentId || '',
         fund: pettyCashFund.fund || ''
       })
     }
   }, [pettyCashFund])
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (branchRef.current && !branchRef.current.contains(e.target)) {
+        setOpenBranch(false)
+      }
+      if (departmentRef.current && !departmentRef.current.contains(e.target)) {
+        setOpenDepartment(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -150,27 +176,71 @@ function EditPettyCashFund() {
             required
           />
 
-          <label className={style.editLabel}>Branch:</label>
-          <input
-            className={style.editInput}
-            type="text"
-            value={formData.branch}
-            onChange={(e) =>
-              setFormData({ ...formData, branch: e.target.value })
-            }
-            required
-          />
+<label className={style.editLabel}>Branch:</label>
 
-          <label className={style.editLabel}>Department:</label>
-          <input
-            className={style.editInput}
-            type="text"
-            value={formData.department}
-            onChange={(e) =>
-              setFormData({ ...formData, department: e.target.value })
-            }
-            required
-          />
+<div className={style.customSelectWrapper} ref={branchRef}>
+  <div
+    className={style.customSelectInput}
+    onClick={() => setOpenBranch(!openBranch)}
+  >
+    {formData.branchId
+      ? branches.find(b => b.id == formData.branchId)?.name
+      : "Select Branch"}
+    <span>▾</span>
+  </div>
+
+  {openBranch && (
+    <div className={style.customSelectDropdown}>
+      {branches
+        .filter(b => b.id != formData.branchId) // remove selected
+        .map(b => (
+          <div
+            key={b.id}
+            className={style.customSelectOption}
+            onClick={() => {
+              setFormData({ ...formData, branchId: b.id })
+              setOpenBranch(false)
+            }}
+          >
+            {b.name}
+          </div>
+        ))}
+    </div>
+  )}
+</div>
+
+<label className={style.editLabel}>Department:</label>
+
+<div className={style.customSelectWrapper} ref={departmentRef}>
+  <div
+    className={style.customSelectInput}
+    onClick={() => setOpenDepartment(!openDepartment)}
+  >
+    {formData.departmentId
+      ? departments.find(d => d.id == formData.departmentId)?.name
+      : "Select Department"}
+    <span>▾</span>
+  </div>
+
+  {openDepartment && (
+    <div className={style.customSelectDropdown}>
+      {departments
+        .filter(d => d.id != formData.departmentId) // remove selected
+        .map(d => (
+          <div
+            key={d.id}
+            className={style.customSelectOption}
+            onClick={() => {
+              setFormData({ ...formData, departmentId: d.id })
+              setOpenDepartment(false)
+            }}
+          >
+            {d.name}
+          </div>
+        ))}
+    </div>
+  )}
+</div>
 
           <label className={style.editLabel}>Fund:</label>
           <input

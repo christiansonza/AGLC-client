@@ -214,7 +214,6 @@ function Affiliates() {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  placeholder="Affiliate Name"
                   required
                 />
 

@@ -372,7 +372,6 @@ function PaymentRequestPage() {
               <label className={style.modalLabel}>Department Type: </label>
                <input
                   type="text"
-                  placeholder="Department Type"
                   value={
                     formData.costCenterId
                       ? activeDepartments.find((d) => d.id === formData.costCenterId)?.type || ""
@@ -467,7 +466,6 @@ function PaymentRequestPage() {
                 <label className={style.modalLabel}>Remarks: </label>
                 <textarea
                   type="text"
-                  placeholder="Remarks"
                   value={formData.remarks}
                   onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
                 >

@@ -178,7 +178,6 @@ function Vendor() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Name"
                   required
                 />
                 <label className={style.modalLabel}>Address: </label>
@@ -186,14 +185,12 @@ function Vendor() {
                   type="text"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  placeholder="Address"
                 />
                 <label className={style.modalLabel}>TIN: </label>
                 <input
                   type="text"
                   value={formData.tin}
                   onChange={(e) => setFormData({ ...formData, tin: e.target.value })}
-                  placeholder="TIN"
                 />
                 <div className={style.activeWrap}>
                   <div className={style.toggleRow}>

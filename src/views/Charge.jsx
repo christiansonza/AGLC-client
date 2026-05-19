@@ -178,7 +178,6 @@ function Charge() {
                 <label className={style.modalLabel}>Code: </label>
                 <input
                   type="text"
-                  placeholder="Code"
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                   required
@@ -187,7 +186,6 @@ function Charge() {
                 <label className={style.modalLabel}>Name: </label>
                 <input
                   type="text"
-                  placeholder="Name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required

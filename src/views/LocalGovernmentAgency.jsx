@@ -200,14 +200,13 @@ function LocalGovernmentAgency() {
               </div>
 
               <form onSubmit={handleSubmit} className={style.formContainer}>
-                <label className={style.modalLabel}>Name</label>
+                <label className={style.modalLabel}>Name:</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  placeholder="Agency name"
                   required
                 />
 

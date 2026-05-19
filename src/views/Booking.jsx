@@ -231,7 +231,6 @@ function Booking() {
                   type="text"
                   value={formData.remarks}
                   onChange={e => setFormData({ ...formData, remarks: e.target.value })}
-                  placeholder="Remarks"
                 >
                 </textarea>
                 

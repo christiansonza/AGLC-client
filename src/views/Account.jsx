@@ -309,7 +309,6 @@ function Account() {
                   onChange={(e) =>
                     setFormData({ ...formData, code: e.target.value })
                   }
-                  placeholder="Code"
                   required
                 />
                 <label className={style.modalLabel}>Name: </label>
@@ -319,7 +318,6 @@ function Account() {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  placeholder="Name"
                   required
                 />
                 <label className={style.modalLabel}>Account Type: </label>
@@ -329,7 +327,6 @@ function Account() {
                   onChange={(e) =>
                     setFormData({ ...formData, accountType: e.target.value })
                   }
-                  placeholder="Account Type"
                 />
                 <label className={style.modalLabel}>Report Type: </label>
                 <input
@@ -338,7 +335,6 @@ function Account() {
                   onChange={(e) =>
                     setFormData({ ...formData, reportType: e.target.value })
                   }
-                  placeholder="Report Type"
                 />
                 <label className={style.modalLabel}>Line Item: </label>
                 <input
@@ -347,7 +343,6 @@ function Account() {
                   onChange={(e) =>
                     setFormData({ ...formData, lineItem: e.target.value })
                   }
-                  placeholder="Line Item"
                 />
                 <div className={style.activeWrap}>
                   <div className={style.toggleRow}>

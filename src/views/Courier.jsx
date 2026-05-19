@@ -202,7 +202,6 @@ function Courier() {
                   onChange={(e) =>
                     setFormData({ ...formData, courier: e.target.value })
                   }
-                  placeholder="Courier name"
                   required
                 />
 

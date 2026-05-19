@@ -330,7 +330,6 @@ const handleFileChange = async (e) => {
                   onChange={(e) =>
                     setFormData({ ...formData, code: e.target.value })
                   }
-                  placeholder="Code"
                   required
                 />
 
@@ -341,7 +340,6 @@ const handleFileChange = async (e) => {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  placeholder="Name"
                   required
                 />
 
@@ -377,7 +375,6 @@ const handleFileChange = async (e) => {
                   onChange={(e) =>
                     setFormData({ ...formData, accountListItem: e.target.value })
                   }
-                  placeholder="Account List Item"
                 />
                 <label className={style.modalLabel}>Account Title: </label>
                 <div className={style.customSelectWrapper} ref={accountRef}>

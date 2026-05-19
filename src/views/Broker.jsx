@@ -212,7 +212,6 @@ function Broker() {
                   onChange={(e) =>
                     setFormData({ ...formData, broker: e.target.value })
                   }
-                  placeholder="Broker name"
                   required
                 />
 

@@ -7,7 +7,8 @@ import {
   useFetchBookingByIdQuery,
   useUpdateBookingMutation,
   useFetchBookingDetailsQuery,
-  useCreateBookingDetailMutation
+  useCreateBookingDetailMutation,
+  useUpdateBookingDetailMutation
 } from '../../features/bookingSlice';
 
 import { useFetchCustomerQuery } from '../../features/customerSlice';
@@ -25,6 +26,7 @@ function EditBooking() {
 
   const { data: bookingData, isLoading, isError, error } = useFetchBookingByIdQuery(id);
   const [updateBooking] = useUpdateBookingMutation();
+  const [updateBookingDetail] = useUpdateBookingDetailMutation();
 
   const { data: bookingDetails = [] } = useFetchBookingDetailsQuery(id);
   const [createBookingDetail] = useCreateBookingDetailMutation();
@@ -49,7 +51,6 @@ function EditBooking() {
   const { data: shippers = [] } = useGetShipperQuery();
   const { data: destinations = [] } = useGetDestinationQuery();
 
-  const [openDetailModal, setOpenDetailModal] = useState(false);
   const [detailForm, setDetailForm] = useState({
     voyNo: '',
     courierId: null,
@@ -75,13 +76,46 @@ function EditBooking() {
   const shipperRef = useRef(null);
   const destinationRef = useRef(null);
 
-  const [detailList, setDetailList] = useState([]);
-
   useEffect(() => {
-    if (bookingDetails) {
-      setDetailList(bookingDetails);
+    if (
+      bookingDetails.length > 0 &&
+      couriers.length > 0 &&
+      brokers.length > 0 &&
+      vessels.length > 0 &&
+      shippers.length > 0 &&
+      destinations.length > 0
+    ) {
+      const detail = bookingDetails[0];
+
+      setDetailForm({
+        voyNo: detail.voyNo || '',
+        voy: detail.voy || '',
+        no: detail.no || '',
+
+        courierId:
+          couriers.find(c => c.courier === detail.courier)?.id || null,
+
+        brokerId:
+          brokers.find(b => b.broker === detail.broker)?.id || null,
+
+        vesselId:
+          vessels.find(v => v.vesselName === detail.vesselName)?.id || null,
+
+        shipperId:
+          shippers.find(s => s.shipper === detail.shipper)?.id || null,
+
+        destinationId:
+          destinations.find(d => d.destinationName === detail.destinationName)?.id || null,
+      });
     }
-  }, [bookingDetails]);
+  }, [
+    bookingDetails,
+    couriers,
+    brokers,
+    vessels,
+    shippers,
+    destinations
+  ]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -98,22 +132,22 @@ function EditBooking() {
 
 
   const [showLoader, setShowLoader] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    useEffect(() => {
+      const timer = setTimeout(() => setShowLoader(false), 1000);
+      return () => clearTimeout(timer);
+    }, []);
 
-  if (showLoader || isLoading) {
-    return (
-      <div style={{
-        position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-        display: "flex", justifyContent: "center", alignItems: "center",
-        backgroundColor: "#fff", zIndex: 9999
-      }}>
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    );
-  }
+    if (showLoader || isLoading) {
+      return (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+          display: "flex", justifyContent: "center", alignItems: "center",
+          backgroundColor: "#fff", zIndex: 9999
+        }}>
+          <Mosaic color="#0D254C" size="small" />
+        </div>
+      );
+    }
 
 
   if (isError) {
@@ -131,59 +165,71 @@ function EditBooking() {
     }
     return <p>Error: {error?.data?.message || 'Something went wrong'}</p>;
   }
-
+  
   const handleUpdate = async (e) => {
     e.preventDefault();
+
     try {
       await updateBooking({ id, ...formData }).unwrap();
-      toast.success('Booking updated successfully!');
+
+      const {
+        voyNo,
+        voy,
+        no,
+        courierId,
+        brokerId,
+        vesselId,
+        shipperId,
+        destinationId
+      } = detailForm;
+
+      if (
+        voyNo || voy || no || courierId || brokerId || vesselId || shipperId || destinationId
+      ) {
+        if (
+          !voyNo || !voy || !no ||
+          courierId == null || brokerId == null ||
+          vesselId == null || shipperId == null || destinationId == null
+        ) {
+          toast.error("Please complete all booking detail fields");
+          return;
+        }
+
+        const payload = {
+          voyNo,
+          voy,
+          no,
+          courier: couriers.find(c => c.id === courierId)?.courier || '',
+          broker: brokers.find(b => b.id === brokerId)?.broker || '',
+          vesselName: vessels.find(v => v.id === vesselId)?.vesselName || '',
+          shipper: shippers.find(s => s.id === shipperId)?.shipper || '',
+          destinationName: destinations.find(d => d.id === destinationId)?.destinationName || '',
+        };
+
+        const existingDetail = bookingDetails?.[0];
+
+        if (existingDetail?.id) {
+          await updateBookingDetail({
+            bookingId: id,
+            detailId: existingDetail.id,
+            ...payload
+          }).unwrap();
+        } else {
+          await createBookingDetail({
+            bookingId: id,
+            ...payload
+          }).unwrap();
+        }
+      }
+        toast.success('Booking updated successfully!');
     } catch (err) {
-      console.error(err);
+      console.log("FULL ERROR", err);
+      console.log("ERROR DATA", err?.data);
+      console.log("ERROR STATUS", err?.status);
+
       toast.error(err?.data?.message || 'Update failed!');
     }
   };
-
-  const handleSaveDetail = async () => {
-    const { voyNo, voy, no, courierId, brokerId, vesselId, shipperId, destinationId } = detailForm;
-
-  if (!voyNo || !voy || !no ||
-      courierId == null || brokerId == null || vesselId == null || 
-      shipperId == null || destinationId == null) {
-    toast.error("Please complete all booking detail fields");
-    return;
-  }
-    const payload = {
-      voyNo,
-      voy,
-      no,
-      courier: couriers.find(c => c.id === courierId)?.courier || '',
-      broker: brokers.find(b => b.id === brokerId)?.broker || '',
-      vesselName: vessels.find(v => v.id === vesselId)?.vesselName || '',
-      shipper: shippers.find(s => s.id === shipperId)?.shipper || '',
-      destinationName: destinations.find(d => d.id === destinationId)?.destinationName || '',
-    };
-
-    try {
-      const newDetail = await createBookingDetail({ bookingId: id, ...payload }).unwrap();
-      setDetailList(prev => [...prev, newDetail]);
-      setDetailForm({
-        voyNo: '',
-        courierId: null,
-        brokerId: null,
-        vesselId: null,
-        voy: '',
-        no: '',
-        shipperId: null,
-        destinationId: null,
-      });
-      setOpenDetailModal(false);
-      toast.success("Booking detail added");
-    } catch (err) {
-      console.error(err);
-      toast.error(err?.data?.message || "Failed to add booking detail");
-    }
-  };
-  
 
   return (
     <main className="main-container">
@@ -199,7 +245,7 @@ function EditBooking() {
           <p className={style.headerSubtitle}>View and manage bookings.</p>
         </div>
 
-        <form onSubmit={handleUpdate} className={style.editFormCustomer}>
+        <form onSubmit={handleUpdate} className={style.editFormBookings}>
           <label className={style.editLabel}>Customer: </label>
           <div className={style.customSelectWrapper} ref={customerRef}>
             <div className={style.customSelectInput} onClick={() => setOpenCustomer(!openCustomer)}>
@@ -217,105 +263,30 @@ function EditBooking() {
             )}
           </div>
 
-          <label className={style.editLabel}>Remarks: </label>
-          <textarea
-            style={{ marginBottom: "1rem" }}
-            value={formData.remarks}
-            onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
-            placeholder="Remarks"
-          />
-
-          <button className={style.editButton} type="submit">Update</button>
-        </form>
-
-        {/* Booking Details Table */}
-        <div className={style.flexheaderTitleJournal} style={{ marginTop: "2rem" }}>
-          <div className={style.bookingContainer}>
-            <p className={style.bookingPaymentTitle}>Booking Details</p>
-            <p className={style.bookingPaymentSubtitle}>Add and view booking details.</p>
-          </div>
-          <button className={style.addBtnJournal} onClick={() => setOpenDetailModal(true)}>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z"
-                />
-              </svg>
-          </button>
-        </div>
-
-        <table className={style.tableJournal}>
-          <thead>
-            <tr className={style.journalHeaderTableBookingDetails}>
-              <th>JPC Voy #</th>
-              <th>S/L Courier</th>
-              <th>Broker</th>
-              <th>Vessel Name</th>
-              <th>Voy #</th>
-              <th>No.</th>
-              <th>Shipper</th>
-              <th>Destination</th>
-            </tr>
-          </thead>
-          <tbody>
-            {detailList.length === 0 ? (
-              <tr>
-                <td colSpan={8} style={{ textAlign: "center", padding: "12px" }}>No booking details.</td>
-              </tr>
-            ) : (
-              detailList.map((d, index) => (
-                <tr className={style.journalBodyTableBookingDetails} key={index}>
-                  <td>{d.voyNo}</td>
-                  <td>{d.courier}</td>
-                  <td>{d.broker}</td>
-                  <td>{d.vesselName}</td>
-                  <td>{d.voy}</td>
-                  <td>{d.no}</td>
-                  <td>{d.shipper}</td>
-                  <td>{d.destinationName}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-
-        {/* Booking Details Modal */}
-        {openDetailModal && (
-          <div className={style.modalOverlay}>
-            <div className={style.modal}>
-              <div className={style.modalHeader}>
-                <h3>Add Booking Detail</h3>
-                <button className={style.closeButton} onClick={() => setOpenDetailModal(false)}>
-                  <svg
-                    className={style.closeBtn}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      d="m11.25 4.75-6.5 6.5m0-6.5 6.5 6.5"
-                    />
-                  </svg>
-                </button>
+            <div className={style.flexVoyCour} style={{ marginTop:'4px'}}>
+              <div style={{display:'flex', flexDirection:'column', width:'100%', gap:'4px'}}>
+                  {/* Voy & No */}
+                  <label className={style.modalLabel}>Voy #:</label>
+                  <input
+                    className={style.editInput}
+                    type="text" value={detailForm.voy} onChange={e => setDetailForm(prev => ({ ...prev, voy: e.target.value }))} />
               </div>
-              <form className={style.formContainer} onSubmit={(e) => { e.preventDefault(); handleSaveDetail(); }}>
-                
-              <div className={style.flexVoyCour}>
+              <div style={{display:'flex', flexDirection:'column', width:'100%', gap:'4px'}}>
+                  <label className={style.modalLabel}>No.:</label>
+                  <input 
+                    className={style.editInput}
+                    type="text" value={detailForm.no} onChange={e => setDetailForm(prev => ({ ...prev, no: e.target.value }))} />
+                  </div>
+              </div>
+
+          <div className={style.flexVoyCour}>
                 {/* Voy Number */}
                 <div style={{display:'flex', flexDirection:'column',  width:'100%'}}>
                   <label className={style.modalLabel}>JPC Voy #:</label>
-                  <input type="text" value={detailForm.voyNo} onChange={e => setDetailForm(prev => ({ ...prev, voyNo: e.target.value }))} />
+                  <input
+                    style={{marginTop:'1px'}}
+                    className={style.editInput}
+                    type="text" value={detailForm.voyNo} onChange={e => setDetailForm(prev => ({ ...prev, voyNo: e.target.value }))} />
                 </div>
 
               <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
@@ -382,17 +353,8 @@ function EditBooking() {
               </div>
 
             <div className={style.flexVoyCour}>
-              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
-                  {/* Voy & No */}
-                  <label className={style.modalLabel}>Voy #:</label>
-                  <input type="text" value={detailForm.voy} onChange={e => setDetailForm(prev => ({ ...prev, voy: e.target.value }))} />
-              </div>
-              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
-                  <label className={style.modalLabel}>No.:</label>
-                  <input type="text" value={detailForm.no} onChange={e => setDetailForm(prev => ({ ...prev, no: e.target.value }))} />
-                  </div>
-              </div>
                   {/* Shipper */}
+              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
                   <label className={style.modalLabel}>Shipper:</label>
                   <div className={style.customSelectWrapper} ref={shipperRef}>
                     <div className={style.customSelectInput} onClick={() => setOpenShipper(!openShipper)}>
@@ -409,7 +371,9 @@ function EditBooking() {
                       </div>
                     )}
                   </div>
+                </div>
 
+              <div style={{display:'flex', flexDirection:'column', width:'100%'}}>
                 {/* Destination */}
                 <label className={style.modalLabel}>Destination:</label>
                 <div className={style.customSelectWrapper} ref={destinationRef}>
@@ -427,15 +391,17 @@ function EditBooking() {
                     </div>
                   )}
                 </div>
-
-                <div className={style.modalActions}>
-                  <button type="button" className={style.cancelButton} onClick={() => setOpenDetailModal(false)}>Cancel</button>
-                  <button type="submit" className={style.submitButton}>Save</button>
-                </div>
-              </form>
+              </div>
             </div>
-          </div>
-        )}
+              <label className={style.editLabel} style={{ marginTop:'12px',}}>Remarks: </label>
+              <textarea
+                style={{ marginBottom: "1rem" }}
+                value={formData.remarks}
+                onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
+                placeholder="Remarks"
+              />
+          <button className={style.editButton} type="submit">Update</button>
+        </form>
 
       </div>
       <ToastContainer />

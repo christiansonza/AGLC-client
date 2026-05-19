@@ -195,7 +195,6 @@ function Vessel() {
                   onChange={(e) =>
                     setFormData({ ...formData, vesselName: e.target.value })
                   }
-                  placeholder="Vessel name"
                   required
                 />
                 <div className={style.modalActions}>

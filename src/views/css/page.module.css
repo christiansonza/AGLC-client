@@ -746,11 +746,28 @@ h3{
 }
 .formContainer input {
   width: 100%;
-  padding: 0.65rem;
+  height: 44px;
+  padding:0 6px;
   margin-bottom: 0.75rem;
   border: 1px solid #ccc;
   color: #3a3a3a;
   border-radius: 4px;
+}
+
+input,
+textarea,
+select {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .activeWrap{
@@ -942,6 +959,15 @@ h3{
   padding: 3rem 1.5rem;
   border-radius: 8px;
 }
+.editFormBookings{
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  /* gap: 0.65rem; */
+  width: 100%;        
+  padding: 3rem 1.5rem;
+  border-radius: 8px;
+}
 .editCustomer,.editVendor,.editCharge,.editBooking{
   padding: 2rem;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
@@ -977,7 +1003,7 @@ h3{
 }
 
 .editInput,.editInputSubAccount{
-  height: 40px;
+  height: 44px;
   width: 100%;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -1018,7 +1044,7 @@ h3{
 }
 textarea{
   resize: vertical;
-  height: 80px;
+  height: 120px;
   width: 100%;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -1213,7 +1239,7 @@ textarea{
 }
 
 .customSelectInput {
-  height: 40px;
+  height: 44px;
   width: 100%;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -1238,17 +1264,28 @@ textarea{
   top: 100%;
   left: 0;
   width: 100%;
-  max-height: 180px; 
-  overflow-y: auto;  
+  max-height: 180px;
+  overflow-y: auto;
   border: 1px solid #ccc;
   border-radius: 0 0 4px 4px;
   background-color: #fff;
   z-index: 1000;
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
   font-size: 14px;
-  user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
+
+  animation: slideDown 0.2s ease;
+  transform-origin: top;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scaleY(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
 }
 
 .customSelectOption {
@@ -1257,7 +1294,7 @@ textarea{
 }
 
 .customSelectOption:hover {
-  background-color: #0D254C;
+  background-color: #0f74e0;
   color: #fff;
 }
 

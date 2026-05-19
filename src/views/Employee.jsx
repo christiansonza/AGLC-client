@@ -193,7 +193,6 @@ function Employee() {
               type="text"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              placeholder="Firstname"
               required
             />
             <label className={style.modalLabel}>Middlename: </label>
@@ -201,28 +200,24 @@ function Employee() {
               type="text"
               value={formData.middleName}
               onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
-              placeholder="Middlename"
             />
             <label className={style.modalLabel}>Lastname: </label>
             <input
               type="text"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              placeholder="Lastname"
             />
             <label className={style.modalLabel}>Contact #: </label>
             <input
               type="text"
               value={formData.contactNumber}
               onChange={(e) => setFormData({ ...formData, contactNumber: e.target.value })}
-              placeholder="Contact Number"
             />
             <label className={style.modalLabel}>User ID: </label>
             <input
               type="number"
               value={formData.userId}
               onChange={(e) => setFormData({ ...formData, userId: e.target.value })}
-              placeholder="User ID"
             />
             <div className={style.activeWrap}>
                   <div className={style.toggleRow}>

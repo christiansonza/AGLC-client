@@ -224,7 +224,6 @@ function Shipper() {
                       shipper: e.target.value
                     })
                   }
-                  placeholder="Shipper name"
                   required
                 />
                 <div className={style.modalActions}>

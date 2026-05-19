@@ -192,7 +192,6 @@ function Destination() {
                   type="text"
                   value={formData.destinationName}
                   onChange={(e) => setFormData({ ...formData, destinationName: e.target.value })}
-                  placeholder="Destination name"
                   required
                 />
                 <div className={style.modalActions}>

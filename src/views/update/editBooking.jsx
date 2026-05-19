@@ -246,7 +246,7 @@ function EditBooking() {
         </div>
 
         <form onSubmit={handleUpdate} className={style.editFormBookings}>
-          <label className={style.editLabel}>Customer: </label>
+          <label style={{marginBottom:'4px'}} className={style.editLabel}>Customer: </label>
           <div className={style.customSelectWrapper} ref={customerRef}>
             <div className={style.customSelectInput} onClick={() => setOpenCustomer(!openCustomer)}>
               {formData.customerId ? activeCustomers.find(c => c.id === formData.customerId)?.name : "-- Select Customer --"}
@@ -393,7 +393,7 @@ function EditBooking() {
                 </div>
               </div>
             </div>
-              <label className={style.editLabel} style={{ marginTop:'12px',}}>Remarks: </label>
+              <label className={style.editLabel} style={{ margin:'14px 0 4px',}}>Remarks: </label>
               <textarea
                 style={{ marginBottom: "1rem" }}
                 value={formData.remarks}

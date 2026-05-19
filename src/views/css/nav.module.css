@@ -43,7 +43,7 @@
   top: 52px; 
   right: 0;
   background-color: #fff;
-  border-radius: 6px;
+  /* border-radius: 6px; */
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -120,17 +120,8 @@ p{
     margin-bottom: auto;
     font-family: "Oswald", sans-serif;
 }
-
 .sideBar {
-background: linear-gradient(
-  rgba(13, 37, 76, 0.9), 
-  rgba(13, 37, 76, 0.9)
-    ),
-    url('../../assets/cargo6.jpg');
-  
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: #1E2A38;
   
   color: #F9FAFB;
   width: 240px;
@@ -147,6 +138,7 @@ background: linear-gradient(
   box-shadow: rgba(0, 0, 0, 0.3) 2px 0px 10px;
   z-index: 2;
 }
+
 .logoHeader{
     font-weight: 700;
     font-size: 44px;
@@ -233,7 +225,7 @@ svg{
 }
 
 .accordionItem:hover {
-  background-color: #0a1c3a;
+ background: rgba(255,255,255,0.06);
 }
 
 .accordionHeader {

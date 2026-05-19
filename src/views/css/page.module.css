@@ -33,10 +33,10 @@
 }
 
 th {
-  color: #3a3a3a;
-  font-family: "Oswald", sans-serif !important;
-  font-weight: 500;
-  font-size: 15 px;
+  /* color: #3a3a3a; */
+  /* font-family: "Oswald", sans-serif !important; */
+  /* font-weight: 500; */
+  /* font-size: 15px; */
   padding: 10px 12px;  
   /* background: linear-gradient(to bottom, #ffffff 0%, #f5f5f5 100%) */
 
@@ -45,17 +45,13 @@ th {
   background-color: #f1f4f6;
 } */
 td{
-  border-bottom: 1px solid #eee;
+  /* border-bottom: 1px solid #eee; */
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid #eee;
-}
+
 .editThPayreq{
   box-shadow: none !important;
   border: 1px solid #ccc !important;
-  background-color: #0D254C !important;
+  background-color: #1E2A38 !important;
   color: #fff !important;
 }
 .thPayreq{
@@ -232,12 +228,12 @@ td {
   padding: 1.5rem 0 2rem;
 }
 .svgExclamation{
-  color: #0D254C;
+  color: #1E2A38;
   height: 22px;
   width: 22px;
 }
 .svgManageVendors{
-  color: #0D254C;
+  color: #3a3a3a;
   margin-top: 2px;
   height: 28px;
   width: 28px;
@@ -245,11 +241,11 @@ td {
 .EditsvgExclamation{
   height: 28px;
   width: 28px;
-  color: #0D254C;
+  color: #1E2A38;
 }
 .headerLaber{
   font-weight: 500;
-  color: #0D254C;
+  color: #3a3a3a;
   font-family: "Oswald", sans-serif !important;
   font-size: 24px;
 }
@@ -258,10 +254,10 @@ td {
 }
 .svgTitleHeader{
   border-radius: 50%;
-  color: #0D254C !important;
+  color: #1E2A38 !important;
   height: 1.75rem;
   width: 1.75rem;
-  border: 1px solid #0D254C;
+  border: 1px solid #1E2A38;
   padding: 2px;
 }
 .editLabelPayment{
@@ -392,22 +388,48 @@ td {
   transform: translateX(0) translateY(-2px);
 }
 
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  /* border: 1px solid #eee; */
+}
+ th {
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  padding: 16px 12px;
+  color: #eee !important;
+  background-color: #1E2A38;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
 th{
-  color: #5a5a5a !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  /* padding-top: .75rem;
+  padding-bottom: .75rem; */
+  font-size: 14px;
+  font-weight: 300;
+  /* background-color: #000; */
 }
 .headBookingTable {
-    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+    /* background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%); */
   border-bottom: 1px solid #eee;
   display: grid;
   grid-template-columns: 200px 1fr 1fr 140px;
   text-align: left;
   margin-bottom: .25rem;
 }
+
+
+
+
 .FlexBookingHistory{
   display: flex;
   align-items: center;
@@ -548,7 +570,7 @@ th{
 
 .pageButton {
   background-color: #fff;
-  color: #0D254C;
+  color: #1E2A38;
   padding: 6px 12px;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -557,7 +579,7 @@ th{
 }
 
 .pageButton:hover {
-  background-color: #0D254C;
+  background-color: #1E2A38;
   color: #fff;
 }
 
@@ -567,8 +589,8 @@ th{
 }
 
 .activePage {
-  background-color: #0D254C;
-  border-color: #0D254C;
+  background-color: #1E2A38;
+  border-color: #1E2A38;
   color: #fff;
 }
 
@@ -578,7 +600,7 @@ th{
   align-items: center;
   gap: 4px;
   background: none;
-  color: #0D254C;
+  color: #1E2A38;
   padding: 6px 12px 6px 10px;
   border-radius: 2px;
   cursor: pointer;
@@ -586,7 +608,7 @@ th{
   border: none;
 }
 .editBtn:hover{
-  background-color: #0D254C;
+  background-color: #1E2A38;
   color: #fff;
   content: 'manage';
 }
@@ -605,7 +627,7 @@ th{
 }
 .editBtnLiquidation:hover{
   display: flex;
-  background-color: #0D254C;
+  background-color: #0f74e0;
   color: #fff;
   content: 'manage';
 }
@@ -626,7 +648,7 @@ th{
   height: 40px;
   width: 120px;
   border-radius: 4px;
-  background-color: #0D254C;
+  background-color: #1E2A38;
   color: #fff;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   border: none;
@@ -660,7 +682,7 @@ th{
 .flexHeaderAccount{
   display: flex;
   gap: 8px;
-  background-color: #0D254C;
+  background-color: #1E2A38;
 }
 h3{
   font-family: "Oswald", sans-serif !important;
@@ -673,14 +695,14 @@ h3{
   border-radius: 50px;
   background-color:#fff;
   border: none;
-  color: #0D254C;
+  color: #1E2A38;
   cursor: pointer;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
 }
 
 .addButton {
-  background-color: #0D254C;
+  background-color: #1E2A38;
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -850,7 +872,7 @@ select:focus {
 .editAccountId{
   display: flex !important;
   padding: 1rem;
-  background-color: #0D254C;
+  background-color: #1E2A38;
 }
 .activeAccountWrap {
   display: flex;
@@ -1110,7 +1132,7 @@ textarea{
   height: 40px;
   width: 120px;
   border-radius: 4px;
-  background-color: #0D254C;
+  background-color: #1E2A38;
   color: #fff;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   border: none;
@@ -1121,7 +1143,7 @@ textarea{
   height: 40px;
   width: 140px;
   border-radius: 4px;
-  background-color: #0D254C;
+  background-color: #1E2A38;
   color: #fff;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   border: none;
@@ -1161,7 +1183,7 @@ textarea{
   border-radius: 50px;
   background-color:#fff;
   border: none;
-  color: #0D254C;
+  color: #1E2A38;
   cursor: pointer;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   height: 100%;
@@ -1186,18 +1208,21 @@ textarea{
   animation: fadeIn 0.2s ease-in-out;
 }
 
-.dropdownItem {
+.dropdownItem{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 16px 8px 8px;
   border: none;
   background: transparent;
   text-align: start;
   cursor: pointer;
   transition: background 0.2s ease-in-out;
 }
-
 .dropdownItem:hover {
-  background-color: #0D254C;
+  background-color: #0f74e0;
   color: #fff;
 }
 
@@ -1369,7 +1394,7 @@ textarea{
   padding: 0 8px;
   border-radius: 50px;
   background-color:#fff;
-  color:#0D254C;
+  color:#1E2A38;
   border: none;
   cursor: pointer;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -1411,7 +1436,7 @@ td.payreqTd {
   padding: 0 8px;
   border-radius: 50px;
   background-color:#fff;
-  color:#0D254C;
+  color:#1E2A38;
   border: none;
   cursor: pointer;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -1419,7 +1444,7 @@ td.payreqTd {
   border: 1px solid #eee;
 }
 .tableJournal{
-  padding: 0 2rem;
+  /* padding: 0 2rem; */
 }
 .addBtnJournal{
   display: flex;
@@ -1428,7 +1453,7 @@ td.payreqTd {
   padding: 0 8px;
   border-radius: 50px;
   background-color:#fff;
-  color:#0D254C;
+  color:#1E2A38;
   border: none;
   cursor: pointer;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -1593,7 +1618,7 @@ td.payreqTd {
 .journalHeaderTable{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  background-color: #0D254C;
+  background-color: #1E2A38;
 }
 .journalHeaderTable th, .EditjournalHeaderTableDetails th{
   color: #fff !important;
@@ -1611,7 +1636,7 @@ td.payreqTd {
   display: grid;
   grid-template-columns: 140px 1fr 125px  135px 135px 140px 135px 120px;
   text-align: left;
-  background-color: #0D254C;
+  background-color: #1E2A38;
 
 }
 .journalBodyTableBookingDetails{
@@ -1621,7 +1646,7 @@ td.payreqTd {
 .journalHeaderTableBookingDetails{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  background-color: #0D254C;
+  background-color: #1E2A38;
 }
 
 .journalHeaderTableBookingDetails th{
@@ -1643,7 +1668,7 @@ td.payreqTd {
 .EditpayreqDetailsBodyTable{
   display: grid;
   grid-template-columns: 140px 1fr 125px  135px 135px 140px 135px 120px;
-  background-color: #0D254C;
+  background-color: #1E2A38;
 }
 .totalPayreqDetailsEdit{
   display: grid;

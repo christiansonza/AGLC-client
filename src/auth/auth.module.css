@@ -51,7 +51,7 @@ body{
     font-size: 2rem;
     font-family: "Oswald", sans-serif;
     font-weight: 600;
-    color: #0D254C;
+    color: #1E2A38;
 }
 .flexLabelfield{
     display: flex;
@@ -62,7 +62,7 @@ body{
 .authLabel{
     font-family: "Oswald", sans-serif;
     font-size: clamp(14px, 1vw, 17px);
-    color: #0D254C;
+    color: #1E2A38;
 }
 .fieldLogin,.fieldRegister,.btnRegister{
     height: 44px;
@@ -75,7 +75,7 @@ body{
 }
 
 .btnRegister{
-    background-color: #0D254C;
+    background-color: #1E2A38;
     color: #fff;
     margin-top: .2rem;
 }
@@ -86,7 +86,7 @@ body{
   height: 42px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  background: #0d254c; 
+  background: #1E2A38; 
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -118,7 +118,7 @@ body{
 }
 
 .loginBtn:hover {
-  border-color: #0d254c;
+  border-color: #1E2A38;
 }
 
 .loginBtn:disabled {
@@ -140,7 +140,7 @@ body{
 }
 a{
     font-family: inter, sans-serif !important;
-    color: #0D254C;
+    color: #1E2A38;
     text-decoration: underline;
 }
 

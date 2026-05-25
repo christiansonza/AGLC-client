@@ -301,8 +301,10 @@ td {
   grid-template-columns: 180px 1fr 1fr 1fr 140px;
   text-align: left;
   margin-bottom: .2rem;
-    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+  background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
   border-bottom: 1px solid #eee;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
 }
 
 .bodyChargeTable{
@@ -317,6 +319,8 @@ td {
   grid-template-columns:1fr 1fr 200px;
   text-align: left;
   margin-bottom: .2rem;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
 }
 .headAccountTable{
     background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
@@ -325,6 +329,8 @@ td {
   grid-template-columns: 180px 1fr 1fr 1fr 1fr 140px;
   text-align: left;
   margin-bottom: .2rem;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
 }
 .bodyAccountTable{
   display: grid;
@@ -339,6 +345,8 @@ td {
   text-align: left;
   margin-bottom: .2rem;
   border-bottom: 1px solid #eee;
+      overflow: hidden;
+  border-radius: 6px 6px 0 0;
 }
 .bodyPettyCashTable{
   display: grid;
@@ -440,6 +448,8 @@ th{
   grid-template-columns: 200px 1fr 1fr 140px;
   text-align: left;
   margin-bottom: .25rem;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
 }
 
 
@@ -458,6 +468,8 @@ th{
   text-align: left;
   margin-bottom: .2rem;
   background-color: #1E2A38;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
 }
 .bodyAffiliateTable {
   display: grid;

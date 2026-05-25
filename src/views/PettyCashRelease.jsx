@@ -436,13 +436,36 @@ function PettyCashRelease() {
                     })()}
                     </td>
                     <td>
+                  <div className={style.actionWrapper}>
+                    <button className={style.editBtn}>
+                      <svg
+                        className={style.svdEditIcon}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1em"
+                        height="1em"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <g fill="currentColor">
+                          <circle cx="6" cy="12" r="1.75" />
+                          <circle cx="12" cy="12" r="1.75" />
+                          <circle cx="18" cy="12" r="1.75" />
+                        </g>
+                      </svg>
+                    </button>
+                      <div className={style.dropdownMenu}>
                         <button
-                            className={style.editBtn}
-                            onClick={()=> navigate(`/editPettyCashRelease/${pc.id}`)}
+                          className={style.editPage}
+                          onClick={()=> navigate(`/editPettyCashRelease/${pc.id}`)}
                         >
-                            <svg className={style.svdEditIcon} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16.14 2.25a5.61 5.61 0 0 0-5.327 7.376L2.77 17.671a1.774 1.774 0 0 0 0 2.508l1.052 1.052a1.773 1.773 0 0 0 2.509 0l8.044-8.045a5.61 5.61 0 0 0 7.19-6.765c-.266-1.004-1.442-1.104-2.032-.514L17.81 7.629a1.017 1.017 0 1 1-1.438-1.438l1.722-1.723c.59-.59.49-1.766-.515-2.032a5.6 5.6 0 0 0-1.438-.186"/></svg>
+                        <svg className={style.editIconPage} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M21 12a1 1 0 0 0-1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6a1 1 0 0 0 0-2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-6a1 1 0 0 0-1-1m-15 .76V17a1 1 0 0 0 1 1h4.24a1 1 0 0 0 .71-.29l6.92-6.93L21.71 8a1 1 0 0 0 0-1.42l-4.24-4.29a1 1 0 0 0-1.42 0l-2.82 2.83l-6.94 6.93a1 1 0 0 0-.29.71m10.76-8.35l2.83 2.83l-1.42 1.42l-2.83-2.83ZM8 13.17l5.93-5.93l2.83 2.83L10.83 16H8Z" />
+                          </svg>
+                          <p className={style.fontfamEditPage}>Manage</p>
                         </button>
-                    </td>
+                      </div>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>

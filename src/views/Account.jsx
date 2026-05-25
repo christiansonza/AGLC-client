@@ -51,6 +51,7 @@ function Account() {
     indexOfLastItem
   );
 
+  // const [openActionId, setOpenActionId] = useState(null);
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
   const handleNext = () => currentPage < totalPages && setCurrentPage((p) => p + 1);
   const handlePrevious = () =>
@@ -228,15 +229,34 @@ function Account() {
               </svg>
             </button>
             <div className={style.moreWrapper}>
-                <button
-                    className={style.moreBtn}
-                    onClick={() => setIsDropdownOpen((prev) => !prev)}
-                    disabled={isImporting}
-                    title="Import/Export File"
-                  >
+              <button
+                className={style.moreBtn}
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                disabled={isImporting}
+                title="Import/Export File"
+              >
                 {isImporting ? (
                   <div className={style.loadingWrapper}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity="0.5"/><path fill="currentColor" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"><animateTransform attributeName="transform" dur="1s" from="0 12 12" repeatCount="indefinite" to="360 12 12" type="rotate"/></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                      <path
+                        fill="currentColor"
+                        d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
+                        opacity="0.5"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"
+                      >
+                        <animateTransform
+                          attributeName="transform"
+                          dur="1s"
+                          from="0 12 12"
+                          repeatCount="indefinite"
+                          to="360 12 12"
+                          type="rotate"
+                        />
+                      </path>
+                    </svg>
                   </div>
                 ) : (
                   <svg
@@ -252,35 +272,59 @@ function Account() {
                   </svg>
                 )}
               </button>
-                {isDropdownOpen && !isImporting && (
-                  <div className={style.dropdownMenu}>
-                    <button onClick={handleImport} className={style.dropdownItem}>
+
+              {isDropdownOpen && !isImporting && (
+                <div className={style.importExportDropdown}>
+                  <button
+                    onClick={handleImport}
+                    className={style.importExportItem}
+                  >
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                       <path d="M0 0h24v24H0z" fill="none" />
-                      <path fill="currentColor" fill-rule="evenodd" d="M15.53 10.47a.75.75 0 0 0-1.06 0l-1.72 1.72V4a.75.75 0 0 0-1.5 0v8.19l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 0 0 0-1.06" clip-rule="evenodd" />
-                      <path fill="currentColor" d="M17.748 12c-.448 0-.84.274-1.157.591l-3 3a2.25 2.25 0 0 1-3.182 0l-3-3C7.092 12.274 6.7 12 6.252 12H4a8 8 0 1 0 16 0z" />
+                      <path
+                        fill="currentColor"
+                        fillRule="evenodd"
+                        d="M15.53 10.47a.75.75 0 0 0-1.06 0l-1.72 1.72V4a.75.75 0 0 0-1.5 0v8.19l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 0 0 0-1.06"
+                        clipRule="evenodd"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M17.748 12c-.448 0-.84.274-1.157.591l-3 3a2.25 2.25 0 0 1-3.182 0l-3-3C7.092 12.274 6.7 12 6.252 12H4a8 8 0 1 0 16 0z"
+                      />
                     </svg>
-                      Import
-                    </button>
-                    <button onClick={handleExport} className={style.dropdownItem}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path fill="currentColor" fill-rule="evenodd" d="M8.845 7.905a.75.75 0 0 0 1.06 0l1.72-1.72v8.19a.75.75 0 0 0 1.5 0v-8.19l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06" clip-rule="evenodd" />
-                        <path fill="currentColor" d="M12.375 20.375a8 8 0 0 0 8-8h-3.75c-.943 0-1.414 0-1.707.293s-.293.764-.293 1.707a2.25 2.25 0 0 1-4.5 0c0-.943 0-1.414-.293-1.707s-.764-.293-1.707-.293h-3.75a8 8 0 0 0 8 8" />
-                      </svg>
-                      Export
-                    </button>
-                  </div>
-                )}
+                    Import
+                  </button>
 
-                <input
-                  type="file"
-                  accept=".xlsx, .xls"
-                  ref={fileInputRef}
-                  className={style.hiddenFileInput}
-                  onChange={handleFileChange}
-                />
-              </div>
+                  <button
+                    onClick={handleExport}
+                    className={style.importExportItem}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                      <path d="M0 0h24v24H0z" fill="none" />
+                      <path
+                        fill="currentColor"
+                        fillRule="evenodd"
+                        d="M8.845 7.905a.75.75 0 0 0 1.06 0l1.72-1.72v8.19a.75.75 0 0 0 1.5 0v-8.19l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06"
+                        clipRule="evenodd"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M12.375 20.375a8 8 0 0 0 8-8h-3.75c-.943 0-1.414 0-1.707.293s-.293.764-.293 1.707a2.25 2.25 0 0 1-4.5 0c0-.943 0-1.414-.293-1.707s-.764-.293-1.707-.293h-3.75a8 8 0 0 0 8 8"
+                      />
+                    </svg>
+                    Export
+                  </button>
+                </div>
+              )}
+
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                ref={fileInputRef}
+                className={style.hiddenFileInput}
+                onChange={handleFileChange}
+              />
+            </div>
           </div>
         
         </div>

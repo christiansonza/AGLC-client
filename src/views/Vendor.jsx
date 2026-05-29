@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useCreateVendorMutation, useFetchVendorQuery } from '../features/vendorSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import style from '../views/css/page.module.css';
-import { Mosaic } from "react-loading-indicators";
 
 function Vendor() {
   const navigate = useNavigate();
-  const { data, isLoading, isError, error } = useFetchVendorQuery();
+  const { data, isError, error } = useFetchVendorQuery();
   const vendors = data ?? [];
 
   const [formData, setFormData] = useState({
@@ -54,33 +53,7 @@ function Vendor() {
     }
   };
 
-  const [showLoader, setShowLoader] = useState(true);
-    
-   useEffect(() => {
-     const timer = setTimeout(() => setShowLoader(false), 1000);
-     return () => clearTimeout(timer);
-     }, []);
-      
-     if (showLoader || isLoading) {
-       return (
-         <div
-           style={{
-             position: "fixed",
-             top: 0,
-             left: 0,
-             width: "100%",
-             height: "100%",
-             display: "flex",
-             justifyContent: "center",
-             alignItems: "center",
-             backgroundColor: "#fff",
-             zIndex: 9999,
-           }}
-           >
-             <Mosaic color="#0D254C" size="small" />
-         </div>
-       );
-     }
+
 
     if (isError) {
       const status = error?.status;

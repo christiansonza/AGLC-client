@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useParams, Link } from "react-router-dom";
-import { Mosaic } from "react-loading-indicators";
 
 import {
   useGetChargeByIdQuery,
@@ -14,7 +13,7 @@ function EditCharge() {
   const { id } = useParams();
   // const navigate = useNavigate();
 
-  const { data: charge, isLoading, isError, error } = useGetChargeByIdQuery(id);
+  const { data: charge, isError, error } = useGetChargeByIdQuery(id);
   const [updateCharge] = useUpdateChargeMutation();
 
   const [formData, setFormData] = useState({
@@ -46,33 +45,7 @@ function EditCharge() {
     }
   };
 
- const [showLoader, setShowLoader] = useState(true);
-   
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-    }, []);
-     
-    if (showLoader || isLoading) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            zIndex: 9999,
-          }}
-          >
-            <Mosaic color="#0D254C" size="small" />
-        </div>
-      );
-    }
+ 
 
   if (isError) {
     const status = error?.status;

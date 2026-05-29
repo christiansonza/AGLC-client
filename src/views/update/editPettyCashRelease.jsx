@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
-import { Mosaic } from "react-loading-indicators";
 
 import {
   useGetPettyCashQuery,
@@ -27,7 +26,7 @@ import style from "../../views/css/page.module.css";
 function EditPettyCashRelease() {
   const { id } = useParams();
 
-  const { data: pettyCashData = [], isLoading: isLoadingPettyCash, isError, error } =
+  const { data: pettyCashData = [], isError, error } =
     useGetPettyCashQuery();
   const [updatePettyCash, { isLoading: isUpdating }] = useUpdatePettyCashMutation();
 
@@ -176,11 +175,7 @@ function EditPettyCashRelease() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const [showLoader, setShowLoader] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 800);
-    return () => clearTimeout(timer);
-  }, []);
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -256,26 +251,7 @@ function EditPettyCashRelease() {
     return sum + (isNaN(value) ? 0 : value);
   }, 0);
 
-  if (isLoadingPettyCash || showLoader) {
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff",
-          zIndex: 9999,
-        }}
-      >
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    );
-  }
+ 
 
   const selectedPaymentRequest = paymentRequests.find(
     (pr) => pr.id === formData.paymentRequestId

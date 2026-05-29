@@ -8,12 +8,11 @@ import { useGetPaymentRequestDetailsByRequestIdQuery } from "../features/payment
 import { ToastContainer, toast } from 'react-toastify';
 
 import style from "../views/css/page.module.css";
-import { Mosaic } from "react-loading-indicators";
 
 function PettyCashLiquidation() {
   const navigate = useNavigate();
 
-  const { data: requests = [], isLoading: loadingRequests, isError, error } = useFetchPaymentRequestQuery();
+  const { data: requests = [], isError, error } = useFetchPaymentRequestQuery();
   const { data: vendors = [] } = useFetchVendorQuery();
   const { data: departments = [] } = useFetchDepartmentQuery();
   const { data: liquidations = [] } = useFetchPettyCashLiquidationQuery();
@@ -130,34 +129,6 @@ function PettyCashLiquidation() {
     }
   };
   
-  const [showLoader, setShowLoader] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-
-  if (showLoader || loadingRequests) {
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff",
-          zIndex: 9999,
-        }}
-      >
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    );
-  }
 
   if (isError) {
     if (error?.status === 401) {

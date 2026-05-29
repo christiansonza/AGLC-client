@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useUpdateUserProfileMutation, useGetUserByIdQuery } from "../../features/userSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import style from '../css/page.module.css';
-import { Mosaic } from "react-loading-indicators";
 
 function EditUser() {
   const { id } = useParams();
 
     // FETCH USER
-  const { data: user, isLoading: isUserLoading , error} = useGetUserByIdQuery(id);
+  const { data: user , error} = useGetUserByIdQuery(id);
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserProfileMutation();
   const [password, setPassword] = useState('');
 
@@ -29,32 +28,7 @@ function EditUser() {
     }
   };
 
-  const [showLoader, setShowLoader] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (showLoader || isUserLoading) {
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff",
-          zIndex: 9999,
-        }}
-      >
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    );
-  }
+ 
    if (!user) {
     const status = error?.status;
 

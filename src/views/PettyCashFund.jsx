@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
-import { Mosaic } from "react-loading-indicators"
 import { useNavigate } from 'react-router-dom'
 import style from '../views/css/page.module.css'
 
@@ -14,7 +13,7 @@ import { useFetchDepartmentQuery } from '../features/departmentSlice'
 
 function PettyCashFund() {
 
-  const { data, isLoading, isError, error } = useFetchPettyCashFundQuery()
+  const { data, isError, error } = useFetchPettyCashFundQuery()
   const funds = data ?? []
   const navigate = useNavigate()
 
@@ -130,33 +129,8 @@ function PettyCashFund() {
   const handleNext = () => currentPage < totalPages && setCurrentPage(p => p + 1)
   const handlePrevious = () => currentPage > 1 && setCurrentPage(p => p - 1)
 
-  const [showLoader, setShowLoader] = useState(true)
+  
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 800)
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (showLoader || isLoading) {
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff",
-          zIndex: 9999,
-        }}
-      >
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    )
-  }
 
   if (isError) {
     return <p>Error: {error?.data?.message || 'Something went wrong'}</p>

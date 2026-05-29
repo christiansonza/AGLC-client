@@ -19,7 +19,6 @@ import { useDeleteAllDetailsMutation } from "../../features/paymentRequest";
 
 import style from "../css/page.module.css";
 import jsPDF from "jspdf";
-import { Mosaic } from "react-loading-indicators";
 
 function EditPaymentRequest() {
 
@@ -38,13 +37,13 @@ function EditPaymentRequest() {
 
   const { id } = useParams();
 
-  const { data: paymentRequest, isLoading, isError, error } = useFetchPaymentRequestByIdQuery(id);
+  const { data: paymentRequest,  isError, error } = useFetchPaymentRequestByIdQuery(id);
 
-  const { data: vendors = [], isLoading: loadingVendors  } = useFetchVendorQuery();
-  const { data: departments = [], isLoading: loadingDepartments  } = useFetchDepartmentQuery();
+  const { data: vendors = []  } = useFetchVendorQuery();
+  const { data: departments = []  } = useFetchDepartmentQuery();
   const [updatePaymentRequest , { isLoading: isUpdating }] = useUpdatePaymentRequestMutation();
 
-  const { data: paymentRequestDetails = [], isLoading: loadingDetails } = useGetPaymentRequestDetailsByRequestIdQuery(id);
+  const { data: paymentRequestDetails = [] } = useGetPaymentRequestDetailsByRequestIdQuery(id);
 
   const { data: bookings = [] } = useFetchBookingQuery();
   const { data: charges = [] } = useFetchChargeQuery();
@@ -517,33 +516,7 @@ if ((departmentType || "").toLowerCase() === "operation" && bookingIdToShow) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-   const [showLoader, setShowLoader] = useState(true);
-     
-    useEffect(() => {
-      const timer = setTimeout(() => setShowLoader(false), 1000);
-      return () => clearTimeout(timer);
-      }, []);
-       
-    if (showLoader || isLoading || loadingVendors || loadingDepartments || loadingDetails) {
-        return (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#fff",
-              zIndex: 9999,
-            }}
-            >
-              <Mosaic color="#0D254C" size="small" />
-          </div>
-        );
-      }
+
 
   if (isError) {
     const status = error?.status;

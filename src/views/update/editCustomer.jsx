@@ -3,13 +3,12 @@ import { useParams, Link } from 'react-router-dom';
 import { useGetCustomerByIdQuery, useUpdateCustomerMutation } from '../../features/customerSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import style from '../css/page.module.css'
-import { Mosaic } from "react-loading-indicators";
 
 function EditCustomer() {
   const { id } = useParams();
   // const navigate = useNavigate();
 
-  const { data: customer, isLoading, isError, error } = useGetCustomerByIdQuery(id);
+  const { data: customer, isError, error } = useGetCustomerByIdQuery(id);
   const [updateCustomer, { isLoading: isUpdating }] = useUpdateCustomerMutation();
 
   const [formData, setFormData] = useState({
@@ -42,33 +41,6 @@ function EditCustomer() {
     }
   };
 
- const [showLoader, setShowLoader] = useState(true);
-   
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-    }, []);
-     
-    if (showLoader || isLoading) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            zIndex: 9999,
-          }}
-          >
-            <Mosaic color="#0D254C" size="small" />
-        </div>
-      );
-    }
 
   if (isError) {
     const status = error?.status;

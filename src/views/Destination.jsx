@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Mosaic } from 'react-loading-indicators'
 import { ToastContainer, toast } from 'react-toastify'
 import style from '../views/css/page.module.css'
 
@@ -12,21 +11,16 @@ import {
 function Destination() {
   const navigate = useNavigate()
 
-  const [showLoader, setShowLoader] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [formData, setFormData] = useState({ destinationName: '' })
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 7
 
-  const { data = [], isLoading, isError, error } = useGetDestinationQuery()
+  const { data = [], isError, error } = useGetDestinationQuery()
   const [addDestination] = useCreateDestinationMutation()
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000)
-    return () => clearTimeout(timer)
-  }, [])
-
+  
   // SEARCH
   const filteredDestinations = data.filter(
     (d) =>
@@ -56,27 +50,7 @@ function Destination() {
     }
   }
 
-  // LOADER
-  if (showLoader || isLoading) {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          zIndex: 9999,
-        }}
-      >
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    )
-  }
+  
 
   if (isError) {
     return <p>Error: {error?.data?.message || 'Something went wrong'}</p>

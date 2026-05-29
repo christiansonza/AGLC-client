@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import { Mosaic } from "react-loading-indicators";
 
 import {
   useFetchBookingByIdQuery,
@@ -24,7 +23,7 @@ import style from '../css/page.module.css';
 function EditBooking() {
   const { id } = useParams();
 
-  const { data: bookingData, isLoading, isError, error } = useFetchBookingByIdQuery(id);
+  const { data: bookingData, isError, error } = useFetchBookingByIdQuery(id);
   const [updateBooking] = useUpdateBookingMutation();
   const [updateBookingDetail] = useUpdateBookingDetailMutation();
 
@@ -131,24 +130,7 @@ function EditBooking() {
   }, []);
 
 
-  const [showLoader, setShowLoader] = useState(true);
-    useEffect(() => {
-      const timer = setTimeout(() => setShowLoader(false), 1000);
-      return () => clearTimeout(timer);
-    }, []);
-
-    if (showLoader || isLoading) {
-      return (
-        <div style={{
-          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-          display: "flex", justifyContent: "center", alignItems: "center",
-          backgroundColor: "#fff", zIndex: 9999
-        }}>
-          <Mosaic color="#0D254C" size="small" />
-        </div>
-      );
-    }
-
+ 
 
   if (isError) {
     const status = error?.status;

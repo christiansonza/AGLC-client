@@ -26,7 +26,7 @@ function Booking() {
   }, []);
 
   const navigate = useNavigate();
-  const { data, isError, error, isLoading } = useFetchBookingQuery();
+  const { data, isError, error } = useFetchBookingQuery();
   const bookings = data ?? [];
   
   const [formData, setFormData] = useState({
@@ -80,33 +80,8 @@ function Booking() {
     }
   };
 
-  const [showLoader, setShowLoader] = useState(true);
    
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-    }, []);
-     
-    if (showLoader || isLoading) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            zIndex: 9999,
-          }}
-          >
-            <Mosaic color="#0D254C" size="small" />
-        </div>
-      );
-    }
+
 
   if (isError) {
     const status = error?.status;
@@ -226,13 +201,15 @@ function Booking() {
                     </div>
                   )}
                 </div>
-                <label className={style.modalLabel}>Remarks: </label>
-                <textarea name="" id=""
+                <label htmlFor="remarks" className={style.modalLabel}>
+                  Remarks:
+                </label>
+                <textarea
+                  id="remarks"
                   type="text"
                   value={formData.remarks}
                   onChange={e => setFormData({ ...formData, remarks: e.target.value })}
-                >
-                </textarea>
+                />
                 
                 <div className={style.modalActions}>
                   <button type="button" className={style.cancelButton} onClick={() => setShowModal(false)}>Cancel</button>

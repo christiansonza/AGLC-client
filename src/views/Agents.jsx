@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useMemo } from 'react'
 
 import { useNavigate, Link } from 'react-router-dom'
 import {
   useFetchAgentQuery,
   useCreateAgentMutation,
 } from '../features/agentSlice'
-import { Mosaic } from 'react-loading-indicators'
 import { ToastContainer, toast } from 'react-toastify';
 
 import style from '../views/css/page.module.css'
 
 function Agents() {
   const navigate = useNavigate()
-  const [showLoader, setShowLoader] = useState(true)
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000)
-    return () => clearTimeout(timer)
-  }, [])
+  // useEffect(() => {
+  //   const timer = setTimeout(() => setShowLoader(false), 1000)
+  //   return () => clearTimeout(timer)
+  // }, [])
 
-  const { data = [], isLoading, isError, error } = useFetchAgentQuery()
+  const { data = [], isError, error } = useFetchAgentQuery(undefined, {
+    refetchOnMountOrArgChange: false,
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+  })
   const [createAgent] = useCreateAgentMutation()
 
   const [formData, setFormData] = useState({ name: '' })
@@ -30,17 +32,19 @@ function Agents() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 7
 
-  const filteredAgents = data.filter((agent) =>
-    agent.name?.toLowerCase().includes(search.toLowerCase())
-  )
+ const filteredAgents = useMemo(() => {
+    return (data || []).filter((agent) =>
+      agent?.name?.toLowerCase().includes(search.toLowerCase())
+    )
+  }, [data, search])
 
   const totalPages = Math.ceil(filteredAgents.length / itemsPerPage)
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentAgents = filteredAgents.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  )
+
+  const currentAgents = useMemo(() => {
+    return filteredAgents.slice(indexOfFirstItem, indexOfLastItem)
+  }, [filteredAgents, indexOfFirstItem, indexOfLastItem])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -58,26 +62,6 @@ function Agents() {
     }
   }
 
-  if (showLoader || isLoading) {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          zIndex: 9999,
-        }}
-      >
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    )
-  }
 
   if (isError) {
     const status = error?.status;
@@ -105,7 +89,7 @@ function Agents() {
         <div className={style.pageHeaderContainer}>
           <div className={style.flexTitleHeader}>
             <div className={style.flexheaderTitle}>
-              <svg svg className={style.svgManageVendors} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <svg className={style.svgManageVendors} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M16 17v2H2v-2s0-4 7-4s7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.4 3.4 0 0 0-1.93.59a5 5 0 0 1 0 5.82A3.4 3.4 0 0 0 15 11a3.5 3.5 0 0 0 0-7" />
               </svg>
               <h3 className={style.headerLaber}>Agent</h3>
@@ -199,15 +183,18 @@ function Agents() {
               </div>
 
               <form onSubmit={handleSubmit} className={style.formContainer}>
-                <label className={style.modalLabel}>Name:</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
-                />
+                <label htmlFor="agent-name" className={style.modalLabel}>
+                  Name:
+                </label>
+                  <input
+                    id="agent-name"
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    required
+                  />
 
                 <div className={style.modalActions}>
                   <button

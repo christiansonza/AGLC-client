@@ -6,13 +6,12 @@ import { useFetchPaymentRequestQuery } from "../features/paymentRequest";
 import { useGetPaymentRequestDetailsByRequestIdQuery } from "../features/paymentRequestDetailSlice";
 import { useFetchEmployeeQuery } from "../features/employeeSlice";
 import style from "../views/css/page.module.css";
-import { Mosaic } from "react-loading-indicators";
 import { useNavigate, Link } from "react-router-dom";
 
 import { useFetchJournalEntryQuery } from "../features/journalEntrySlice";
 
 function PettyCashRelease() {
-  const { data, isLoading, isError, error } = useGetPettyCashQuery();
+  const { data, isError, error } = useGetPettyCashQuery();
   const pettyCashes = data ?? [];
   const navigate = useNavigate()
 
@@ -117,11 +116,6 @@ function PettyCashRelease() {
     }
   };
 
-  const [showLoader, setShowLoader] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
     const { data: paymentRequestDetails = [] } = useGetPaymentRequestDetailsByRequestIdQuery(
     formData.paymentRequestId,
@@ -134,18 +128,6 @@ function PettyCashRelease() {
         .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     : (0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-
-  if (showLoader || isLoading) {
-    return (
-      <div style={{
-        position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-        display: "flex", justifyContent: "center", alignItems: "center",
-        backgroundColor: "#fff", zIndex: 9999
-      }}>
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    );
-  }
 
   if (isError) {
     const status = error?.status;

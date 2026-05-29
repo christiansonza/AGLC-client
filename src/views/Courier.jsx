@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   useGetCourierQuery,
   usePostCourierMutation,
 } from '../features/courierSlice'
 
-import { Mosaic } from 'react-loading-indicators'
 import { ToastContainer, toast } from 'react-toastify'
 
 import style from '../views/css/page.module.css'
@@ -13,14 +12,10 @@ import style from '../views/css/page.module.css'
 function Courier() {
   const navigate = useNavigate()
 
-  const [showLoader, setShowLoader] = useState(true)
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000)
-    return () => clearTimeout(timer)
-  }, [])
+ 
 
-  const { data = [], isLoading, isError, error } = useGetCourierQuery()
+  const { data = [], isError, error } = useGetCourierQuery()
   const [addCourier] = usePostCourierMutation()
 
   const [formData, setFormData] = useState({ courier: '' })
@@ -63,27 +58,7 @@ function Courier() {
     }
   }
 
-  if (showLoader || isLoading) {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          zIndex: 9999,
-        }}
-      >
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    )
-  }
-
+  
   if (isError) {
     return <p>Error: {error?.data?.message || 'Something went wrong'}</p>
   }

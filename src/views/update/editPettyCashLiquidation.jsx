@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Mosaic } from 'react-loading-indicators';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { 
@@ -20,13 +19,13 @@ import style from '../css/page.module.css';
 function EditPettyCashLiquidation() {
   const { id } = useParams();
 
-  const { data: liquidation, isLoading: loadingLiquidation } = useFetchPettyCashLiquidationByIdQuery(id);
+  const { data: liquidation } = useFetchPettyCashLiquidationByIdQuery(id);
   const { data: paymentRequests = [], isLoading: loadingRequests } = useFetchPaymentRequestQuery();
   const [selectedRequestId, setSelectedRequestId] = useState(null);
   const [ updateLiquidationDetail ] = useUpdatePettyCashLiquidationDetailMutation();
 
 
-  const { data: details = [], isLoading: loadingDetails } = useGetPaymentRequestDetailsByRequestIdQuery(selectedRequestId, { skip: !selectedRequestId });
+  const { data: details = [] } = useGetPaymentRequestDetailsByRequestIdQuery(selectedRequestId, { skip: !selectedRequestId });
   const [updateLiquidation, { isLoading: isUpdating }] = useUpdatePettyCashLiquidationMutation();
 
   const payReqRef = useRef(null);
@@ -99,7 +98,6 @@ function EditPettyCashLiquidation() {
     }
   };
 
-  const [showLoader, setShowLoader] = useState(true);
 
   const { data: liquidationDetails = [] } = useFetchPettyCashLiquidationDetailQuery(id);
 
@@ -134,23 +132,7 @@ function EditPettyCashLiquidation() {
       : 0;
 
 
-    useEffect(() => {
-      const timer = setTimeout(() => setShowLoader(false), 1000);
-      return () => clearTimeout(timer);
-    }, []);
   
-  if (loadingLiquidation || loadingRequests || loadingDetails || showLoader) {
-    return (
-      <div style={{
-        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-        display: 'flex', justifyContent: 'center', alignItems: 'center',
-        backgroundColor: '#fff', zIndex: 9999
-      }}>
-        <Mosaic color="#0D254C" size="small" />
-      </div>
-    );
-  }
-
   return (
     <main className="main-container">
       <div className={style.editCustomer}>

@@ -9,7 +9,6 @@ import {
 } from "../features/subAccountTitleSlice";
 import { useFetchAccountQuery } from "../features/accountTitleSlice";
 import style from "../views/css/page.module.css";
-import { Mosaic } from "react-loading-indicators";
 
 
 function SubAccount() {
@@ -31,7 +30,7 @@ useEffect(() => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
-  const { data, isError, error, isLoading } = useFetchSubAccountQuery();
+  const { data, isError, error } = useFetchSubAccountQuery();
   const subAccounts = data ?? [];
 
   const { data: accounts = [], isLoading: isAccountsLoading } = useFetchAccountQuery();
@@ -151,33 +150,7 @@ const handleFileChange = async (e) => {
   XLSX.writeFile(wb, "subAccounts_export.xlsx");
 };
 
- const [showLoader, setShowLoader] = useState(true);
-   
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-    }, []);
-     
-    if (showLoader || isLoading) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            zIndex: 9999,
-          }}
-          >
-            <Mosaic color="#0D254C" size="small" />
-        </div>
-      );
-    }
+
  
   if (isError) {
     const status = error?.status;

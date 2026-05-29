@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import style from '../views/css/nav.module.css';
 import pfp from '../assets/userpfp.jpg';
 import { useCurrentUserQuery, useLogoutUserMutation } from '../features/userSlice';
@@ -11,6 +11,7 @@ import { userApi } from '../features/userSlice';
 
 function Nav() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const [openUsers, setOpenUsers] = useState(false);
   const [openBusiness, setOpenBusiness] = useState(false);
@@ -42,7 +43,7 @@ function Nav() {
     setOpenPettyCash(false);
   };
   
-    const toggleOrg = () => {
+  const toggleOrg = () => {
     setOpenOrg(prev => !prev);
     setOpenUsers(false);
     setOpenBusiness(false);
@@ -78,7 +79,6 @@ function Nav() {
     setOpenOperations(false);
   };
 
-
   const closeAllAccordions = () => {
     setOpenUsers(false);
     setOpenBusiness(false);
@@ -88,52 +88,42 @@ function Nav() {
     setOpenPettyCash(false);
   };
 
-    const [loadingLogout, setLoadingLogout] = useState(false); 
-    const handleLogout = async () => {
-      setLoadingLogout(true);
-      setTimeout(async () => { 
-      try {
-        await logoutUser().unwrap();
-        toast.success('Logged out successfully');
-        localStorage.clear();
-        sessionStorage.clear();
-        dispatch(userApi.util.resetApiState());
-        window.location.href = '/login'; 
-      } catch (err) {
-        toast.error('Logout failed');
-        console.error(err);
-        setLoadingLogout(false);
-      }
-    }, 1000);
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+      toast.success('Logged out successfully');
+      localStorage.clear();
+      sessionStorage.clear();
+      dispatch(userApi.util.resetApiState());
+      navigate('/login'); // Use React Router navigate instead of hard page refresh
+    } catch (err) {
+      toast.error('Logout failed');
+      console.error(err);
+    }
   };
 
- const [showLoader, setShowLoader] = useState(true);
-   
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-    }, []);
-     
-    if (showLoader || isLoading || loadingLogout) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            zIndex: 9999,
-          }}
-          >
-            <Mosaic color="#0D254C" size="small" />
-        </div>
-      );
-    }
+  // If user data is fetching on initial application load, show loader in place.
+  // We removed the artificial 1-second timeout loader that was flashing on link clicks.
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
+          zIndex: 9999,
+        }}
+      >
+        <Mosaic color="#0D254C" size="small" />
+      </div>
+    );
+  }
 
   if (!user) return null;
 
@@ -142,35 +132,35 @@ function Nav() {
       {/* Top Bar */}
       <div className={style.topBar}>
         <p className={style.welcomeText}>{user?.username || 'Guest'}</p>
-          <div className={style.profileWrapper}>
-            <img
-              src={pfp}
-              alt="profile"
-              className={style.profileImg}
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            />
-            <div className={`${style.dropdown} ${isDropdownOpen ? style.open : ''}`}>
-              <Link
-                className={style.dropdownItem1}
-                to={`/editProfile/${user.id}`}
-                onClick={() => setIsDropdownOpen(false)}
-              >
+        <div className={style.profileWrapper}>
+          <img
+            src={pfp}
+            alt="profile"
+            className={style.profileImg}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          />
+          <div className={`${style.dropdown} ${isDropdownOpen ? style.open : ''}`}>
+            <Link
+              className={style.dropdownItem1}
+              to={`/editProfile/${user.id}`}
+              onClick={() => setIsDropdownOpen(false)}
+            >
               <svg className={style.svgProf} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                 <path d="M0 0h24v24H0z" fill="none" />
-                <path fill="currentColor" fill-rule="evenodd" d="M7 10V7a5 5 0 1 1 10 0v3h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2zm-1 2v8h12v-8zm3-2h6V7a3 3 0 0 0-6 0zm5 4h2v4h-2z" />
+                <path fill="currentColor" fillRule="evenodd" d="M7 10V7a5 5 0 1 1 10 0v3h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2zm-1 2v8h12v-8zm3-2h6V7a3 3 0 0 0-6 0zm5 4h2v4h-2z" />
               </svg>
-                <p>Change Password</p>
-              </Link>
-              <button className={style.dropdownItem2} onClick={handleLogout}>
-                <svg className={style.svgLogout} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path fill="currentColor" d="M11.25 19a.75.75 0 0 1 .75-.75h6a.25.25 0 0 0 .25-.25V6a.25.25 0 0 0-.25-.25h-6a.75.75 0 0 1 0-1.5h6c.966 0 1.75.784 1.75 1.75v12A1.75 1.75 0 0 1 18 19.75h-6a.75.75 0 0 1-.75-.75" />
-                  <path fill="currentColor" d="M15.612 13.115a1 1 0 0 1-1 1H9.756q-.035.533-.086 1.066l-.03.305a.718.718 0 0 1-1.025.578a16.8 16.8 0 0 1-4.885-3.539l-.03-.031a.72.72 0 0 1 0-.998l.03-.031a16.8 16.8 0 0 1 4.885-3.539a.718.718 0 0 1 1.025.578l.03.305q.051.532.086 1.066h4.856a1 1 0 0 1 1 1z" />
-                </svg>
-                <p>Logout</p>
-              </button>
-            </div>
+              <p>Change Password</p>
+            </Link>
+            <button className={style.dropdownItem2} onClick={handleLogout}>
+              <svg className={style.svgLogout} xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path fill="currentColor" d="M11.25 19a.75.75 0 0 1 .75-.75h6a.25.25 0 0 0 .25-.25V6a.25.25 0 0 0-.25-.25h-6a.75.75 0 0 1 0-1.5h6c.966 0 1.75.784 1.75 1.75v12A1.75 1.75 0 0 1 18 19.75h-6a.75.75 0 0 1-.75-.75" />
+                <path fill="currentColor" d="M15.612 13.115a1 1 0 0 1-1 1H9.756q-.035.533-.086 1.066l-.03.305a.718.718 0 0 1-1.025.578a16.8 16.8 0 0 1-4.885-3.539l-.03-.031a.72.72 0 0 1 0-.998l.03-.031a16.8 16.8 0 0 1 4.885-3.539a.718.718 0 0 1 1.025.578l.03.305q.051.532.086 1.066h4.856a1 1 0 0 1 1 1z" />
+              </svg>
+              <p>Logout</p>
+            </button>
           </div>
+        </div>
       </div>
 
       {/* Sidebar */}
@@ -179,17 +169,15 @@ function Nav() {
           <p className={style.logoHeader}>ACESTAR</p>
           <p className={style.logoSubHeader}>Global Logistics Corporation</p>
         </div>
-        {/* <hr className={style.hr} /> */}
         <div className={style.menuList}>
-          {/* <small className={style.menuCaption}>MENU</small> */}
           {/* User Directory */}
           <div className={`${style.accordionItem} ${openUsers ? style.activeAccordion : ''}`}>
             <div className={style.accordionHeader} onClick={toggleUsers}>
               <div className={style.flexUserManagement}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M16 17v2H2v-2s0-4 7-4s7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.4 3.4 0 0 0-1.93.59a5 5 0 0 1 0 5.82A3.4 3.4 0 0 0 15 11a3.5 3.5 0 0 0 0-7" />
-              </svg>
-              <p>User Directory</p>
+                </svg>
+                <p>User Directory</p>
               </div>
               <span className={`${style.arrow} ${openUsers ? style.rotate : ''}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -206,9 +194,9 @@ function Nav() {
               <Link className={style.link} onClick={closeAllAccordions} to="/customer"><p>Customer</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/agents"><p>Agent</p></Link>
               <Link className={style.link} onClick={closeAllAccordions} to="/department"><p>Department</p></Link>
-
             </div>
           </div>
+
           {/* Accounts */}
           <div className={`${style.accordionItem} ${openSetup ? style.activeAccordion : ''}`}>
             <div className={style.accordionHeader} onClick={toggleSetup}>
@@ -216,7 +204,7 @@ function Nav() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                   <g fill="none" fillRule="evenodd">
                     <path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
-                    <path fill="currentColor" d="m12.67 2.217l8.5 4.75A1.5 1.5 0 0 1 22 8.31v1.44c0 .69-.56 1.25-1.25 1.25H20v8h1a1 1 0 1 1 0 2H3a1 1 0 1 1 0-2h1v-8h-.75C2.56 11 2 10.44 2 9.75V8.31c0-.522.27-1.002.706-1.274l8.623-4.819a1.5 1.5 0 0 1 1.342 0ZM17 11H7v8h2v-6h2v6h2v-6h2v6h2zm-5-5a1 1 0 1 0 0 2a1 1 0 0 0 0-2" />
+                    <path fill="currentColor" d="m12.67 2.217l8.5 4.75A1.5 1.5 0 0 1 22 8.31v1.44c0 .69-.56 1.25-1.25 1.25H20v8h1a1 1 0 1 1 0 2H3a1 1 0 1 1 0-2h1v-8h-.75C2.56 11 2 10.44 2 9.75V8.31c0-.522.27-1.002.706-1.274l8.623-4.819a1.5 1.5 0 0 1.342 0ZM17 11H7v8h2v-6h2v6h2v-6h2v6h2zm-5-5a1 1 0 1 0 0 2a1 1 0 0 0 0-2" />
                   </g>
                 </svg>
                 <p>Accounts</p>
@@ -237,7 +225,8 @@ function Nav() {
               <Link className={style.link} onClick={closeAllAccordions} to="/paymentRequest"><p>Payment Request</p></Link>
             </div>
           </div>
-                    {/* Petty Cash */}
+
+          {/* Petty Cash */}
           <div className={`${style.accordionItem} ${openPettyCash ? style.activeAccordion : ''}`}>
             <div className={style.accordionHeader} onClick={togglePettyCash}>
               <div className={style.flexUserManagement}>
@@ -279,14 +268,15 @@ function Nav() {
               </Link>
             </div>
           </div>
-          {/* organizations */}
+
+          {/* Organizations */}
           <div className={`${style.accordionItem} ${openOrg ? style.activeAccordion : ''}`}>
             <div className={style.accordionHeader} onClick={toggleOrg}>
               <div className={style.flexUserManagement}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M7.998 5.75A3.752 3.752 0 1 1 12.5 9.428V11.5h3.25A2.25 2.25 0 0 1 18 13.75v.825a3.754 3.754 0 0 1-.748 7.43a3.752 3.752 0 0 1-.752-7.43v-.825a.75.75 0 0 0-.75-.75h-8a.75.75 0 0 0-.75.75v.825a3.754 3.754 0 0 1-.748 7.43a3.752 3.752 0 0 1-.752-7.43v-.825a2.25 2.25 0 0 1 2.25-2.25H11V9.428A3.754 3.754 0 0 1 7.998 5.75" />
                 </svg>
-              <p>Organizations</p>
+                <p>Organizations</p>
               </div>
               <span className={`${style.arrow} ${openOrg ? style.rotate : ''}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -305,6 +295,7 @@ function Nav() {
               <Link className={style.link} onClick={closeAllAccordions} to="/localGovernmentAgency"><p>Local Government Agency</p></Link>
             </div>
           </div>
+
           {/* Operations */}
           <div className={`${style.accordionItem} ${openOperations ? style.activeAccordion : ''}`}>
             <div className={style.accordionHeader} onClick={toggleOperations}>
@@ -328,14 +319,15 @@ function Nav() {
               <Link className={style.link} onClick={closeAllAccordions} to="/charge"><p>Charge</p></Link>
             </div>
           </div>
-          {/* data maintenance */}
+
+          {/* Data Maintenance */}
           <div className={`${style.accordionItem} ${openBusiness ? style.activeAccordion : ''}`}>
             <div className={style.accordionHeader} onClick={toggleBusiness}>
               <div className={style.flexUserManagement}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M3 8h18V5.5q0-.625-.437-1.062T19.5 4h-15q-.625 0-1.062.438T3 5.5zm0 6h18v-4H3zm1.5 6h15q.625 0 1.063-.437T21 18.5V16H3v2.5q0 .625.438 1.063T4.5 20M4.287 6.712Q4 6.425 4 6t.288-.712T5 5t.713.288T6 6t-.288.713T5 7t-.712-.288m0 6Q4 12.426 4 12t.288-.712T5 11t.713.288T6 12t-.288.713T5 13t-.712-.288m0 6Q4 18.426 4 18t.288-.712T5 17t.713.288T6 18t-.288.713T5 19t-.712-.288" />
-              </svg>
-              <p>Data Maintenance</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M3 8h18V5.5q0-.625-.437-1.062T19.5 4h-15q-.625 0-1.062.438T3 5.5zm0 6h18v-4H3zm1.5 6h15q.625 0 1.063-.437T21 18.5V16H3v2.5q0 .625.438 1.063T4.5 20M4.287 6.712Q4 6.425 4 6t.288-.712T5 5t.713.288T6 6t-.288.713T5 7t-.712-.288m0 6Q4 12.426 4 12t.288-.712T5 11t.713.288T6 12t-.288.713T5 13t-.712-.288m0 6Q4 18.426 4 18t.288-.712T5 17t.713.288T6 18t-.288.713T5 19t-.712-.288" />
+                </svg>
+                <p>Data Maintenance</p>
               </div>
               <span className={`${style.arrow} ${openBusiness ? style.rotate : ''}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

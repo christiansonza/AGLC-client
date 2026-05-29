@@ -6,7 +6,6 @@ import {
 } from "../../features/departmentSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import style from "../css/page.module.css";
-import { Mosaic } from "react-loading-indicators";
 
 function EditDepartment() {
 
@@ -28,7 +27,7 @@ function EditDepartment() {
   const { id } = useParams();
   // const navigate = useNavigate();
 
-  const { data: department, isLoading, isError, error } =
+  const { data: department, isError, error } =
     useFetchDepartmentByIdQuery(id);
 
   const [updateDepartment, { isLoading: isUpdating }] =
@@ -63,33 +62,7 @@ function EditDepartment() {
     }
   };
 
- const [showLoader, setShowLoader] = useState(true);
-   
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1000);
-    return () => clearTimeout(timer);
-    }, []);
-     
-    if (showLoader || isLoading) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            zIndex: 9999,
-          }}
-          >
-            <Mosaic color="#0D254C" size="small" />
-        </div>
-      );
-    }
+
 
   if (isError) {
     const status = error?.status;

@@ -6,9 +6,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 import Agents from '../src/views/Agents'
 
-// ========================
-// MOCK RTK QUERY
-// ========================
+
 vi.mock('../src/features/agentSlice', () => ({
   useFetchAgentQuery: vi.fn(),
   useCreateAgentMutation: vi.fn(),
@@ -19,9 +17,7 @@ import {
   useCreateAgentMutation,
 } from '../src/features/agentSlice'
 
-// ========================
-// MOCK NAVIGATION
-// ========================
+
 const mockNavigate = vi.fn()
 
 vi.mock('react-router-dom', async () => {
@@ -33,9 +29,6 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// ========================
-// MOCK TOAST
-// ========================
 vi.mock('react-toastify', () => ({
   ToastContainer: () => <div />,
   toast: {
@@ -49,9 +42,6 @@ describe('Agents Component', () => {
     vi.clearAllMocks()
   })
 
-  // ========================
-  // 1. RENDER LIST
-  // ========================
   test('renders agent list', async () => {
     useFetchAgentQuery.mockReturnValue({
       data: [{ id: 1, name: 'John Agent' }],
@@ -70,9 +60,6 @@ describe('Agents Component', () => {
     expect(await screen.findByText('John Agent')).toBeInTheDocument()
   })
 
-  // ========================
-  // 2. OPEN MODAL
-  // ========================
   test('opens modal', async () => {
     useFetchAgentQuery.mockReturnValue({
       data: [],
@@ -93,9 +80,6 @@ describe('Agents Component', () => {
     expect(screen.getByText('Add Agent')).toBeInTheDocument()
   })
 
-  // ========================
-  // 3. SEARCH FILTER
-  // ========================
   test('search filters agents', async () => {
     useFetchAgentQuery.mockReturnValue({
       data: [
@@ -122,9 +106,7 @@ describe('Agents Component', () => {
     expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument()
   })
 
-  // ========================
-  // 4. CREATE AGENT (FIXED)
-  // ========================
+
   test('creates new agent', async () => {
     const mockCreateAgent = vi.fn(() => ({
       unwrap: () =>
@@ -148,10 +130,8 @@ describe('Agents Component', () => {
       </BrowserRouter>
     )
 
-    // open modal
     await userEvent.click(screen.getByTitle('Add Agent'))
 
-    // stable selector (NO textbox conflicts anymore)
     const input = await screen.findByLabelText(/name/i)
 
     await userEvent.type(input, 'New Agent')
@@ -167,9 +147,7 @@ describe('Agents Component', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/editAgents/99')
   })
 
-  // ========================
-  // 5. UNAUTHORIZED ERROR
-  // ========================
+
   test('shows unauthorized error', async () => {
     useFetchAgentQuery.mockReturnValue({
       data: [],

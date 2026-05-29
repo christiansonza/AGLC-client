@@ -52,7 +52,6 @@ describe('Booking (MSW Integration)', () => {
   });
 
   test('shows unauthorized error', async () => {
-    // Override handler to simulate 401 Unauthorized
     server.use(
       http.get('http://localhost:4000/booking', () => {
         return new HttpResponse(
@@ -64,12 +63,10 @@ describe('Booking (MSW Integration)', () => {
 
     renderWithProviders(<Booking />);
 
-    // Match the unauthorized message
     expect(
       await screen.findByText(/Unauthorized/i)
     ).toBeInTheDocument();
 
-    // Assert the login link exists
     const loginLink = await screen.findByRole('link', { name: /log in/i });
     expect(loginLink).toHaveAttribute('href', '/login');
   });
